@@ -1,4 +1,2 @@
-itkg-consume
-============
-
-WS client library
+WS consumer library
+===================

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="consume.sample.service.google.translate.request.class">Consume\Sample\Service\Google\Translate\Request</parameter>
+        <parameter key="consume.sample.service.google.translate.response.class">Consume\Sample\Service\Google\Translate\Response</parameter>
+    </parameters>
+
+    <services>
+        <service id="google.translate.request" class="%consume.sample.service.google.translate.request.class%">
+            <argument>https://www.googleapis.com/language</argument>
+            <argument>/translate/v2</argument>
+
+        </service>
+        <service id="google.translate.response" class="%consume.sample.service.google.translate.response.class%">
+            <argument>json</argument>
+        </service>
+        <service id="google.translate.client" class="%consume.client.rest.class%">
+
+
+        </service>
+
+        <service id="google.translate" class="%consume.method.class%">
+            <argument>%google.translate.identifier%</argument>
+            <argument id="google.translate.request" />
+            <argument id="google.translate.response" />
+            <argument id="google.translate.client" />
+
+
+        </service>
+
+    </services>
+</container>

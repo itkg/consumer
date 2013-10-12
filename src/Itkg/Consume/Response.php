@@ -1,6 +1,6 @@
 <?php
 
-namespace Itkg\Consume\Model;
+namespace Itkg\Consume;
 
 use Itkg\Consume\AbstractModel;
 
@@ -8,6 +8,14 @@ class Response extends AbstractModel
 {
     protected $body;
     protected $header;
+    protected $format;
+    protected $mapping;
+
+    public function __construct($format, array $mapping = array())
+    {
+        $this->format = $format;
+        $this->mapping = $mapping;
+    }
 
     public function bind($datas = array())
     {
@@ -43,5 +51,25 @@ class Response extends AbstractModel
     public function setHeader($header)
     {
         $this->header = $header;
+    }
+
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    public function setFormat($format)
+    {
+        $this->format = $format;
+    }
+
+    public function getMapping()
+    {
+        return $this->mapping;
+    }
+
+    public function setMapping($mapping)
+    {
+        $this->mapping = $mapping;
     }
 }

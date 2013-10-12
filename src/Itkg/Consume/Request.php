@@ -1,24 +1,27 @@
 <?php
 
-namespace Itkg\Consume\Model;
+namespace Itkg\Consume;
 
 use Itkg\Consume\AbstractModel;
 
-class Request extends AbstractModel
+abstract class Request extends AbstractModel
 {
     protected $uri;
     protected $host;
     protected $headers;
     protected $method;
 
-    public function __construct($uri)
+    public function __construct($host, $uri = '', $method = 'GET', $headers = array())
     {
+        $this->host = $host;
         $this->uri = $uri;
+        $this->method = $method;
+        $this->headers = $headers;
     }
 
-    public function create()
+    public function getParams()
     {
-        return ''; // Return an emtpy request
+        return $this->params;
     }
 
     public function getUri()
@@ -65,4 +68,6 @@ class Request extends AbstractModel
     {
         return md5(serialize($this));
     }
+
+    abstract public function create();
 }

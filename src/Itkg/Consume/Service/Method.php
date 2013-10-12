@@ -8,8 +8,7 @@ use Itkg\Consume\Model\Response;
 
 class Method extends Config
 {
-    protected $logger;
-    protected $cacheClass;
+    protected $loggers;
     protected $identifier;
     protected $request;
     protected $response;
@@ -45,24 +44,14 @@ class Method extends Config
         $this->response = $response;
     }
 
-    public function getLogger()
+    public function getLoggers()
     {
-        return $this->logger;
+        return $this->loggers;
     }
 
-    public function setLogger(AbstractLogger $logger)
+    public function setLoggers(array $loggers)
     {
-        $this->logger = $logger;
-    }
-
-    public function getCacheClass()
-    {
-        return $this->cacheClass;
-    }
-
-    public function setCacheClass($cacheClass)
-    {
-        $this->cacheClass = $cacheClass;
+        $this->loggers = $loggers;
     }
 
     public function getProtocol()

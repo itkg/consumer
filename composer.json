@@ -1,0 +1,29 @@
+{
+    "name":         "itkg/consumer",
+    "type":         "library",
+    "description":  "Itkg consume library",
+    "keywords":     ["library", "consume", "itkg", "interakting"],
+    "homepage":     "http://github.com/itkg/consumer",
+    "license":      "MIT",
+    "authors":      [
+        {
+            "name":     "Interakting",
+            "email":    "itkg@interakting.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "require": {
+        "itkg/itkg-core": "*",
+        "php": ">=5.3.3",
+        "itkg/itkg-core": "1.0",
+        "itkg/itkg-logs": "1.0",
+        "itkg/itkg-cache": "1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Itkg\\Consume": "src"
+        }
+    }
+}
