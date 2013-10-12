@@ -7,7 +7,9 @@
     <parameters>
         <parameter key="consume.service.class">Itkg\Consume\Service</parameter>
     </parameters>
+    <services>
+        <service id="consume.service" class="%consume.service.class%" />
 
-    <service id="consume.service" class="%consume.service.class%" />
+    </services>
 
 </container>

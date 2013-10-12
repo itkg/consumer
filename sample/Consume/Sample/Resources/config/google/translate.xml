@@ -7,13 +7,16 @@
     <parameters>
         <parameter key="consume.sample.service.google.translate.request.class">Consume\Sample\Service\Google\Translate\Request</parameter>
         <parameter key="consume.sample.service.google.translate.response.class">Consume\Sample\Service\Google\Translate\Response</parameter>
+        <parameter key="google.translate.identifier">[GOOGLE][TRANSLATE]</parameter>
     </parameters>
 
     <services>
         <service id="google.translate.request" class="%consume.sample.service.google.translate.request.class%">
-            <argument>https://www.googleapis.com/language</argument>
-            <argument>/translate/v2</argument>
-
+            <argument>https://www.googleapis.com/</argument>
+            <argument>/language/translate/v2</argument>
+            <argument />
+            <argument />
+            <argument>AIzaSyCrjfvdQ-P1rVkTOcdLttdeh7-gkw5qYco</argument>
         </service>
         <service id="google.translate.response" class="%consume.sample.service.google.translate.response.class%">
             <argument>json</argument>
@@ -23,13 +26,11 @@
 
         </service>
 
-        <service id="google.translate" class="%consume.method.class%">
+        <service id="google.translate" class="%consume.service.method.class%" public="true">
             <argument>%google.translate.identifier%</argument>
-            <argument id="google.translate.request" />
-            <argument id="google.translate.response" />
-            <argument id="google.translate.client" />
-
-
+            <argument type="service" id="google.translate.request" />
+            <argument type="service" id="google.translate.response" />
+            <argument type="service" id="google.translate.client" />
         </service>
 
     </services>

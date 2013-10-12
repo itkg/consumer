@@ -15,11 +15,11 @@
         "phpunit/phpunit": "3.7.*"
     },
     "require": {
-        "itkg/itkg-core": "*",
         "php": ">=5.3.3",
-        "itkg/itkg-core": "1.0",
-        "itkg/itkg-logs": "1.0",
-        "itkg/itkg-cache": "1.0"
+        "guzzle/guzzle": "v3.7.4",
+        "itkg/core": "dev-master",
+        "itkg/log": "dev-master",
+        "itkg/cache": "dev-master"
     },
     "autoload": {
         "psr-0": {

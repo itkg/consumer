@@ -22,6 +22,7 @@ class ConsumeSampleExtension extends Extension
         );
 
         $loader->load('google/translate.xml');
+        $loader->load('google/shortener.xml');
     }
 
     public function getAlias()

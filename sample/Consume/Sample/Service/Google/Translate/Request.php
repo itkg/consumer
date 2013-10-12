@@ -1,8 +1,8 @@
 <?php
 
-namespace Consume\Sample\Google\Translate;
+namespace Consume\Sample\Service\Google\Translate;
 
-use Itkg\Consume\Response as BaseRequest;
+use Itkg\Consume\Request as BaseRequest;
 
 class Request extends BaseRequest
 {

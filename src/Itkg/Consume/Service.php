@@ -31,31 +31,31 @@ class Service extends Config
         $this->before();
 
         try {
-            $this->callMethod($method, $params);
+            $response = $this->callMethod($method, $params);
         }catch(\Exception $e) {
             $this->exception = $e;
+            $response = null;
         }
 
         $this->after();
+
+        return $response;
     }
 
     protected function callMethod($method, array $params = array())
     {
-        // TODO : injecter la factory
-        $method = \Itkg::get('consume.service.method.factory')->getMethod();
+        // @TODO : injecter le container
+        $method = \Itkg::get($method);
+
         $method->getRequest()->bind($params);
+        $this->lastRequest = $method->getRequest();
         // Init client
         // TODO : injecter la factory
-        $client = \Itkg::get('consume.client.factory')->getClient(
-            $method->getProtocol(),
-            $method->getRequest()
-        );
+        $method->call();
 
-        $client->call();
-        // Gestion de cache ?
-        $method->getResponse()->bind($client->getResponse());
+        $this->lastResponse = $method->getResponse();
 
-        return $method->getResponse();
+        return $this->lastResponse;
     }
 
     public function getConfig()

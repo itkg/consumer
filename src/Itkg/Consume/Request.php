@@ -3,6 +3,7 @@
 namespace Itkg\Consume;
 
 use Itkg\Consume\AbstractModel;
+use Lemon\Hydrator\HydratorInterface;
 
 abstract class Request extends AbstractModel
 {
@@ -11,7 +12,7 @@ abstract class Request extends AbstractModel
     protected $headers;
     protected $method;
 
-    public function __construct($host, $uri = '', $method = 'GET', $headers = array())
+    public function __construct($host, $uri = '', $method = 'GET', $headers = array(), HydratorInterface $hydrator = null)
     {
         $this->host = $host;
         $this->uri = $uri;

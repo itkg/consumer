@@ -2,7 +2,10 @@
 
 namespace Itkg\Consume;
 
-class AbstractModel 
+use Itkg\Consume\Hydrator\ArrayHydrator;
+use Itkg\Consume\Hydrator\Simple;
+
+class AbstractModel
 {
     protected $validator;
     protected $errors;
@@ -68,15 +71,16 @@ class AbstractModel
         }
     }
 
-    public function hydrate($datas = array())
+    public function hydrate($datas = array(), $options = array())
     {
-        $this->getHydrator()->hydrate($this, $datas);
+        $this->getHydrator()->hydrate($this, $datas, $options);
+
     }
 
     public function getHydrator()
     {
         if(!$this->hydrator) {
-            $this->hydrator = new ArrayHydrator();
+            $this->hydrator = new Simple();
         }
 
         return $this->hydrator;

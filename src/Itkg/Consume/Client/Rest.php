@@ -1,17 +1,17 @@
 <?php
 
-namespace Itkg\Consume\Rest;
+namespace Itkg\Consume\Client;
 
 use Guzzle\Http\Client as BaseClient;
 use Itkg\Consume\ClientInterface;
-use Itkg\Consume\Model\Request;
+use Itkg\Consume\Request;
 
 /**
  * Class Client
  *
  * @author Pascal DENIS <pascal.denis.75@gmail.com>
  */
-class Client extends BaseClient implements ClientInterface
+class Rest extends BaseClient implements ClientInterface
 {
     protected $config;
     protected $response;
@@ -30,16 +30,33 @@ class Client extends BaseClient implements ClientInterface
     public function call()
     {
         if($this->request->getMethod()) {
-            $httpMethod = strtolower($this->request->getMethod());
+            $httpMethod = strtoupper($this->request->getMethod());
         }else {
-            $httpMethod = 'get';
+            $httpMethod = 'GET';
+        }
+        $uri = $this->request->getUri();
+        $datas = $this->request->create();
+        $headers = $this->request->getHeaders();
+        print_r($datas);
+        switch($httpMethod) {
+            case 'GET':
+                $uri = $this->makeUrl($uri, $datas);
+
+                $request = $this->get($uri, $headers);
+            break;
+            case 'POST':
+                $request = $this->post($uri, $headers, $datas);
+            break;
+            case 'PUT':
+
+                $request = $this->put($uri, $headers, $datas);
+            break;
+            case 'DELETE':
+
+                $request = $this->delete($uri, $headers, $datas);
+            break;
         }
 
-        $this->request = $httpMethod(
-            $this->request->getUri(),
-            $this->request->getHeaders(),
-            $this->request->create()
-        );
         // Ou stocker ces éléments
 /*        if($this->config->hasOption('login') && $this->config->hasOption('password')) {
             $request->setAuth(
@@ -54,10 +71,60 @@ class Client extends BaseClient implements ClientInterface
                 $request->addCookie($key, $value);
             }
         } */
-
-        $this->response = $this->request->send();
+        try {
+            $this->response = $request->send();
+        }catch(\Exception $e) {
+            print_r($e);
+        }
     }
 
+    /**
+     * Construct an uri with parameters
+     * et les valeurs
+     *
+     * @param string $url
+     * @param array $datas
+     * @return string
+     */
+    public function makeUrl($url, $datas)
+    {
+        $separator = '?';
+        $valueSeparator = '=';
+        $index = 0;
+        if(is_array($datas) && !empty($datas)) {
+            if(preg_match('/\\?/', $url)) {
+                $index ++;
+            }
+
+            foreach($datas as $key => $value) {
+                if($key != '') {
+                    $currentKeySeparator = substr($key, 0, 1);
+                    if(!in_array($currentKeySeparator, array('.' ,'/', '&', '?', '#'))) {
+                        if($index > 0) {
+                            $separator = '&';
+                        }else {
+                            $separator = '?';
+                        }
+                        $index++;
+                    }else {
+                        $separator = '';
+                    }
+                    $key = $separator.$key;
+                }
+                $currentValueSeparator = substr($value, 0, 1);
+                if(!in_array($currentValueSeparator, array('.', '/', '&', '?', '#'))) {
+
+                    $valueSeparator = '=';
+                }else {
+                    $valueSeparator = '';
+                }
+
+                $url .= $key.$valueSeparator.$value;
+
+            }
+        }
+        return $url;
+    }
     public function getResponse()
     {
         if($this->response) {
@@ -66,6 +133,7 @@ class Client extends BaseClient implements ClientInterface
                 'header' => $this->response->getRawHeaders()
             );
         }
+        print_r($this->response);
         return null;
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Consume\Sample\Google\Translate;
+namespace Consume\Sample\Service\Google\Translate;
 
 use Itkg\Consume\Response as BaseResponse;
 

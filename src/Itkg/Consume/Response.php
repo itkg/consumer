@@ -3,17 +3,17 @@
 namespace Itkg\Consume;
 
 use Itkg\Consume\AbstractModel;
+use Itkg\Consume\HydratorInterface;
 
 class Response extends AbstractModel
 {
     protected $body;
     protected $header;
-    protected $format;
     protected $mapping;
 
-    public function __construct($format, array $mapping = array())
+    public function __construct(HydratorInterface $hydrator = null, $mapping = array())
     {
-        $this->format = $format;
+        $this->hydrator = $hydrator;
         $this->mapping = $mapping;
     }
 
@@ -27,11 +27,10 @@ class Response extends AbstractModel
         }
 
         $this->setDatas($datas);
-        $this->format();
+        $this->hydrate($datas['body'], array('mapping' => $this->mapping));
+
         $this->validate();
     }
-
-    public function format() {}
 
     public function getBody()
     {

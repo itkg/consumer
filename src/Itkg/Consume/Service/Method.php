@@ -3,8 +3,9 @@
 namespace Itkg\Consume\Service;
 
 use Itkg\Config;
-use Itkg\Consume\Model\Request;
-use Itkg\Consume\Model\Response;
+use Itkg\Consume\ClientInterface;
+use Itkg\Consume\Request;
+use Itkg\Consume\Response;
 
 class Method extends Config
 {
@@ -12,11 +13,28 @@ class Method extends Config
     protected $identifier;
     protected $request;
     protected $response;
-    protected $protocol;
+    protected $client;
+
+    public function __construct($identifier, Request $request, Response $response, ClientInterface $client)
+    {
+        $this->identifier = $identifier;
+        $this->request = $request;
+        $this->response = $response;
+        $this->client = $client;
+    }
 
     public function validate()
     {
         // Validate method config & params ?
+    }
+
+    public function call()
+    {
+        $this->client->init($this->request);
+        $this->client->call();
+        $this->response->bind($this->client->getResponse());
+
+        return $this->response;
     }
 
     public function getIdentifier()
@@ -39,6 +57,11 @@ class Method extends Config
         $this->request = $request;
     }
 
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
     public function setResponse(Response $response)
     {
         $this->response = $response;
@@ -54,13 +77,13 @@ class Method extends Config
         $this->loggers = $loggers;
     }
 
-    public function getProtocol()
+    public function getClient()
     {
-        return $this->protocol;
+        return $this->client;
     }
 
-    public function setProtocol($protocol)
+    public function setClient(ClientInterface $client)
     {
-        $this->protocol = $protocol;
+        $this->client = $client;
     }
 }

@@ -24,12 +24,10 @@ $itkg->load();
 $service = Itkg::get('consume.service');
 try {
     // Call google translate WS
-    $translate = $service->call('google.translate', array(
-        'content' => 'bonjour',
-        'source'  => 'fr',
-        'target'  => 'en'
+    $shortener = $service->call('google.shortener', array(
+        'url' => 'www.canalplus.fr'
     ));
 }catch(\Exception $e) {
     print_r($e);
 }
-print_r($translate);
+print_r($shortener);
