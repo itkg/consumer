@@ -65,7 +65,6 @@ class AbstractModel
     }
     public function validate()
     {
-        // @TODO : Gestion des erreurs
         if($this->validator) {
             $this->validator->validate($this);
         }
@@ -84,5 +83,18 @@ class AbstractModel
         }
 
         return $this->hydrator;
+    }
+
+    public function toLog()
+    {}
+
+    public function toArray()
+    {
+        return \get_object_vars($this);
+    }
+
+    public function toJson()
+    {
+        return json_encode($this);
     }
 }

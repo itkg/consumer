@@ -43,19 +43,17 @@ class ServiceSubscriber implements EventSubscriberInterface
             Events::BIND_REQUEST  => array('onBindRequest', 0),
             Events::BIND_RESPONSE => array('onBindResponse', 0),
             Events::PRE_CALL      => array('onPreCall', 0),
-            Events::POST_CALL     => array('onPostCall', 0)
+            Events::POST_CALL     => array('onPostCall', 0),
+            Events::FAIL_CALL     => array('onFailCall', 0),
+            Events::SUCCESS_CALL  => array('onSuccessCall', 0)
         );
     }
 
     public function onBindRequest(FilterServiceEvent $event)
-    {
-
-    }
+    {}
 
     public function onBindResponse(FilterServiceEvent $event)
-    {
-
-    }
+    {}
 
     public function onPreCall(FilterServiceEvent $event)
     {
@@ -63,6 +61,16 @@ class ServiceSubscriber implements EventSubscriberInterface
     }
 
     public function onPostCall(FilterServiceEvent $event)
+    {
+
+    }
+
+    public function onSuccessCall(FilterServiceEvent $event)
+    {
+
+    }
+
+    public function onFailCall(FilterServiceEvent $event)
     {
 
     }

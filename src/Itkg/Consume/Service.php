@@ -25,17 +25,12 @@ class Service
         $this->client = $client;
     }
 
-    public function validate()
-    {
-        // Validate method config & params ?
-    }
-
     public function before($datas = array())
     {
         $this->request->bind($datas);
-        \Itkg::get('core.event_dispatcher')->dispatch(Events::BIND_REQUEST, new FilterServiceEvent($this));
-
+        $this->sendEvent(Events::BIND_REQUEST);
         $this->client->init($this->request);
+        $this->initLoggers();
     }
 
     public function call($datas = array())
@@ -43,20 +38,40 @@ class Service
         $this->before($datas);
 
         try {
+            $this->sendEvent(Events::PRE_CALL);
             $this->client->call();
-
+            $this->sendEvent(Events::SUCCESS_CALL);
         }catch(\Exception $e) {
             $this->exception = $e;
+            $this->sendEvent(Events::FAIL_CALL);
         }
-
+        $this->sendEvent(Events::POST_CALLP);
         $this->after();
 
         return $this->response;
     }
 
+    public function sendEvent($eventType)
+    {
+        \Itkg::get('core.event_dispatcher')->dispatch($eventType, new FilterServiceEvent($this));
+
+    }
+
     public function after()
     {
+        if($this->exception) {
+            throw $this->exception;
+        }
+
         $this->response->bind($this->client->getResponse());
+        $this->sendEvent(Events::BIND_RESPONSE);
+    }
+
+    public function initLoggers()
+    {
+        foreach($this->getLoggers() as $logger) {
+            $logger->init($this->identifier);
+        }
     }
 
     public function getIdentifier()
@@ -91,6 +106,9 @@ class Service
 
     public function getLoggers()
     {
+        if(!is_array($this->loggers)) {
+            $this->loggers = array();
+        }
         return $this->loggers;
     }
 
