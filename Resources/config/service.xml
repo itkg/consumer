@@ -6,10 +6,11 @@
 
     <parameters>
         <parameter key="consume.service.class">Itkg\Consume\Service</parameter>
+        <parameter key="consume.service.factory.class">Itkg\Consume\Service\Method\Factory</parameter>
     </parameters>
-    <services>
-        <service id="consume.service" class="%consume.service.class%" />
 
-    </services>
+    <services>
+        <service id="consume.service.factory" class="%consume.service.factory.class%" public="true"/>
+     </services>
 
 </container>

@@ -28,7 +28,7 @@
 
         </service>
 
-        <service id="google.shortener" class="%consume.service.method.class%" public="true">
+        <service id="google.shortener" class="%consume.service.class%" public="true">
             <argument>%google.translate.identifier%</argument>
             <argument type="service" id="google.shortener.request" />
             <argument type="service" id="google.shortener.response" />

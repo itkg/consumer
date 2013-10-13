@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/core.git",
-                "reference": "61a7106e72ce7810e555a203a358f66da482629e"
+                "reference": "b47d2c1ddebadeed419d54b8956121ea52cc4212"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/core/zipball/61a7106e72ce7810e555a203a358f66da482629e",
-                "reference": "61a7106e72ce7810e555a203a358f66da482629e",
+                "url": "https://api.github.com/repos/itkg/core/zipball/b47d2c1ddebadeed419d54b8956121ea52cc4212",
+                "reference": "b47d2c1ddebadeed419d54b8956121ea52cc4212",
                 "shasum": ""
             },
             "require": {
@@ -190,7 +190,7 @@
                 "interkating",
                 "library"
             ],
-            "time": "2013-10-12 16:50:26"
+            "time": "2013-10-13 18:03:23"
         },
         {
             "name": "itkg/log",

@@ -2,65 +2,111 @@
 
 namespace Itkg\Consume;
 
-use Itkg\Config;
+use Itkg\Consume\ClientInterface;
+use Itkg\Consume\Request;
+use Itkg\Consume\Response;
+use Itkg\Consume\Event\FilterServiceEvent;
+use Itkg\Consume\Service\Events;
 
-class Service extends Config
+class Service
 {
+    protected $loggers;
+    protected $identifier;
+    protected $request;
+    protected $response;
+    protected $client;
     protected $exception;
-    protected $lastResponse;
-    protected $lastRequest;
-    protected $config;
 
-    protected function after()
+    public function __construct($identifier, Request $request, Response $response, ClientInterface $client)
     {
-        // Utiliser des event
+        $this->identifier = $identifier;
+        $this->request = $request;
+        $this->response = $response;
+        $this->client = $client;
     }
 
-    protected function before()
+    public function validate()
     {
-        // Utiliser des event
+        // Validate method config & params ?
     }
 
-    protected function init()
+    public function before($datas = array())
     {
+        $this->request->bind($datas);
+        \Itkg::get('core.event_dispatcher')->dispatch(Events::BIND_REQUEST, new FilterServiceEvent($this));
 
+        $this->client->init($this->request);
     }
 
-    public function call($method, array $params = array())
+    public function call($datas = array())
     {
-        $this->before();
+        $this->before($datas);
 
         try {
-            $response = $this->callMethod($method, $params);
+            $this->client->call();
+
         }catch(\Exception $e) {
             $this->exception = $e;
-            $response = null;
         }
 
         $this->after();
 
-        return $response;
+        return $this->response;
     }
 
-    protected function callMethod($method, array $params = array())
+    public function after()
     {
-        // @TODO : injecter le container
-        $method = \Itkg::get($method);
-
-        $method->getRequest()->bind($params);
-        $this->lastRequest = $method->getRequest();
-        // Init client
-        // TODO : injecter la factory
-        $method->call();
-
-        $this->lastResponse = $method->getResponse();
-
-        return $this->lastResponse;
+        $this->response->bind($this->client->getResponse());
     }
 
-    public function getConfig()
+    public function getIdentifier()
     {
-        return $this->config;
+        return $this->identifier;
+    }
+
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+    }
+
+    public function getLoggers()
+    {
+        return $this->loggers;
+    }
+
+    public function setLoggers(array $loggers)
+    {
+        $this->loggers = $loggers;
+    }
+
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    public function setClient(ClientInterface $client)
+    {
+        $this->client = $client;
     }
 
     public function getException()
@@ -68,8 +114,8 @@ class Service extends Config
         return $this->exception;
     }
 
-    public function setConfig(Config $config)
+    public function setException(\Exception $exception)
     {
-        $this->config = $config;
+        $this->exception = $exception;
     }
 }

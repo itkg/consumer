@@ -13,10 +13,12 @@ class Simple implements HydratorInterface
         if(is_array($datas)) {
             foreach($datas as $key => $value) {
                 if(isset($options['mapping'][$key])) {
+                    // Recursive injection
                     $subObject = new $options['mapping'][$key]();
                     $this->hydrate($subObject, $value, $options);
                     $value = $subObject;
                 }
+                // Check setMethod
                 $this->callSetter($object, $key, $value);
             }
         }

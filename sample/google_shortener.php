@@ -20,11 +20,9 @@ $itkg->registerExtension(new \Consume\Sample\DependencyInjection\ConsumeSampleEx
 // Load config
 $itkg->load();
 
-// Get service manager
-$service = Itkg::get('consume.service');
 try {
     // Call google translate WS
-    $shortener = $service->call('google.shortener', array(
+    $shortener = \Itkg::get('google.shortener')->call(array(
         'url' => 'www.canalplus.fr'
     ));
 }catch(\Exception $e) {

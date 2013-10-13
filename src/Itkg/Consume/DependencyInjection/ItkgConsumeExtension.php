@@ -26,8 +26,8 @@ class ItkgConsumeExtension extends Extension
 
         $loader->load('client.xml');
         $loader->load('service.xml');
-        $loader->load('method.xml');
         $loader->load('hydrator.xml');
+        $loader->load('event.xml');
     }
 
     /**
