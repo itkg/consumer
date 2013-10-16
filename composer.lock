@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/core.git",
-                "reference": "b47d2c1ddebadeed419d54b8956121ea52cc4212"
+                "reference": "fb092f9053f42b1835ffda573cf784c2e2326e8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/core/zipball/b47d2c1ddebadeed419d54b8956121ea52cc4212",
-                "reference": "b47d2c1ddebadeed419d54b8956121ea52cc4212",
+                "url": "https://api.github.com/repos/itkg/core/zipball/fb092f9053f42b1835ffda573cf784c2e2326e8f",
+                "reference": "fb092f9053f42b1835ffda573cf784c2e2326e8f",
                 "shasum": ""
             },
             "require": {
@@ -190,7 +190,7 @@
                 "interkating",
                 "library"
             ],
-            "time": "2013-10-13 18:03:23"
+            "time": "2013-10-13 19:12:17"
         },
         {
             "name": "itkg/log",
@@ -198,12 +198,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/log.git",
-                "reference": "74cc8a4cfbf9b50f77523b0f0364786333a5c850"
+                "reference": "4c5310b795e6c6032ca8ced7031bc2e42b7e253a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/log/zipball/74cc8a4cfbf9b50f77523b0f0364786333a5c850",
-                "reference": "74cc8a4cfbf9b50f77523b0f0364786333a5c850",
+                "url": "https://api.github.com/repos/itkg/log/zipball/4c5310b795e6c6032ca8ced7031bc2e42b7e253a",
+                "reference": "4c5310b795e6c6032ca8ced7031bc2e42b7e253a",
                 "shasum": ""
             },
             "require": {
@@ -238,7 +238,7 @@
                 "library",
                 "log"
             ],
-            "time": "2013-10-12 17:06:21"
+            "time": "2013-10-16 19:56:30"
         },
         {
             "name": "psr/log",

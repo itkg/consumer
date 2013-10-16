@@ -26,6 +26,5 @@ try {
         'url' => 'www.canalplus.fr'
     ));
 }catch(\Exception $e) {
-    print_r($e);
+    //print_r($e);
 }
-print_r($shortener);

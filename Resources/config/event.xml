@@ -5,15 +5,18 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="consume.event.filter_service_event.class">Itkg\Consume\Event\FilterServiceEvent</parameter>
-        <parameter key="consume.event.service_subscriber.class">Itkg\Consume\Event\ServiceSubscriber</parameter>
+        <parameter key="consume.service.event.filter_service_event.class">Itkg\Consume\Service\Event\FilterServiceEvent</parameter>
+        <parameter key="consume.service.event.service_log_subscriber.class">Itkg\Consume\Service\Event\ServiceLogSubscriber</parameter>
+        <parameter key="consume.service.event.service_debug_subscriber.class">Itkg\Consume\Service\Event\ServiceDebugSubscriber</parameter>
     </parameters>
 
     <services>
-        <service id="consume.event.filter_service_event" class="%consume.event.filter_service_event.class%" public="true"/>
-        <service id="consume.event.service_subscriber" class="%consume.event.service_subscriber.class%">
+        <service id="consume.service.event.filter_service_event" class="%consume.service.event.filter_service_event.class%" public="true"/>
+        <service id="consume.service.event.service_log_subscriber" class="%consume.service.event.service_log_subscriber.class%">
             <tag name="core.subscriber"/>
         </service>
+     <!--   <service id="consume.service.event.service_debug_subscriber" class="%consume.service.event.service_debug_subscriber.class%">
+            <tag name="core.subscriber"/>
+        </service> -->
     </services>
-
 </container>

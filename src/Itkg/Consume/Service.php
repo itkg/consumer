@@ -5,7 +5,7 @@ namespace Itkg\Consume;
 use Itkg\Consume\ClientInterface;
 use Itkg\Consume\Request;
 use Itkg\Consume\Response;
-use Itkg\Consume\Event\FilterServiceEvent;
+use Itkg\Consume\Service\Event\FilterServiceEvent;
 use Itkg\Consume\Service\Events;
 
 class Service
@@ -17,12 +17,14 @@ class Service
     protected $client;
     protected $exception;
 
-    public function __construct($identifier, Request $request, Response $response, ClientInterface $client)
+    public function __construct($identifier, Request $request, Response $response,
+        ClientInterface $client, $loggers = array())
     {
         $this->identifier = $identifier;
         $this->request = $request;
         $this->response = $response;
         $this->client = $client;
+        $this->loggers = $loggers;
     }
 
     public function before($datas = array())
@@ -45,7 +47,7 @@ class Service
             $this->exception = $e;
             $this->sendEvent(Events::FAIL_CALL);
         }
-        $this->sendEvent(Events::POST_CALLP);
+        $this->sendEvent(Events::POST_CALL);
         $this->after();
 
         return $this->response;

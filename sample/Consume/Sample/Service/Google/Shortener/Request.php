@@ -31,4 +31,9 @@ class Request extends BaseRequest
     {
         $this->url = $url;
     }
+
+    public function toLog()
+    {
+        return 'URL : '.$this->url;
+    }
 }
