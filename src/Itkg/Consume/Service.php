@@ -7,6 +7,7 @@ use Itkg\Consume\Request;
 use Itkg\Consume\Response;
 use Itkg\Consume\Service\Event\FilterServiceEvent;
 use Itkg\Consume\Service\Events;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Service
 {
@@ -16,6 +17,7 @@ class Service
     protected $response;
     protected $client;
     protected $exception;
+    protected $eventDispatcher;
 
     public function __construct($identifier, Request $request, Response $response,
         ClientInterface $client, $loggers = array())
@@ -53,9 +55,19 @@ class Service
         return $this->response;
     }
 
+    public function setEventDispatcher(EventDispatcher $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
+    }
+
     public function sendEvent($eventType)
     {
-        \Itkg::get('core.event_dispatcher')->dispatch($eventType, new FilterServiceEvent($this));
+        $this->eventDispatcher->dispatch($eventType, new FilterServiceEvent($this));
 
     }
 

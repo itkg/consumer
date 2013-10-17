@@ -8,4 +8,11 @@
         <parameter key="consume.service.class">Itkg\Consume\Service</parameter>
         <parameter key="consume.service.factory.class">Itkg\Consume\Service\Method\Factory</parameter>
     </parameters>
+    <services>
+        <service id="consume.service" class="%consume.service.class%">
+            <call method="setEventDispatcher">
+                <argument type="service" id="core.event_dispatcher" />
+            </call>
+        </service>
+    </services>
 </container>
