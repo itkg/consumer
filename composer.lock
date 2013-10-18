@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ee66e942ee3f7d29bdfae2549c883628",
+    "hash": "3a940f9335700c7bac3a5da34e4aed38",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -198,12 +198,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/log.git",
-                "reference": "4c5310b795e6c6032ca8ced7031bc2e42b7e253a"
+                "reference": "dbb7537ee7d95c95b2252e47e9dd65813a8d6f73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/log/zipball/4c5310b795e6c6032ca8ced7031bc2e42b7e253a",
-                "reference": "4c5310b795e6c6032ca8ced7031bc2e42b7e253a",
+                "url": "https://api.github.com/repos/itkg/log/zipball/dbb7537ee7d95c95b2252e47e9dd65813a8d6f73",
+                "reference": "dbb7537ee7d95c95b2252e47e9dd65813a8d6f73",
                 "shasum": ""
             },
             "require": {
@@ -238,7 +238,7 @@
                 "library",
                 "log"
             ],
-            "time": "2013-10-16 19:56:30"
+            "time": "2013-10-16 20:04:21"
         },
         {
             "name": "psr/log",
@@ -778,16 +778,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.27",
+            "version": "3.7.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4b024e753e3421837afbcca962c8724c58b39376"
+                "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4b024e753e3421837afbcca962c8724c58b39376",
-                "reference": "4b024e753e3421837afbcca962c8724c58b39376",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
+                "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
                 "shasum": ""
             },
             "require": {
@@ -848,7 +848,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-09-16 03:09:52"
+            "time": "2013-10-17 07:27:40"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
