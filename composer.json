@@ -23,8 +23,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Itkg\\Consume": "src"
+            "Itkg\\Consumer": "src"
         }
     },
-    "target-dir":   "Itkg/Consume"
+    "target-dir":   "Itkg/Consumer"
 }

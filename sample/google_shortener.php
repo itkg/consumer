@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 session_start();
 $loader = require_once '../vendor/autoload.php';
 
-$loader->add('Consume\\Sample',__DIR__);
+$loader->add('Consumer\\Sample',__DIR__);
 
 use Itkg;
 
@@ -14,8 +14,8 @@ $itkg = new Itkg('../var/cache/Itkg_cache.php', true);
 // Add extensions
 $itkg->registerExtension(new \Itkg\Cache\DependencyInjection\ItkgCacheExtension());
 $itkg->registerExtension(new \Itkg\Log\DependencyInjection\ItkgLogExtension());
-$itkg->registerExtension(new \Itkg\Consume\DependencyInjection\ItkgConsumeExtension());
-$itkg->registerExtension(new \Consume\Sample\DependencyInjection\ConsumeSampleExtension());
+$itkg->registerExtension(new \Itkg\Consumer\DependencyInjection\ItkgConsumerExtension());
+$itkg->registerExtension(new \Consumer\Sample\DependencyInjection\ConsumerSampleExtension());
 
 // Load config
 $itkg->load();
