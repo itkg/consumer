@@ -3,6 +3,7 @@
 namespace Itkg\Consumer;
 
 use Itkg\Consumer\AbstractModel;
+use Itkg\Consumer\Hydrator\Simple;
 use Lemon\Hydrator\HydratorInterface;
 
 abstract class Request extends AbstractModel
@@ -46,6 +47,14 @@ abstract class Request extends AbstractModel
     public function setHost($host)
     {
         $this->host = $host;
+    }
+
+    public function getHydrator()
+    {
+        if(!$this->hydrator) {
+            $this->hydrator = new Simple();
+        }
+        return $this->hydrator;
     }
 
     public function getHeaders()

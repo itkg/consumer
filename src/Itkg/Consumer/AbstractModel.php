@@ -72,17 +72,21 @@ class AbstractModel
 
     public function hydrate($datas = array(), $options = array())
     {
-        $this->getHydrator()->hydrate($this, $datas, $options);
-
+        if($this->hasHydrator()) {
+            $this->getHydrator()->hydrate($this, $datas, $options);
+        }else {
+            $this->datas = $datas;
+        }
     }
 
     public function getHydrator()
     {
-        if(!$this->hydrator) {
-            $this->hydrator = new Simple();
-        }
-
         return $this->hydrator;
+    }
+
+    public function hasHydrator()
+    {
+        return (null != $this->hydrator);
     }
 
     public function toLog()
