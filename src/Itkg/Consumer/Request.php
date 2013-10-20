@@ -11,6 +11,7 @@ abstract class Request extends AbstractModel
     protected $host;
     protected $headers;
     protected $method;
+    protected $scope;
 
     public function __construct($host, $uri = '', $method = 'GET', $headers = array(), HydratorInterface $hydrator = null)
     {
@@ -20,9 +21,11 @@ abstract class Request extends AbstractModel
         $this->headers = $headers;
     }
 
-    public function getParams()
+    public function updateSCope()
     {
-        return $this->params;
+        if($this->scope == 'SESSION') {
+            $this->headers['cookies']['PHPSESSID'] = session_id();
+        }
     }
 
     public function getUri()
@@ -63,6 +66,17 @@ abstract class Request extends AbstractModel
     public function setMethod($method = 'GET')
     {
         $this->method = $method;
+    }
+
+    public function getScope()
+    {
+        return $this->scope;
+    }
+
+    public function setScope($scope = 'PAGE')
+    {
+        $this->scope = $scope;
+        $this->updateScope();
     }
 
     public function getIdentifier()

@@ -13,17 +13,22 @@ use Itkg\Consumer\Request;
  */
 class Rest extends BaseClient implements ClientInterface
 {
-    protected $config;
     protected $response;
     protected $request;
+    protected $options;
+
+    public function __construct(array $options = array())
+    {
+        $this->options = $options;
+    }
 
     public function init(Request $request)
     {
         $this->request = $request;
 
         parent::__construct(
-            $this->request->getHost()
-           // $this->method->getOptions() // TODO : ou stocker les options ?
+            $this->request->getHost(),
+            $this->options
         );
     }
 
@@ -37,7 +42,7 @@ class Rest extends BaseClient implements ClientInterface
         $uri = $this->request->getUri();
         $datas = $this->request->create();
         $headers = $this->request->getHeaders();
-        print_r($datas);
+
         switch($httpMethod) {
             case 'GET':
                 $uri = $this->makeUrl($uri, $datas);
@@ -57,25 +62,21 @@ class Rest extends BaseClient implements ClientInterface
             break;
         }
 
-        // Ou stocker ces éléments
-/*        if($this->config->hasOption('login') && $this->config->hasOption('password')) {
+        if(isset($headers['login']) && isset($headers['password'])) {
             $request->setAuth(
-                $this->config->getOption('login'),
-                $this->config->getOption('password')
+                $headers['login'],
+                $headers['password']
             );
-        } */
-        // Ou stocker ces éléments
-        // Si des cookies sont présents, on les ajoute à la requete
-      /*  if($this->config->hasOption('cookies') && is_array($cookies = $this->config->getOption('cookies'))) {
-            foreach($cookies as $key => $value) {
+        }
+
+        if(isset($headers['cookies']) && is_array($headers['cookies'])) {
+            foreach($headers['cookies'] as $key => $value) {
                 $request->addCookie($key, $value);
             }
-        } */
-        try {
-            $this->response = $request->send();
-        }catch(\Exception $e) {
-            print_r($e);
         }
+
+        $this->response = $request->send();
+
     }
 
     /**
@@ -133,13 +134,8 @@ class Rest extends BaseClient implements ClientInterface
                 'header' => $this->response->getRawHeaders()
             );
         }
-        print_r($this->response);
-        return null;
-    }
 
-    public function setUri($uri)
-    {
-        $this->uri = $uri;
+        return null;
     }
 
     /**
