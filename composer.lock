@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "3a940f9335700c7bac3a5da34e4aed38",
+    "hash": "42a4b962453409f732becbd1a942d19f",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/cache.git",
-                "reference": "c7cecd967de1527a3a8d77c0ca292d912ae829fa"
+                "reference": "1edbdc2992c20739935745c1e0be1710bcf44028"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/cache/zipball/c7cecd967de1527a3a8d77c0ca292d912ae829fa",
-                "reference": "c7cecd967de1527a3a8d77c0ca292d912ae829fa",
+                "url": "https://api.github.com/repos/itkg/cache/zipball/1edbdc2992c20739935745c1e0be1710bcf44028",
+                "reference": "1edbdc2992c20739935745c1e0be1710bcf44028",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 "itkg",
                 "library"
             ],
-            "time": "2013-10-12 17:06:38"
+            "time": "2013-10-20 17:25:30"
         },
         {
             "name": "itkg/core",

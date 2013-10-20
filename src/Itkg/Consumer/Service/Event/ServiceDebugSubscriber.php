@@ -45,7 +45,8 @@ class ServiceDebugSubscriber implements EventSubscriberInterface
             Events::PRE_CALL      => array('onPreCall', 0),
             Events::POST_CALL     => array('onPostCall', 0),
             Events::FAIL_CALL     => array('onFailCall', 0),
-            Events::SUCCESS_CALL  => array('onSuccessCall', 0)
+            Events::SUCCESS_CALL  => array('onSuccessCall', 0),
+            Events::FROM_CACHE    => array('onCacheCall', 0)
         );
     }
 

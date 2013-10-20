@@ -35,7 +35,8 @@ class ServiceLogSubscriber implements EventSubscriberInterface
         return array(
             Events::PRE_CALL      => array('onPreCall', 0),
             Events::FAIL_CALL     => array('onFailCall', 0),
-            Events::SUCCESS_CALL  => array('onSuccessCall', 0)
+            Events::SUCCESS_CALL  => array('onSuccessCall', 0),
+            Events::FROM_CACHE    => array('onCacheCall', 0)
         );
     }
 
@@ -59,6 +60,14 @@ class ServiceLogSubscriber implements EventSubscriberInterface
         foreach($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::FAIL_CALL);
             $logger->error($event->getService()->getResponse()->toLog());
+        }
+    }
+
+    public function onCacheCall(FilterServiceEvent $event)
+    {
+        foreach($this->getLoggers($event) as $logger) {
+            $logger->getFormatter()->addParam('EVENT', Events::FROM_CACHE);
+            $logger->info($event->getService()->getResponse()->toLog());
         }
     }
 

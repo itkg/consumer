@@ -86,7 +86,7 @@ class AbstractModel
 
     public function hasHydrator()
     {
-        return (null != $this->hydrator);
+        return (null != $this->getHydrator());
     }
 
     public function toLog()

@@ -13,6 +13,9 @@
             <call method="setEventDispatcher">
                 <argument type="service" id="core.event_dispatcher" />
             </call>
+            <call method="setCacheManager">
+                <argument type="service" id="cache.manager" />
+            </call>
         </service>
     </services>
 </container>

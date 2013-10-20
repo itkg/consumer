@@ -29,7 +29,14 @@
             <argument type="service" id="log.helper.id_generator.default" />
         </service>
         <service id="google.shortener.client" class="%consumer.client.rest.class%" />
-
+        <service id="shortener.cache.object" parent="consumer.cache.object">
+            <call method="setDuration">
+                <argument>3600</argument>
+            </call>
+            <call method="setType">
+                <argument>cache.adapter.session</argument>
+            </call>
+        </service>
 
         <service id="google.shortener" parent="consumer.service" public="true">
             <argument>%google.translate.identifier%</argument>
@@ -39,6 +46,9 @@
             <argument type="collection">
                 <argument type="service" id="google.shortener.logger.display" />
             </argument>
+            <call method="setCache">
+                <argument type="service" id="shortener.cache.object" />
+            </call>
         </service>
 
     </services>

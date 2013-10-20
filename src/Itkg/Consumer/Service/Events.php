@@ -11,4 +11,5 @@ final class Events
     const SUCCESS_CALL = 'consume.service.success_call';
     const FAIL_CALL = 'consume.service.fail_call';
     const BIND_RESPONSE = 'consume.service.bind_response';
+    const FROM_CACHE = 'consume.service.from_cache';
 }

@@ -2,6 +2,8 @@
 
 namespace Itkg\Consumer;
 
+use Itkg\Cache\Manager as CacheManager;
+use Itkg\Consumer\Cache\Object;
 use Itkg\Consumer\ClientInterface;
 use Itkg\Consumer\Request;
 use Itkg\Consumer\Response;
@@ -18,6 +20,9 @@ class Service
     protected $client;
     protected $exception;
     protected $eventDispatcher;
+    protected $cacheManager;
+    protected $cache;
+    protected $fromCache;
 
     public function __construct($identifier, Request $request, Response $response,
         ClientInterface $client, $loggers = array())
@@ -31,26 +36,60 @@ class Service
 
     public function before($datas = array())
     {
+        $this->fromCache = false;
+        // bind request
         $this->request->bind($datas);
         $this->sendEvent(Events::BIND_REQUEST);
+
+        // init client & loggers
         $this->client->init($this->request);
         $this->initLoggers();
     }
 
     public function call($datas = array())
     {
+        if($this->hasCache()) {
+            $this->fromCache = true;
+            return $this->cacheCall($datas);
+        }
+
+        return $this->directCall($datas);
+    }
+
+    public function directCall($datas = array())
+    {
+        // Init & bind request
         $this->before($datas);
 
         try {
+            // Call
             $this->sendEvent(Events::PRE_CALL);
             $this->client->call();
-            $this->sendEvent(Events::SUCCESS_CALL);
+
         }catch(\Exception $e) {
             $this->exception = $e;
-            $this->sendEvent(Events::FAIL_CALL);
         }
-        $this->sendEvent(Events::POST_CALL);
+
+        // Bind response into response object
         $this->after();
+
+        // Post call event
+        $this->sendEvent(Events::POST_CALL);
+
+        // Return last response
+        return $this->response;
+    }
+
+    public function cacheCall($datas = array())
+    {
+        // Create cache params to identify cache
+        $datas[0] = $this->getIdentifier();
+        $datas[1] = $this->request->getHost();
+        $datas[2] = $this->request->getUri();
+        $this->response = $this->cacheManager->getValueFromObject($this->cache, $datas);
+        if($this->fromCache) {
+            $this->sendEvent(Events::FROM_CACHE);
+        }
 
         return $this->response;
     }
@@ -65,20 +104,50 @@ class Service
         return $this->eventDispatcher;
     }
 
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    public function hasCache()
+    {
+        return (null != $this->cache);
+    }
+
+    public function setCache(Object $cache)
+    {
+        $this->cache = $cache;
+        $this->cache->setService($this);
+    }
+
+    public function getCacheManager()
+    {
+        return $this->cacheManager;
+    }
+
+    public function setCacheManager(CacheManager $cacheManager)
+    {
+        $this->cacheManager = $cacheManager;
+    }
+
     public function sendEvent($eventType)
     {
         $this->eventDispatcher->dispatch($eventType, new FilterServiceEvent($this));
-
     }
 
     public function after()
     {
+        // If exception we throw it
         if($this->exception) {
+            $this->sendEvent(Events::FAIL_CALL);
             throw $this->exception;
         }
 
+        // Bind response
         $this->response->bind($this->client->getResponse());
         $this->sendEvent(Events::BIND_RESPONSE);
+
+        $this->sendEvent(Events::SUCCESS_CALL);
     }
 
     public function initLoggers()

@@ -26,5 +26,21 @@ try {
         'url' => 'www.canalplus.fr'
     ));
 }catch(\Exception $e) {
-    //print_r($e);
+    print_r($e);
 }
+
+try {
+    // Call google translate WS
+    $shortener = \Itkg::get('google.shortener')->call(array(
+            'url' => 'www.canalplay.com'
+        ));
+}catch(\Exception $e) {
+    print_r($e);
+}
+
+print_r($shortener);
+
+echo '<br />CACHE stockage : <br />';
+print_r(
+   $_SESSION
+);

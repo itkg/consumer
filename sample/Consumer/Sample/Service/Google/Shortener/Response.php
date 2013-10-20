@@ -39,4 +39,9 @@ class Response extends BaseResponse
     {
         $this->kind = $kind;
     }
+
+    public function toLog()
+    {
+        return 'URL : '.$this->id;
+    }
 }
