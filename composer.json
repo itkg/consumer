@@ -25,6 +25,5 @@
         "psr-0": {
             "Itkg\\Consumer": "src"
         }
-    },
-    "target-dir":   "Itkg/Consumer"
+    }
 }
