@@ -9,12 +9,12 @@ class Response extends AbstractModel
 {
     protected $body;
     protected $header;
-    protected $mapping;
+    protected $options;
 
-    public function __construct(HydratorInterface $hydrator = null, $mapping = array())
+    public function __construct(HydratorInterface $hydrator = null, $options = array())
     {
         $this->hydrator = $hydrator;
-        $this->mapping = $mapping;
+        $this->options = $options;
     }
 
     public function bind($datas = array())
@@ -27,7 +27,7 @@ class Response extends AbstractModel
         }
 
         $this->setDatas($datas);
-        $this->hydrate($datas['body'], array('mapping' => $this->mapping));
+        $this->hydrate($datas['body'], $this->options);
 
         $this->validate();
     }
@@ -62,13 +62,13 @@ class Response extends AbstractModel
         $this->format = $format;
     }
 
-    public function getMapping()
+    public function getOptions()
     {
-        return $this->mapping;
+        return $this->options;
     }
 
-    public function setMapping($mapping)
+    public function setOptions($options)
     {
-        $this->mapping = $mapping;
+        $this->options = $options;
     }
 }
