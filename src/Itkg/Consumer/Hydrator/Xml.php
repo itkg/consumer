@@ -24,28 +24,24 @@ class Xml implements HydratorInterface
         }else {
             $root = '';
         }
+
         $object = $this->xmlToObject($data, $root, $options['mapping'], $arrayTag, $object);
 
     }
 
     public function xmlToObject($xml, $tagName, $mapping = array(), $arrayTag = array(), $object = null)
     {
-        if(is_object($object)) {
 
-        }else {
+        if(!is_object($object)) {
             if (isset($mapping[$tagName])) {
-                try {
-                    $object = new $mapping[$tagName];
-                } catch (Exception $exc) {
-                    //return $xml; //retourne des objets simpleXml
-                    return null; // ne retourne pas d'objet simpleXml
-                }
+                $object = new $mapping[$tagName];
             } else {
-
                 return $this->xmlAsArray($xml, $arrayTag);
             }
         }
         $aVars = get_object_vars($xml);
+
+
         if (count($aVars)) {
             foreach ($aVars as $varName => $varValue) {
                 // cas @attributes
@@ -110,11 +106,11 @@ class Xml implements HydratorInterface
             foreach ($xml as $key => $value) {
                 if (in_array($key, $arrayTag) && count($value) == 1) {
                     $varArray = array();
-                    $varArray[0] = self::simplexml2array($value, $arrayTag);
+                    $varArray[0] = $this->xmlAsArray($value, $arrayTag);
                     $r[$key] = $varArray;
                     // objet
                 } else {
-                    $r[$key] = self::simplexml2array($value, $arrayTag);
+                    $r[$key] = $this->xmlAsArray($value, $arrayTag);
                 }
             }
             if (isset($a) && count($a) > 0) {    // Attributes
@@ -123,6 +119,7 @@ class Xml implements HydratorInterface
                     $r[$k] = $v;
                 }
             }
+            unset($r['@attributes']);
             return $r;
         }
         return (string) $xml;
