@@ -8,10 +8,10 @@ use Itkg\Consumer\HydratorInterface;
 class Simple implements HydratorInterface
 {
 
-    public function hydrate(&$object, $datas, $options = array())
+    public function hydrate(&$object, $data, $options = array())
     {
-        if(is_array($datas)) {
-            foreach($datas as $key => $value) {
+        if(is_array($data)) {
+            foreach($data as $key => $value) {
                 if(isset($options['mapping'][$key])) {
                     // Recursive injection
                     $subObject = new $options['mapping'][$key]();

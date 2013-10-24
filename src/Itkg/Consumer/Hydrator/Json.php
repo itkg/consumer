@@ -8,11 +8,11 @@ use Itkg\Consumer\HydratorInterface;
 class Json implements HydratorInterface
 {
 
-    public function hydrate(&$object, $datas, $options = array())
+    public function hydrate(&$object, $data, $options = array())
     {
-        $datas = json_decode($datas, true);
+        $data = json_decode($data, true);
 
         $simple = new Simple();
-        $simple->hydrate($object, $datas, $options);
+        $simple->hydrate($object, $data, $options);
     }
 }
