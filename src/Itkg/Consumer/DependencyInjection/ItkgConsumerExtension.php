@@ -19,6 +19,9 @@ class ItkgConsumerExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new XmlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../../../../Resources/config')
@@ -29,13 +32,5 @@ class ItkgConsumerExtension extends Extension
         $loader->load('hydrator.xml');
         $loader->load('event.xml');
         $loader->load('cache.xml');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlias()
-    {
-        return 'itkg_consumer';
     }
 }

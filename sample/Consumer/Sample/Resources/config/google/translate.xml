@@ -5,28 +5,28 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="consumer.sample.service.google.translate.request.class">Consumer\Sample\Service\Google\Translate\Request</parameter>
-        <parameter key="consumer.sample.service.google.translate.response.class">Consumer\Sample\Service\Google\Translate\Response</parameter>
+        <parameter key="itkg_consumer.sample.service.google.translate.request.class">Consumer\Sample\Service\Google\Translate\Request</parameter>
+        <parameter key="itkg_consumer.sample.service.google.translate.response.class">Consumer\Sample\Service\Google\Translate\Response</parameter>
         <parameter key="google.translate.identifier">[GOOGLE][TRANSLATE]</parameter>
     </parameters>
 
     <services>
-        <service id="google.translate.request" class="%consumer.sample.service.google.translate.request.class%">
+        <service id="google.translate.request" class="%itkg_consumer.sample.service.google.translate.request.class%">
             <argument>https://www.googleapis.com/</argument>
             <argument>/language/translate/v2</argument>
             <argument />
             <argument />
             <argument>AIzaSyCrjfvdQ-P1rVkTOcdLttdeh7-gkw5qYco</argument>
         </service>
-        <service id="google.translate.response" class="%consumer.sample.service.google.translate.response.class%">
+        <service id="google.translate.response" class="%itkg_consumer.sample.service.google.translate.response.class%">
             <argument>json</argument>
         </service>
-        <service id="google.translate.client" class="%consumer.client.rest.class%">
+        <service id="google.translate.client" class="%itkg_consumer.client.rest.class%">
 
 
         </service>
 
-        <service id="google.translate" class="%consumer.service.class%" public="true">
+        <service id="google.translate" class="%itkg_consumer.service.class%" public="true">
             <argument>%google.translate.identifier%</argument>
             <argument type="service" id="google.translate.request" />
             <argument type="service" id="google.translate.response" />

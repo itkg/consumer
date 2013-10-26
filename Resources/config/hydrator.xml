@@ -5,14 +5,14 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="consumer.hydrator.array.class">Itkg\Consumer\Hydrator\Simple</parameter>
-        <parameter key="consumer.hydrator.json.class">Itkg\Consumer\Hydrator\Json</parameter>
-        <parameter key="consumer.hydrator.xml.class">Itkg\Consumer\Hydrator\Xml</parameter>
+        <parameter key="itkg_consumer.hydrator.array.class">Itkg\Consumer\Hydrator\Simple</parameter>
+        <parameter key="itkg_consumer.hydrator.json.class">Itkg\Consumer\Hydrator\Json</parameter>
+        <parameter key="itkg_consumer.hydrator.xml.class">Itkg\Consumer\Hydrator\Xml</parameter>
     </parameters>
     <services>
-        <service id="consumer.hydrator.array" class="%consumer.hydrator.array.class%" />
-        <service id="consumer.hydrator.json" class="%consumer.hydrator.json.class%" />
-        <service id="consumer.hydrator.xml" class="%consumer.hydrator.xml.class%" />
+        <service id="itkg_consumer.hydrator.array" class="%itkg_consumer.hydrator.array.class%" />
+        <service id="itkg_consumer.hydrator.json" class="%itkg_consumer.hydrator.json.class%" />
+        <service id="itkg_consumer.hydrator.xml" class="%itkg_consumer.hydrator.xml.class%" />
     </services>
 
 </container>

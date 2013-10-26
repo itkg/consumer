@@ -5,8 +5,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="consumer.sample.service.google.shortener.request.class">Consumer\Sample\Service\Google\Shortener\Request</parameter>
-        <parameter key="consumer.sample.service.google.shortener.response.class">Consumer\Sample\Service\Google\Shortener\Response</parameter>
+        <parameter key="itkg_consumer.sample.service.google.shortener.request.class">Consumer\Sample\Service\Google\Shortener\Request</parameter>
+        <parameter key="itkg_consumer.sample.service.google.shortener.response.class">Consumer\Sample\Service\Google\Shortener\Response</parameter>
         <parameter key="google.translate.identifier">[GOOGLE][SHORTENER]</parameter>
         <parameter key="google.shortener.request.headers" type="collection">
             <parameter key="Content-Type">application/json</parameter>
@@ -14,22 +14,22 @@
     </parameters>
 
     <services>
-        <service id="google.shortener.request" class="%consumer.sample.service.google.shortener.request.class%">
+        <service id="google.shortener.request" class="%itkg_consumer.sample.service.google.shortener.request.class%">
             <argument>https://www.googleapis.com/</argument>
             <argument>/urlshortener/v1/url</argument>
             <argument>POST</argument>
             <argument>%google.shortener.request.headers%</argument>
         </service>
-        <service id="google.shortener.response" class="%consumer.sample.service.google.shortener.response.class%">
-            <argument type="service" id="consumer.hydrator.json"/>
+        <service id="google.shortener.response" class="%itkg_consumer.sample.service.google.shortener.response.class%">
+            <argument type="service" id="itkg_consumer.hydrator.json"/>
         </service>
         <service id="google.shortener.logger.display" class="%log.logger.display.class%">
             <argument type="collection"></argument>
             <argument type="service" id="log.formatter.default" />
             <argument type="service" id="log.helper.id_generator.default" />
         </service>
-        <service id="google.shortener.client" class="%consumer.client.rest.class%" />
-        <service id="shortener.cache.object" parent="consumer.cache.object">
+        <service id="google.shortener.client" class="%itkg_consumer.client.rest.class%" />
+        <service id="shortener.cache.object" parent="itkg_consumer.cache.object">
             <call method="setDuration">
                 <argument>3600</argument>
             </call>
@@ -38,7 +38,7 @@
             </call>
         </service>
 
-        <service id="google.shortener" parent="consumer.service" public="true">
+        <service id="google.shortener" parent="itkg_consumer.service" public="true">
             <argument>%google.translate.identifier%</argument>
             <argument type="service" id="google.shortener.request" />
             <argument type="service" id="google.shortener.response" />
