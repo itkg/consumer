@@ -11,7 +11,7 @@
     <services>
         <service id="itkg_consumer.service" class="%itkg_consumer.service.class%">
             <call method="setEventDispatcher">
-                <argument type="service" id="core.event_dispatcher" />
+                <argument type="service" id="event_dispatcher" />
             </call>
             <call method="setCacheManager">
                 <argument type="service" id="cache.manager" />
