@@ -17,6 +17,8 @@
     "require": {
         "php": ">=5.3.3",
         "guzzle/guzzle": "v3.7.4",
+        "fkooman/guzzle-bearer-auth-plugin": "dev-master",
+        "fkooman/php-oauth-client": "dev-master",
         "itkg/core": "dev-master",
         "itkg/log": "dev-master",
         "itkg/cache": "dev-master"

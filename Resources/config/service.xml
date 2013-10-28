@@ -14,7 +14,7 @@
                 <argument type="service" id="event_dispatcher" />
             </call>
             <call method="setCacheManager">
-                <argument type="service" id="cache.manager" />
+                <argument type="service" id="itkg_cache.manager" />
             </call>
         </service>
     </services>

@@ -3,6 +3,7 @@
 namespace Itkg\Consumer;
 
 use Itkg\Cache\Manager as CacheManager;
+use Itkg\Consumer\Authentication\ProviderInterface;
 use Itkg\Consumer\Cache\Object;
 use Itkg\Consumer\ClientInterface;
 use Itkg\Consumer\Request;
@@ -23,6 +24,7 @@ class Service
     protected $cacheManager;
     protected $cache;
     protected $fromCache;
+    protected $authenticationProvider;
 
     public function __construct($identifier, Request $request, Response $response,
         ClientInterface $client, $loggers = array())
@@ -43,6 +45,9 @@ class Service
 
         // init client & loggers
         $this->client->init($this->request);
+
+        $this->authenticate();
+
         $this->initLoggers();
     }
 
@@ -92,6 +97,17 @@ class Service
         }
 
         return $this->response;
+    }
+
+    public function authenticate()
+    {
+        if($this->hasAuthenticationProvider()) {
+            if(!$this->authenticationProvider->hasAccess()) {
+                // TODO : bind event
+                $this->authenticate();
+            }
+            $this->authenticationProvider->hydrate($this->client);
+        }
     }
 
     public function setEventDispatcher(EventDispatcher $eventDispatcher)
@@ -218,5 +234,20 @@ class Service
     public function setException(\Exception $exception)
     {
         $this->exception = $exception;
+    }
+
+    public function getAuthenticationProvider()
+    {
+        return $this->authenticationProvider;
+    }
+
+    public function hasAuthenticationProvider()
+    {
+        return (false !== $this->authenticationProvider);
+    }
+
+    public function setAuthenticationProvdier(ProviderInterface $provider)
+    {
+        $this->authenticationProvider = $provider;
     }
 }
