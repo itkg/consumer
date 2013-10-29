@@ -32,5 +32,6 @@ class ItkgConsumerExtension extends Extension
         $loader->load('hydrator.xml');
         $loader->load('event.xml');
         $loader->load('cache.xml');
+        $loader->load('authenticate.xml');
     }
 }

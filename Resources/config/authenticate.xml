@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="itkg_consumer.authentication.provider.oauth.class">Itkg\Consumer\Authentication\Provider\OAuth</parameter>
+        <parameter key="itkg_consumer.authentication.provider.oauth2.class">Itkg\Consumer\Authentication\Provider\OAuth2</parameter>
+    </parameters>
+    <services>
+        <service id="itkg_consumer.authentication.provider.oauth" class="%itkg_consumer.authentication.provider.oauth.class%" />
+        <service id="itkg_consumer.authentication.provider.oauth2" class="%itkg_consumer.authentication.provider.oauth2.class%" />
+    </services>
+</container>
