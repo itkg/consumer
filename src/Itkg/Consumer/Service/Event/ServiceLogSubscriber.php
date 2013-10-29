@@ -36,7 +36,10 @@ class ServiceLogSubscriber implements EventSubscriberInterface
             Events::PRE_CALL      => array('onPreCall', 0),
             Events::FAIL_CALL     => array('onFailCall', 0),
             Events::SUCCESS_CALL  => array('onSuccessCall', 0),
-            Events::FROM_CACHE    => array('onCacheCall', 0)
+            Events::FROM_CACHE    => array('onCacheCall', 0),
+            Events::PRE_AUTHENTICATE  => array('onPreAuthenticate', 0),
+            Events::FAIL_AUTHENTICATE => array('onFailAuthenticate', 0),
+            Events::SUCCESS_AUTHENTICATE => array('onSuccessAuthenticate', 0)
         );
     }
 
@@ -67,6 +70,30 @@ class ServiceLogSubscriber implements EventSubscriberInterface
     {
         foreach($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::FROM_CACHE);
+            $logger->info($event->getService()->getResponse()->toLog());
+        }
+    }
+
+    public function onPreAuthenticate(FilterServiceEvent $event)
+    {
+        foreach($this->getLoggers($event) as $logger) {
+            $logger->getFormatter()->addParam('EVENT', Events::PRE_AUTHENTICATE);
+            $logger->info($event->getService()->getResponse()->toLog());
+        }
+    }
+
+    public function onFailAuthenticate(FilterServiceEvent $event)
+    {
+        foreach($this->getLoggers($event) as $logger) {
+            $logger->getFormatter()->addParam('EVENT', Events::POST_AUTHENTICATE);
+            $logger->error($event->getService()->getResponse()->toLog());
+        }
+    }
+
+    public function onSuccessAuthenticate(FilterServiceEvent $event)
+    {
+        foreach($this->getLoggers($event) as $logger) {
+            $logger->getFormatter()->addParam('EVENT', Events::POST_AUTHENTICATE);
             $logger->info($event->getService()->getResponse()->toLog());
         }
     }

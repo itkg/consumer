@@ -103,8 +103,15 @@ class Service
     {
         if($this->hasAuthenticationProvider()) {
             if(!$this->authenticationProvider->hasAccess()) {
-                // TODO : bind event
-                $this->authenticate();
+                try {
+                    $this->sendEvent(Events::PRE_AUTHENTICATE);
+                    $this->authenticate();
+                }catch(\Exception $e) {
+                    $this->exception = $e;
+                    $this->sendEvent(Events::FAIL_AUTHENTICATE);
+                    throw $e;
+                }
+                $this->sendEvent(Events::SUCCESS_AUTHENTICATE);
             }
             $this->authenticationProvider->hydrate($this->client);
         }

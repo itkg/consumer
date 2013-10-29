@@ -40,13 +40,16 @@ class ServiceDebugSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            Events::BIND_REQUEST  => array('onBindRequest', 0),
-            Events::BIND_RESPONSE => array('onBindResponse', 0),
-            Events::PRE_CALL      => array('onPreCall', 0),
-            Events::POST_CALL     => array('onPostCall', 0),
-            Events::FAIL_CALL     => array('onFailCall', 0),
-            Events::SUCCESS_CALL  => array('onSuccessCall', 0),
-            Events::FROM_CACHE    => array('onCacheCall', 0)
+            Events::BIND_REQUEST      => array('onBindRequest', 0),
+            Events::BIND_RESPONSE     => array('onBindResponse', 0),
+            Events::PRE_CALL          => array('onPreCall', 0),
+            Events::POST_CALL         => array('onPostCall', 0),
+            Events::FAIL_CALL         => array('onFailCall', 0),
+            Events::SUCCESS_CALL      => array('onSuccessCall', 0),
+            Events::FROM_CACHE        => array('onCacheCall', 0),
+            Events::PRE_AUTHENTICATE  => array('onPreAuthenticate', 0),
+            Events::FAIL_AUTHENTICATE => array('onFailAuthenticate', 0),
+            Events::SUCCESS_AUTHENTICATE => array('onSuccessAuthenticate', 0)
         );
     }
 
@@ -97,6 +100,30 @@ class ServiceDebugSubscriber implements EventSubscriberInterface
     {
         foreach($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::POST_CALL);
+            $logger->debug($event->getService()->getResponse()->toLog());
+        }
+    }
+
+    public function onPreAuthenticate(FilterServiceEvent $event)
+    {
+        foreach($this->getLoggers($event) as $logger) {
+            $logger->getFormatter()->addParam('EVENT', Events::PRE_AUTHENTICATE);
+            $logger->debug($event->getService()->getResponse()->toLog());
+        }
+    }
+
+    public function onFailAuthenticate(FilterServiceEvent $event)
+    {
+        foreach($this->getLoggers($event) as $logger) {
+            $logger->getFormatter()->addParam('EVENT', Events::FAIL_AUTHENTICATE);
+            $logger->debug($event->getService()->getResponse()->toLog());
+        }
+    }
+
+    public function onSuccessAuthenticate(FilterServiceEvent $event)
+    {
+        foreach($this->getLoggers($event) as $logger) {
+            $logger->getFormatter()->addParam('EVENT', Events::SUCCESS_AUTHENTICATE);
             $logger->debug($event->getService()->getResponse()->toLog());
         }
     }
