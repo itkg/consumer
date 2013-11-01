@@ -5,6 +5,13 @@ namespace Itkg\Consumer;
 use Itkg\Consumer\AbstractModel;
 use Itkg\Consumer\HydratorInterface;
 
+/**
+ * Class Response
+ *
+ * @package Itkg\Consumer
+ *
+ * @author Pascal DENIS <pascal.denis@businessdecision.com>
+ */
 class Response extends AbstractModel
 {
     protected $body;

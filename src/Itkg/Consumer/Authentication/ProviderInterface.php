@@ -13,9 +13,11 @@ interface ProviderInterface
 {
     public function getAuthToken();
 
-    public function hydrate(ClientInterface $client);
+    public function hydrateClient($client);
 
     public function hasAccess();
 
     public function authenticate();
+
+    public function clean();
 }

@@ -70,7 +70,8 @@ class OAuth2  extends Config implements ProviderInterface
 
     public function authenticate()
     {
-        if(false === ($accessToken = $this->api->getAccessToken($this->context))) {
+
+       if(false === ($accessToken = $this->api->getAccessToken($this->context))) {
             $this->saveState();
             header("HTTP/1.1 302 Found");
             header("Location: " . $this->api->getAuthorizeUri($this->context));
@@ -95,9 +96,9 @@ class OAuth2  extends Config implements ProviderInterface
         );
     }
 
-    public function hydrateClient(Rest $client)
+    public function hydrateClient($client)
     {
-       $this->client->addSubscriber(BearerAuth($this->getAccessToken()->getAccessToken()));
+       $client->addSubscriber(new BearerAuth($this->getAccessToken()->getAccessToken()));
     }
 
     public function saveState()
@@ -107,5 +108,11 @@ class OAuth2  extends Config implements ProviderInterface
             'redirect' => $_SERVER['REQUEST_URI'],
             'id'       => $this->getParam('id')
         );
+    }
+
+    public function clean()
+    {
+        $this->api->deleteAccessToken($this->context);
+        $this->api->deleteRefreshToken($this->context);
     }
 }

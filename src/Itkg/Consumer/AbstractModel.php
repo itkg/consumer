@@ -5,8 +5,17 @@ namespace Itkg\Consumer;
 use Itkg\Consumer\Hydrator\ArrayHydrator;
 use Itkg\Consumer\Hydrator\Simple;
 
+/**
+ * Class AbstractModel
+ * @package Itkg\Consumer
+ *
+ * @author Pascal DENIS <pascal.denis@businessdecision.com>
+ */
 class AbstractModel
 {
+    /**
+     * @var Val
+     */
     protected $validator;
     protected $errors;
     protected $hydrator;

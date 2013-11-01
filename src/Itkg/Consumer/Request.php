@@ -6,6 +6,12 @@ use Itkg\Consumer\AbstractModel;
 use Itkg\Consumer\Hydrator\Simple;
 use Lemon\Hydrator\HydratorInterface;
 
+/**
+ * Class Request
+ * @package Itkg\Consumer
+ *
+ * @author Pascal DENIS <pascal.denis@businessdecision.com>
+ */
 abstract class Request extends AbstractModel
 {
     protected $uri;

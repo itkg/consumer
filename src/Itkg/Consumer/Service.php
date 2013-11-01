@@ -12,6 +12,15 @@ use Itkg\Consumer\Service\Event\FilterServiceEvent;
 use Itkg\Consumer\Service\Events;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * Class Service
+ *
+ * Call service, bind request / response and authenticate
+ *
+ * @package Itkg\Consumer
+ *
+ * @author Pascal DENIS <pascal.denis@businessdecision.com>
+ */
 class Service
 {
     protected $loggers;
@@ -101,19 +110,26 @@ class Service
 
     public function authenticate()
     {
+
         if($this->hasAuthenticationProvider()) {
             if(!$this->authenticationProvider->hasAccess()) {
                 try {
                     $this->sendEvent(Events::PRE_AUTHENTICATE);
-                    $this->authenticate();
+
+                    $this->getAuthenticationProvider()->authenticate();
+
                 }catch(\Exception $e) {
+
                     $this->exception = $e;
+
                     $this->sendEvent(Events::FAIL_AUTHENTICATE);
+
                     throw $e;
                 }
                 $this->sendEvent(Events::SUCCESS_AUTHENTICATE);
             }
-            $this->authenticationProvider->hydrate($this->client);
+
+            $this->authenticationProvider->hydrateClient($this->client);
         }
     }
 
@@ -163,6 +179,10 @@ class Service
         // If exception we throw it
         if($this->exception) {
             $this->sendEvent(Events::FAIL_CALL);
+            if($this->hasAuthenticationProvider()) {
+
+                $this->getAuthenticationProvider()->clean();
+            }
             throw $this->exception;
         }
 
@@ -253,7 +273,7 @@ class Service
         return (false !== $this->authenticationProvider);
     }
 
-    public function setAuthenticationProvdier(ProviderInterface $provider)
+    public function setAuthenticationProvider(ProviderInterface $provider)
     {
         $this->authenticationProvider = $provider;
     }
