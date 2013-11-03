@@ -30,11 +30,20 @@ class OAuth2  extends Config implements ProviderInterface
     protected $api;
     protected $redirect;
 
+    protected $requiredParams = array(
+        'id',   
+        'client_id',
+        'client_secret',
+        'scope',
+        'token_endpoint',
+        'authorize_endpoint',
+        'redirect_uri'
+    );
+
     public function __construct($params = array(), $storage = null)
     {
         $this->setParams($params);
 
-        // @TODO : Define requiredParams
         $this->validateParams();
         if(!empty($storage)) {
             $this->storage = $storage;
