@@ -45,19 +45,8 @@ class Simple implements HydratorInterface
 
     public function toCamelCase($key)
     {
-        if(strrpos($key, '_')) {
-            $keys = explode('_', $key);
-            $key = '';
-            foreach($keys as $k) {
-                if($key) {
-                    $key .= ucFirst($k);
-                }else {
-                    $key = $k;
-                }
-            }
-        }
-        print_r($key);
-        return $key;
+        $regexp = '#_(.)#e';
+        return preg_replace($regexp, "strtoupper('\\1')", $key);
     }
 
     public function callSetter(&$object, $key, $value)

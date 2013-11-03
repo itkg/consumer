@@ -31,7 +31,7 @@ class OAuth2  extends Config implements ProviderInterface
     protected $redirect;
 
     protected $requiredParams = array(
-        'id',   
+        'id',
         'client_id',
         'client_secret',
         'scope',
