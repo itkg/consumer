@@ -19,7 +19,7 @@ class AbstractModel
     protected $validator;
     protected $errors;
     protected $hydrator;
-    protected $datas;
+    protected $data;
 
     public function getValidator()
     {
@@ -55,22 +55,22 @@ class AbstractModel
         $this->errors[] = $error;
     }
 
-    public function bind($datas = array())
+    public function bind($data = array())
     {
-        $this->setDatas($datas);
-        $this->hydrate($datas);
+        $this->setData($data);
+        $this->hydrate($data);
 
         $this->validate();
     }
 
-    public function getDatas()
+    public function getData()
     {
-        return $this->parameters;
+        return $this->data;
     }
 
-    public function setDatas($datas = array())
+    public function setData($data = array())
     {
-        $this->datas = $datas;
+        $this->data = $data;
     }
     public function validate()
     {
@@ -79,12 +79,12 @@ class AbstractModel
         }
     }
 
-    public function hydrate($datas = array(), $options = array())
+    public function hydrate($data = array(), $options = array())
     {
         if($this->hasHydrator()) {
-            $this->getHydrator()->hydrate($this, $datas, $options);
+            $this->getHydrator()->hydrate($this, $data, $options);
         }else {
-            $this->datas = $datas;
+            $this->data = $data;
         }
     }
 

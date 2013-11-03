@@ -8,7 +8,9 @@ use fkooman\OAuth\Client\ClientConfig;
 use fkooman\OAuth\Client\Context;
 use fkooman\OAuth\Client\Scope;
 use fkooman\OAuth\Client\SessionStorage;
+use fkooman\OAuth\Client\Callback;
 use Guzzle\Http\Client;
+use Guzzle\Http\ClientInterface;
 use Itkg\Consumer\Authentication\Provider;
 use Itkg\Consumer\Authentication\ProviderInterface;
 use Itkg\Consumer\Client\Rest;
@@ -26,6 +28,7 @@ class OAuth2  extends Config implements ProviderInterface
     protected $config;
     protected $context;
     protected $api;
+    protected $redirect;
 
     public function __construct($params = array(), $storage = null)
     {
@@ -103,16 +106,28 @@ class OAuth2  extends Config implements ProviderInterface
 
     public function saveState()
     {
-        $_SESSION['itkg_consumer_oauth2'] = array(
-            'config'   => $this->config,
-            'redirect' => $_SERVER['REQUEST_URI'],
-            'id'       => $this->getParam('id')
-        );
+        $this->redirect = $_SERVER['REQUEST_URI'];
+        $_SESSION['itkg_consumer_oauth2'] = $this;
+    }
+
+    public function handleCallback($data = array())
+    {
+        $cb = new Callback($this->getParam('id'), $this->config, $this->storage, $this->client);
+        $cb->handleCallback($data);
+
+        header("HTTP/1.1 302 Found");
+        header("Location: ".$this->redirect);
+        exit;
     }
 
     public function clean()
     {
         $this->api->deleteAccessToken($this->context);
         $this->api->deleteRefreshToken($this->context);
+    }
+
+    public function mergeData(array $data = array())
+    {
+        //@TODO
     }
 }

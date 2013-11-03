@@ -20,4 +20,6 @@ interface ProviderInterface
     public function authenticate();
 
     public function clean();
+
+    public function mergeData(array $data = array());
 }

@@ -2,80 +2,141 @@
 
 namespace Itkg\Consumer\Authentication\Provider;
 
-use \Itkg\Consumer\ClientInterface;
-use Itkg\Consumer\Authentication\Provider;
-use Itkg\Consumer\Request;
-use Itkg\Consumer\Response;
+use Guzzle\Plugin\Oauth\OauthPlugin;
+use Itkg\Consumer\Authentication\ProviderInterface;
+use Itkg\Core\Config;
 
 /**
  * Class OAuth
  *
  * @author Pascal DENIS <pascal.denis@businessdecision.com>
  */
-class OAuth implements ProviderInterface
+class OAuth extends Config implements ProviderInterface
 {
     protected $key;
     protected $secret;
-    protected $client;
-    protected $request;
-    protected $response;
+    protected $api;
+    protected $state;
+    protected $token;
+    protected $redirect;
 
-    public function __construct(ClientInterface $client, Request $request, Response $response, $key, $secret)
+    protected $requiredParams = array(
+        'consumer_key',
+        'consumer_secret',
+        'authorize_endpoint',
+        'access_token_endpoint',
+    );
+
+    public function __construct($params)
     {
-        $this->client = $client;
-        $this->request = $request;
-        $this->response = $response;
-        $this->key = $key;
-        $this->secret = $secret;
+        $this->params = $params;
+
+        $this->validateParams();
+
+        $this->restoreState();
     }
 
-    public function getClient()
+    public function getAuthToken()
     {
-        return $this->client;
+        if(false !== $this->token) {
+            $this->authenticate();
+        }
+
+        return $this->token;
     }
 
-    public function setClient(ClientInterface $client)
+    public function hydrateClient($client)
     {
-        $this->client = $client;
+        $infos = array(
+            'consumer_key'    => $this->getParam('consumer_key'),
+            'consumer_secret' => $this->getParam('consumer_secret'),
+            'token'           => $this->token,
+            'token_secret'    => $this->secret
+        );
+
+        $client->addSubscriber(new OauthPlugin($infos));
     }
 
-    public function getRequest()
+    public function hasAccess()
     {
-        return $this->request;
+        return (null !== $this->token);
     }
 
-    public function setRequest(Request $request)
+    public function authenticate()
     {
-        $this->request = $request;
+        $this->api = new \OAuth(
+            $this->getParam('consumer_key'),
+            $this->getParam('consumer_secret'),
+            OAUTH_SIG_METHOD_HMACSHA1,
+            OAUTH_AUTH_TYPE_URI
+        );
+
+        if(!isset($_GET['oauth_token']) && !$this->state) {
+            $request_token_info =  $this->api->getRequestToken($this->getParam('request_token_endpoint'));
+            $this->secret = $request_token_info['oauth_token_secret'];
+            $this->state = 1;
+            $this->redirect = $_SERVER['REQUEST_URI'];
+            $this->saveState();
+
+            header('Location: '.$this->getParam('authorize_endpoint').'?oauth_token='.$request_token_info['oauth_token']);
+            exit;
+        }
     }
 
-    public function getResponse()
+    public function handleCallback($data)
     {
-        return $this->response;
+        try {
+            $this->api = new \OAuth(
+                $this->getParam('consumer_key'),
+                $this->getParam('consumer_secret'),
+                OAUTH_SIG_METHOD_HMACSHA1,
+                OAUTH_AUTH_TYPE_URI
+            );
+
+            $this->api->setToken($data['oauth_token'], $this->secret);
+            $accessToken = $this->api->getAccessToken($this->getParam('access_token_endpoint'));
+
+            $this->state = 2;
+            $this->token = $accessToken['oauth_token'];
+            $this->secret = $accessToken['oauth_token_secret'];
+        }catch(\Exception $e) {
+            $this->state = null;
+        }
+        $this->saveState();
+        header("HTTP/1.1 302 Found");
+        header("Location: ".$this->redirect);
+        exit;
+
     }
 
-    public function setResponse(Response $response)
+    public function clean()
     {
-        $this->response = $response;
+        unset($_SESSION['itkg_consumer_oauth']);
+        unset($_SESSION['itkg_consumer_oauth_values']);
     }
 
-    public function getKey()
+    public function saveState()
     {
-        return $this->key;
+        $_SESSION['itkg_consumer_oauth'] = $this;
+        $_SESSION['itkg_consumer_oauth_values'] = array(
+            'secret' => $this->secret,
+            'state' => $this->state,
+            'token' => $this->token
+        );
     }
 
-    public function setKey($key)
+    public function restoreState()
     {
-        $this->key = $key;
+        if(isset($_SESSION['itkg_consumer_oauth_values'])) {
+            $this->state = $_SESSION['itkg_consumer_oauth_values']['state'];
+            $this->secret = $_SESSION['itkg_consumer_oauth_values']['secret'];
+            $this->token = $_SESSION['itkg_consumer_oauth_values']['token'];
+        }
     }
 
-    public function getSecret()
+    public function mergeData(array $data = array())
     {
-        return $this->secret;
+        //@TODO
     }
 
-    public function setSecret($secret)
-    {
-        $this->secret = $secret;
-    }
 }

@@ -24,17 +24,17 @@ class Response extends AbstractModel
         $this->options = $options;
     }
 
-    public function bind($datas = array())
+    public function bind($data = array())
     {
-        if(isset($datas['body'])) {
-            $this->body = $datas['body'];
+        if(isset($data['body'])) {
+            $this->body = $data['body'];
         }
-        if(isset($datas['header'])) {
-            $this->header = $datas['header'];
+        if(isset($data['header'])) {
+            $this->header = $data['header'];
         }
 
-        $this->setDatas($datas);
-        $this->hydrate($datas['body'], $this->options);
+        $this->setData($data);
+        $this->hydrate($data['body'], $this->options);
 
         $this->validate();
     }

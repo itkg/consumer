@@ -54,7 +54,7 @@ class Service
 
         // init client & loggers
         $this->client->init($this->request);
-
+        // authenticate request before call
         $this->authenticate();
 
         $this->initLoggers();
@@ -64,9 +64,10 @@ class Service
     {
         if($this->hasCache()) {
             $this->fromCache = true;
+            // Use cache object to make call
             return $this->cacheCall($datas);
         }
-
+        // Direct call
         return $this->directCall($datas);
     }
 
@@ -100,6 +101,8 @@ class Service
         $datas[0] = $this->getIdentifier();
         $datas[1] = $this->request->getHost();
         $datas[2] = $this->request->getUri();
+
+        // Cache call from cache object
         $this->response = $this->cacheManager->getValueFromObject($this->cache, $datas);
         if($this->fromCache) {
             $this->sendEvent(Events::FROM_CACHE);
@@ -112,10 +115,15 @@ class Service
     {
 
         if($this->hasAuthenticationProvider()) {
+            // If no access for this request
             if(!$this->authenticationProvider->hasAccess()) {
                 try {
                     $this->sendEvent(Events::PRE_AUTHENTICATE);
 
+                    // Merge Request data into provider (user key, id, etc.)
+                    $this->getAuthenticationProvider()->mergeData($this->request->getData());
+
+                    // Start authentication
                     $this->getAuthenticationProvider()->authenticate();
 
                 }catch(\Exception $e) {
@@ -129,6 +137,7 @@ class Service
                 $this->sendEvent(Events::SUCCESS_AUTHENTICATE);
             }
 
+            // Hydrate client with credentials
             $this->authenticationProvider->hydrateClient($this->client);
         }
     }
@@ -180,7 +189,7 @@ class Service
         if($this->exception) {
             $this->sendEvent(Events::FAIL_CALL);
             if($this->hasAuthenticationProvider()) {
-
+                // To avoid some pb with authentication provider storage, we clean it
                 $this->getAuthenticationProvider()->clean();
             }
             throw $this->exception;
