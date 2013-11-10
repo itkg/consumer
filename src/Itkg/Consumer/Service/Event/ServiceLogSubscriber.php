@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @author Pascal DENIS <pascal.denis@businessdecision.com>
  */
-class ServiceLogSubscriber implements EventSubscriberInterface
+class ServiceLogSubscriber extends ServiceSubscriber
 {
 
     /**
@@ -138,16 +138,5 @@ class ServiceLogSubscriber implements EventSubscriberInterface
             $logger->getFormatter()->addParam('EVENT', Events::POST_AUTHENTICATE);
             $logger->info($event->getService()->getResponse()->toLog());
         }
-    }
-
-    /**
-     * Get loggers from an event
-     *
-     * @param FilterServiceEvent $event An event
-     * @return array
-     */
-    protected function getLoggers(FilterServiceEvent $event)
-    {
-        return $event->getService()->getLoggers();
     }
 }

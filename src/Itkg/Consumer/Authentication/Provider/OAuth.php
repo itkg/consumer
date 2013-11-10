@@ -112,9 +112,9 @@ class OAuth extends Config implements ProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Create api
      */
-    public function authenticate()
+    public function createApi()
     {
         $this->api = new \OAuth(
             $this->getParam('consumer_key'),
@@ -122,6 +122,14 @@ class OAuth extends Config implements ProviderInterface
             OAUTH_SIG_METHOD_HMACSHA1,
             OAUTH_AUTH_TYPE_URI
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function authenticate()
+    {
+        $this->createApi();
 
         if (!isset($_GET['oauth_token']) && !$this->state) {
             $request_token_info = $this->api->getRequestToken($this->getParam('request_token_endpoint'));
@@ -147,12 +155,7 @@ class OAuth extends Config implements ProviderInterface
     public function handleCallback($data)
     {
         try {
-            $this->api = new \OAuth(
-                $this->getParam('consumer_key'),
-                $this->getParam('consumer_secret'),
-                OAUTH_SIG_METHOD_HMACSHA1,
-                OAUTH_AUTH_TYPE_URI
-            );
+            $this->createApi();
 
             $this->api->setToken($data['oauth_token'], $this->secret);
             $accessToken = $this->api->getAccessToken($this->getParam('access_token_endpoint'));

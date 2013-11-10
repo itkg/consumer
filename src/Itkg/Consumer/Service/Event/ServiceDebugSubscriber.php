@@ -4,6 +4,7 @@ namespace Itkg\Consumer\Event;
 
 
 use Itkg\Consumer\Event\FilterServiceEvent;
+use Itkg\Consumer\Service\Event\ServiceSubscriber;
 use Itkg\Consumer\Service\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -13,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @author Pascal DENIS <pascal.denis@businessdecision.com>
  */
-class ServiceDebugSubscriber implements EventSubscriberInterface
+class ServiceDebugSubscriber extends ServiceSubscriber
 {
 
     /**
@@ -171,16 +172,5 @@ class ServiceDebugSubscriber implements EventSubscriberInterface
             $logger->getFormatter()->addParam('EVENT', Events::SUCCESS_AUTHENTICATE);
             $logger->debug($event->getService()->getResponse()->toLog());
         }
-    }
-
-    /**
-     * Get loggers from an event
-     *
-     * @param FilterServiceEvent $event An event
-     * @return array
-     */
-    protected function getLoggers(FilterServiceEvent $event)
-    {
-        return $event->getService()->getLoggers();
     }
 }

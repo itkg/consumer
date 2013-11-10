@@ -141,9 +141,7 @@ class OAuth2 extends Config implements ProviderInterface
 
         if (false === ($accessToken = $this->api->getAccessToken($this->context))) {
             $this->saveState();
-            header("HTTP/1.1 302 Found");
-            header("Location: " . $this->api->getAuthorizeUri($this->context));
-            exit;
+            $this->redirect($this->api->getAuthorizeUri($this->context));
         }
         $this->isLogged = true;
 
@@ -197,9 +195,7 @@ class OAuth2 extends Config implements ProviderInterface
         $cb = new Callback($this->getParam('id'), $this->config, $this->storage, $this->client);
         $cb->handleCallback($data);
 
-        header("HTTP/1.1 302 Found");
-        header("Location: " . $this->redirect);
-        exit;
+        $this->redirect($this->redirect);
     }
 
     /**
@@ -209,6 +205,18 @@ class OAuth2 extends Config implements ProviderInterface
     {
         $this->api->deleteAccessToken($this->context);
         $this->api->deleteRefreshToken($this->context);
+    }
+
+    /**
+     * Redirect request to specific location
+     *
+     * @param string $location
+     */
+    public function redirect($location)
+    {
+        header("HTTP/1.1 302 Found");
+        header("Location: " . $location);
+        exit;
     }
 
     /**
