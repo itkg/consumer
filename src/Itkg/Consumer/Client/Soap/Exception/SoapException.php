@@ -2,23 +2,30 @@
 
 namespace Itkg\Consumer\Client\Soap\Exception;
 
+/**
+ * Class SoapException
+ *
+ * @package Itkg\Consumer\Client\Soap\Exception
+ *
+ * @author Pascal DENIS <pascal.denis@businessdecision.com>
+ */
 class SoapException extends \SoapFault
 {
     /**
-     * La trame contenant la requête soap
+     * A soap request
      *
      * @var string
      */
     protected $trame;
     /**
-     * Les données transmis dans la trame
+     * Request parameters
      *
      * @var array
      */
-    protected $aDatas;
+    protected $data;
 
     /**
-     * Renvoi la trame
+     * Getter Request trame
      *
      * @return string
      */
@@ -30,7 +37,7 @@ class SoapException extends \SoapFault
     /**
      * Set trame
      *
-     * @param string $trame
+     * @param string $trame A soap request
      */
     public function setTrame($trame)
     {
@@ -38,22 +45,22 @@ class SoapException extends \SoapFault
     }
 
     /**
-     * Renvoi la données
+     * Getter data
      *
      * @return array
      */
-    public function getDatas()
+    public function getData()
     {
-        return $this->aDatas;
+        return $this->data;
     }
 
     /**
-     * Set datas
+     * Set data
      *
-     * @param array $aDatas
+     * @param array $data List of data
      */
-    public function setDatas($aDatas)
+    public function setDatas($data)
     {
-        $this->aDatas = $aDatas;
+        $this->data = $data;
     }
 }

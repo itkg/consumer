@@ -6,6 +6,12 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
+/**
+ * Class Configuration
+ * @package Itkg\Consumer\DependencyInjection
+ *
+ * @author Pascal DENIS <pascal.denis@businessdecision.com>
+ */
 class Configuration implements ConfigurationInterface
 {
     /**

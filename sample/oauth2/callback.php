@@ -23,7 +23,6 @@ $clientConfig = $_SESSION['itkg_consumer_oauth2']['config'];
 $id = $_SESSION['itkg_consumer_oauth2']['id'];
 echo '<pre>';
 print_r($clientConfig);
-
 try {
     $tokenStorage = new \fkooman\OAuth\Client\SessionStorage();
     $httpClient = new \Guzzle\Http\Client();

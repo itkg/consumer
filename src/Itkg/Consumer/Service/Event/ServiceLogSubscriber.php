@@ -3,10 +3,16 @@
 namespace Itkg\Consumer\Service\Event;
 
 
+use Itkg\Consumer\Service\Event\FilterServiceEvent;
 use Itkg\Consumer\Service\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Itkg\Consumer\Service\Event\FilterServiceEvent;
 
+/**
+ * Class ServiceLogSubscriber
+ * @package Itkg\Consumer\Service\Event
+ *
+ * @author Pascal DENIS <pascal.denis@businessdecision.com>
+ */
 class ServiceLogSubscriber implements EventSubscriberInterface
 {
 
@@ -33,72 +39,114 @@ class ServiceLogSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            Events::PRE_CALL      => array('onPreCall', 0),
-            Events::FAIL_CALL     => array('onFailCall', 0),
-            Events::SUCCESS_CALL  => array('onSuccessCall', 0),
-            Events::FROM_CACHE    => array('onCacheCall', 0),
-            Events::PRE_AUTHENTICATE  => array('onPreAuthenticate', 0),
+            Events::PRE_CALL => array('onPreCall', 0),
+            Events::FAIL_CALL => array('onFailCall', 0),
+            Events::SUCCESS_CALL => array('onSuccessCall', 0),
+            Events::FROM_CACHE => array('onCacheCall', 0),
+            Events::PRE_AUTHENTICATE => array('onPreAuthenticate', 0),
             Events::FAIL_AUTHENTICATE => array('onFailAuthenticate', 0),
             Events::SUCCESS_AUTHENTICATE => array('onSuccessAuthenticate', 0)
         );
     }
 
+    /**
+     * Is called before service call
+     *
+     * @param FilterServiceEvent $event An event
+     */
     public function onPreCall(FilterServiceEvent $event)
     {
-        foreach($this->getLoggers($event) as $logger) {
+        foreach ($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::PRE_CALL);
             $logger->info($event->getService()->getRequest()->toLog());
         }
     }
+
+    /**
+     * Is called after success service call
+     *
+     * @param FilterServiceEvent $event An event
+     */
     public function onSuccessCall(FilterServiceEvent $event)
     {
-        foreach($this->getLoggers($event) as $logger) {
+        foreach ($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::SUCCESS_CALL);
             $logger->info($event->getService()->getResponse()->toLog());
         }
     }
 
+    /**
+     * Is called after fail service call
+     *
+     * @param FilterServiceEvent $event An event
+     */
     public function onFailCall(FilterServiceEvent $event)
     {
-        foreach($this->getLoggers($event) as $logger) {
+        foreach ($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::FAIL_CALL);
             $logger->error($event->getService()->getResponse()->toLog());
         }
     }
 
+    /**
+     * Is called when service call use cache
+     *
+     * @param FilterServiceEvent $event An event
+     */
     public function onCacheCall(FilterServiceEvent $event)
     {
-        foreach($this->getLoggers($event) as $logger) {
+        foreach ($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::FROM_CACHE);
             $logger->info($event->getService()->getResponse()->toLog());
         }
     }
 
+    /**
+     * Is called before authenticate
+     *
+     * @param FilterServiceEvent $event An event
+     */
     public function onPreAuthenticate(FilterServiceEvent $event)
     {
-        foreach($this->getLoggers($event) as $logger) {
+        foreach ($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::PRE_AUTHENTICATE);
             $logger->info($event->getService()->getResponse()->toLog());
         }
     }
 
+    /**
+     * Is callend on fail authenticate
+     *
+     * @param FilterServiceEvent $event An event
+     */
     public function onFailAuthenticate(FilterServiceEvent $event)
     {
-        foreach($this->getLoggers($event) as $logger) {
+        foreach ($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::POST_AUTHENTICATE);
             $logger->error($event->getService()->getResponse()->toLog());
         }
     }
 
+    /**
+     * Is called on success authenticate
+     *
+     * @param FilterServiceEvent $event An event
+     */
     public function onSuccessAuthenticate(FilterServiceEvent $event)
     {
-        foreach($this->getLoggers($event) as $logger) {
+        foreach ($this->getLoggers($event) as $logger) {
             $logger->getFormatter()->addParam('EVENT', Events::POST_AUTHENTICATE);
             $logger->info($event->getService()->getResponse()->toLog());
         }
     }
 
-    protected function getLoggers($event)
+    /**
+     * Get loggers from an event
+     *
+     * @param FilterServiceEvent $event An event
+     * @return array
+     */
+    protected function getLoggers(FilterServiceEvent $event)
     {
         return $event->getService()->getLoggers();
     }

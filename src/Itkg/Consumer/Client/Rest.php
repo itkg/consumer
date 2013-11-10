@@ -13,15 +13,40 @@ use Itkg\Consumer\Request;
  */
 class Rest extends BaseClient implements ClientInterface
 {
+    /**
+     * Response values
+     *
+     * @var mixed
+     */
     protected $response;
+    /**
+     * Request object
+     *
+     * @var Request
+     */
     protected $request;
+    /**
+     * List of options
+     *
+     * @var array
+     */
     protected $options;
 
+    /**
+     * Constructor
+     *
+     * @param array $options List of options
+     */
     public function __construct(array $options = array())
     {
         $this->options = $options;
     }
 
+    /**
+     * Init client with request
+     *
+     * @param Request $request A request object
+     */
     public function init(Request $request)
     {
         $this->request = $request;
@@ -32,45 +57,48 @@ class Rest extends BaseClient implements ClientInterface
         );
     }
 
+    /**
+     * Call Rest
+     */
     public function call()
     {
-        if($this->request->getMethod()) {
+        if ($this->request->getMethod()) {
             $httpMethod = strtoupper($this->request->getMethod());
-        }else {
+        } else {
             $httpMethod = 'GET';
         }
         $uri = $this->request->getUri();
         $datas = $this->request->create();
         $headers = $this->request->getHeaders();
 
-        switch($httpMethod) {
-            case 'GET':
-                $uri = $this->makeUrl($uri, $datas);
-
-                $request = $this->get($uri, $headers);
-            break;
+        switch ($httpMethod) {
             case 'POST':
                 $request = $this->post($uri, $headers, $datas);
-            break;
+                break;
             case 'PUT':
 
                 $request = $this->put($uri, $headers, $datas);
-            break;
+                break;
             case 'DELETE':
 
                 $request = $this->delete($uri, $headers, $datas);
-            break;
+                break;
+            case 'GET':
+            default:
+                $uri = $this->makeUrl($uri, $datas);
+                $request = $this->get($uri, $headers);
+                break;
         }
 
-        if(isset($headers['login']) && isset($headers['password'])) {
+        if (isset($headers['login']) && isset($headers['password'])) {
             $request->setAuth(
                 $headers['login'],
                 $headers['password']
             );
         }
 
-        if(isset($headers['cookies']) && is_array($headers['cookies'])) {
-            foreach($headers['cookies'] as $key => $value) {
+        if (isset($headers['cookies']) && is_array($headers['cookies'])) {
+            foreach ($headers['cookies'] as $key => $value) {
                 $request->addCookie($key, $value);
             }
         }
@@ -81,56 +109,60 @@ class Rest extends BaseClient implements ClientInterface
 
     /**
      * Construct an uri with parameters
-     * et les valeurs
+     * and values
      *
-     * @param string $url
-     * @param array $datas
+     * @param string $uri Request uri
+     * @param array $data List of data
      * @return string
      */
-    public function makeUrl($url, $datas)
+    public function makeUrl($uri, $data)
     {
-        $separator = '?';
-        $valueSeparator = '=';
         $index = 0;
-        if(is_array($datas) && !empty($datas)) {
-            if(preg_match('/\\?/', $url)) {
-                $index ++;
+        if (is_array($data) && !empty($data)) {
+            if (preg_match('/\\?/', $uri)) {
+                $index++;
             }
 
-            foreach($datas as $key => $value) {
-                if($key != '') {
+            foreach ($data as $key => $value) {
+                if ($key != '') {
                     $currentKeySeparator = substr($key, 0, 1);
-                    if(!in_array($currentKeySeparator, array('.' ,'/', '&', '?', '#'))) {
-                        if($index > 0) {
+                    if (!in_array($currentKeySeparator, array('.', '/', '&', '?', '#'))) {
+                        if ($index > 0) {
                             $separator = '&';
-                        }else {
+                        } else {
                             $separator = '?';
                         }
                         $index++;
-                    }else {
+                    } else {
                         $separator = '';
                     }
-                    $key = $separator.$key;
+                    $key = $separator . $key;
                 }
                 $currentValueSeparator = substr($value, 0, 1);
-                if(!in_array($currentValueSeparator, array('.', '/', '&', '?', '#'))) {
+                if (!in_array($currentValueSeparator, array('.', '/', '&', '?', '#'))) {
 
                     $valueSeparator = '=';
-                }else {
+                } else {
                     $valueSeparator = '';
                 }
 
-                $url .= $key.$valueSeparator.$value;
+                $uri .= $key . $valueSeparator . $value;
 
             }
         }
-        return $url;
+        return $uri;
     }
+
+    /**
+     * Getter response
+     *
+     * @return array|null
+     */
     public function getResponse()
     {
-        if($this->response) {
+        if ($this->response) {
             return array(
-                'body'   => $this->response->getBody(true),
+                'body' => $this->response->getBody(true),
                 'header' => $this->response->getRawHeaders()
             );
         }

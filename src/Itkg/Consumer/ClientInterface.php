@@ -19,9 +19,9 @@ interface ClientInterface
     public function init(Request $request);
 
     /**
-     * Get response object
+     * Get response values
      *
-     * @return Response
+     * @return array
      */
     public function getResponse();
 }

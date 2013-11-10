@@ -2,10 +2,10 @@
 
 namespace Itkg\Consumer\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
  * Class ItkgConsumerExtension
@@ -24,7 +24,7 @@ class ItkgConsumerExtension extends Extension
 
         $loader = new XmlFileLoader(
             $container,
-            new FileLocator(__DIR__.'/../../../../Resources/config')
+            new FileLocator(__DIR__ . '/../../../../Resources/config')
         );
 
         $loader->load('client.xml');
