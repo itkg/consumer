@@ -26,7 +26,6 @@ If you use composer, add ExtraFormBundle bundle as a dependency to the composer.
 If you use itkg/core DIC, you can do :
 
 ```php
-// app/AppKernel.php
 <?php
     // ...
     $core = new Itkg\Core('../../var/cache/itkg_cache.php', true);
