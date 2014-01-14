@@ -1,12 +1,13 @@
 Webservice consumer library
 ===========================
 
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/itkg/consumer/badges/quality-score.png?s=3b10bb253c61cc1d52897a81911334a8f42b25de)](https://scrutinizer-ci.com/g/itkg/consumer/)
+[![Code Coverage](https://scrutinizer-ci.com/g/itkg/consumer/badges/coverage.png?s=5f5724ea506f3d5493220cc807af0637f5fce749)](https://scrutinizer-ci.com/g/itkg/consumer/)
 
 ## features
 * Rest & Soap consumer library
-* Authentication providers : OAuth 1.0.a (PECL extension) & OAuth 2
 * Webservice caching
-* Logging & debugging
+* Logging
 
 ## Installation
 
@@ -22,28 +23,3 @@ If you use composer, add library as a dependency to the composer.json of your ap
     },
 
 ```
-
-If you use itkg/core DIC, you can do :
-
-```php
-<?php
-    // ...
-    $core = new Itkg\Core('../../var/cache/itkg_cache.php', true);
-
-    // Add extension
-    $core->registerExtension(new \Itkg\Consumer\DependencyInjection\ItkgConsumerExtension());
-    $core->load();
-
-```
-
-## Usage
-
-* Service
-
-* Request & Response
-
-* Caching
-
-* Authentication providers
-
-* Logging
