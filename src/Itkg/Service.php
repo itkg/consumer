@@ -26,22 +26,22 @@ abstract class Service
     protected $configuration;
 
     /**
-    * Paramètres utilisables au sein du service
-    *
-    * @var array
-    */
+     * Paramètres utilisables au sein du service
+     *
+     * @var array
+     */
     protected $parameters;
 
     /**
      * Début de l'appel en microsecondes
-     * 
+     *
      * @var string
      */
     protected $start;
-    
+
     /**
      * Fin de l'appel en microsecondes
-     * 
+     *
      * @var string
      */
     protected $end;
@@ -56,7 +56,7 @@ abstract class Service
 
     /**
      * Get la configuration du service
-     * 
+     *
      * @return Itkg\Service\Configuration
      */
     public function getConfiguration()
@@ -73,40 +73,40 @@ abstract class Service
     {
         $this->configuration = $configuration;
     }
-    
+
     /**
      * Getter start
-     * 
+     *
      * @return float
      */
     public function getStart()
     {
         return $this->start;
     }
-    
+
     /**
      * Setter start
-     * 
+     *
      * @param float $start
      */
     public function setStart($start)
     {
         $this->start = $start;
     }
-    
+
     /**
      * Getter end
-     * 
+     *
      * @return float
      */
     public function getEnd()
     {
         return $this->end;
     }
-    
+
     /**
      * Setter end
-     * 
+     *
      * @param float $end
      */
     public function setEnd($end)
@@ -116,7 +116,7 @@ abstract class Service
 
     /**
      * Retourne la durée de l'appel
-     * 
+     *
      * @param int $precision
      * @return float
      */
@@ -124,6 +124,7 @@ abstract class Service
     {
         return round(($this->end - $this->start), $precision);
     }
+
     /**
      * Appelle une méthode du service dynamiquement
      * Charge les modèles liées à la méthode
@@ -148,9 +149,9 @@ abstract class Service
         /**
          * Exception si le requestModel n'est pas défini
          */
-        if(!$requestModel || !is_object($requestModel)) {
+        if (!$requestModel || !is_object($requestModel)) {
             throw new Exception\NotFoundException('Le Request Model pour
-                la méthode '.$method.' n\'est pas défini');
+                la méthode ' . $method . ' n\'est pas défini');
         }
 
         /**
@@ -162,9 +163,9 @@ abstract class Service
          * Validation du modèle
          * Jette une exception si le modèle n'est pas valide
          */
-        if(!$requestModel->validate()){
+        if (!$requestModel->validate()) {
             throw new Exception\ValidationException($requestModel->getErrors(),
-                    'Erreur lors de la validation du request model');
+                'Erreur lors de la validation du request model');
         }
 
         /**
@@ -175,9 +176,9 @@ abstract class Service
         /**
          * Exception si le responseModel n'est pas défini
          */
-        if(!$responseModel) {
+        if (!$responseModel) {
             throw new Exception\NotFoundException('Le Response Model pour
-                la méthode '.$method.' n\'est pas défini');
+                la méthode ' . $method . ' n\'est pas défini');
         }
 
         /**
@@ -187,7 +188,7 @@ abstract class Service
 
         // Initialisation de l'appel
         $this->start = microtime(true);
-        
+
         /**
          * Récupération du nom de la classe du ResponseModel
          */
@@ -203,7 +204,7 @@ abstract class Service
          */
         try {
             $oResponse = $this->$method($requestModel, $responseModelClass, $mapping);
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
             $exception = $e;
             $this->logIncident($method, $exception, $aDatas);
         }
@@ -213,25 +214,25 @@ abstract class Service
         /**
          * Affichage du debug
          */
-        if($bDebug){
-            echo '<br/><br/><strong>========================= Appel methode '.$method. ' =========================</strong><br/>';
+        if ($bDebug) {
+            echo '<br/><br/><strong>========================= Appel methode ' . $method . ' =========================</strong><br/>';
             echo '<br/>------------------------------------------------ Paramètres ws ------------------------------------------------<br/>';
             $aParametres = $this->configuration->getParameters();
-            if(is_array($aParametres) && !empty($aParametres)){
-                foreach($aParametres as $key => $value){
-                     echo($key.' : '.$value.'<br/>');
+            if (is_array($aParametres) && !empty($aParametres)) {
+                foreach ($aParametres as $key => $value) {
+                    echo($key . ' : ' . $value . '<br/>');
                 }
             }
             echo '<br/>-------------------------------------------------- Données ws -------------------------------------------------<br/>';
-            if(is_array($aDatas) && !empty($aDatas)){
-                foreach($aDatas as $key => $value){
-                     echo($key.' : '.$value.'<br/>');
+            if (is_array($aDatas) && !empty($aDatas)) {
+                foreach ($aDatas as $key => $value) {
+                    echo($key . ' : ' . $value . '<br/>');
                 }
             }
             echo '<br/>------------------------------------------------- Trame appel -------------------------------------------------<br/>';
-            echo(htmlentities($this->client->__getLastRequest()).'<br/>');
+            echo(htmlentities($this->client->__getLastRequest()) . '<br/>');
             echo '<br/>------------------------------------------------ Trame reponse ------------------------------------------------<br/>';
-            echo(htmlentities($this->client->__getLastResponse()).'<br/>');
+            echo(htmlentities($this->client->__getLastResponse()) . '<br/>');
             echo '<br/>------------------------------------------------ Reponse model ------------------------------------------------<br/>';
             echo '<pre>';
             var_dump($oResponse);
@@ -272,8 +273,13 @@ abstract class Service
      * @param string $method : la méthode appelée par call
      * @return mixed $oResponse
      */
-    public function postCall($oResponse, $oRequestModel = null, \Exception $exception = null, array $aDatas = array(), $method = '')
-    {
+    public function postCall(
+        $oResponse,
+        $oRequestModel = null,
+        \Exception $exception = null,
+        array $aDatas = array(),
+        $method = ''
+    ) {
         $paramsLogs = array();
         $reponseTrame = "";
         $requestTrame = "";
@@ -281,22 +287,23 @@ abstract class Service
         //trim des datas retournées par le call
         Helper\DataTransformer::trimData($oResponse);
 
-	//récupération des trames dans le cas d'un client SOAP
-        if ($this->configuration->getParameter("disableLogTrame")!="true" 
-                && (is_subclass_of($this->client,"SoapClient")
-                    || is_subclass_of($this->client,"Guzzle\Http\Client"))) {
-                $requestTrame = $this->client->__getLastRequest();
-                if (strlen($requestTrame)>0){
-                    $requestTrame  = str_replace(CHR(13).CHR(10),"",$requestTrame );
-                    $requestTrame = " - " . $requestTrame;
-                }
-                $reponseTrame = $this->client->__getLastResponse();
-                if (strlen($reponseTrame)>0){
-                    $reponseTrame  = str_replace(CHR(13).CHR(10),"",$reponseTrame );
-                    $reponseTrame = " - " . $reponseTrame;
-                }
+        //récupération des trames dans le cas d'un client SOAP
+        if ($this->configuration->getParameter("disableLogTrame") != "true"
+            && (is_subclass_of($this->client, "SoapClient")
+                || is_subclass_of($this->client, "Guzzle\Http\Client"))
+        ) {
+            $requestTrame = $this->client->__getLastRequest();
+            if (strlen($requestTrame) > 0) {
+                $requestTrame = str_replace(CHR(13) . CHR(10), "", $requestTrame);
+                $requestTrame = " - " . $requestTrame;
+            }
+            $reponseTrame = $this->client->__getLastResponse();
+            if (strlen($reponseTrame) > 0) {
+                $reponseTrame = str_replace(CHR(13) . CHR(10), "", $reponseTrame);
+                $reponseTrame = " - " . $reponseTrame;
+            }
         }
-   
+
         //on logue l'appel à la fin (postCall), pour avoir la trame d'appel (getLastRequest)
         $paramsLogs["appelRetour"] = "APPEL";
         $requestToLog = "";
@@ -307,19 +314,19 @@ abstract class Service
         $this->logger->write($requestToLog . $requestTrame);
 
         $paramsLogs["requestTime"] = $this->getDuration();
-        if(is_object($exception)) {
+        if (is_object($exception)) {
             $paramsLogs["appelRetour"] = "REPONSE KO";
             $sLogRequestModel = "";
-        if(is_object($oRequestModel) && method_exists($oRequestModel, "__toLog")){
-            $sLogRequestModel = ' - '.$oRequestModel->__toLog();
-        }
+            if (is_object($oRequestModel) && method_exists($oRequestModel, "__toLog")) {
+                $sLogRequestModel = ' - ' . $oRequestModel->__toLog();
+            }
             $this->logger->getFormatter()->setParameters($paramsLogs);
-            $this->logger->write('Erreur : '.$exception->getMessage(). $sLogRequestModel . $reponseTrame);
+            $this->logger->write('Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame);
             throw $exception;
-        }else {
+        } else {
             $paramsLogs["appelRetour"] = "REPONSE OK";
             $sLogResponseModel = "";
-            if(is_object($oResponse) && method_exists($oResponse, "__toLog")){
+            if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
                 $sLogResponseModel = $oResponse->__toLog();
             }
             $this->logger->getFormatter()->setParameters($paramsLogs);
@@ -331,17 +338,17 @@ abstract class Service
 
     /**
      * Getter parameters
-     * 
+     *
      * @return array
      */
     public function getParameters()
     {
-        if(!is_array($this->parameters)) {
+        if (!is_array($this->parameters)) {
             $this->parameters = array();
         }
         return $this->parameters;
     }
-    
+
     /**
      * Set parameters
      *
@@ -370,9 +377,9 @@ abstract class Service
     {
         $logger = $this->configuration->getMethodIncidentLogger($method);
 
-        if($logger) {
-            if($e instanceOf \Itkg\Soap\Exception\SoapException) {
-		$e->setDatas($aDatas);
+        if ($logger) {
+            if ($e instanceOf \Itkg\Soap\Exception\SoapException) {
+                $e->setDatas($aDatas);
                 $logger->write($e->getTrame());
             }
         }
@@ -384,7 +391,7 @@ abstract class Service
      *
      * @return boolean
      */
-    public  function canAccess()
+    public function canAccess()
     {
         return true;
     }

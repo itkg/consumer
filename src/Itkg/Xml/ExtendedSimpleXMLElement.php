@@ -4,9 +4,9 @@ namespace Itkg\Xml;
 
 /**
  * Extension for SimpleXMLElement
- * 
+ *
  * @author Fatma ARKAM <fatma.arkam@businessdecision.com>
- * 
+ *
  * @package \Itkg\Xml
  */
 class ExtendedSimpleXMLElement extends \SimpleXMLElement

@@ -33,7 +33,7 @@ abstract class Model
      * @var array
      */
     protected $datas;
-    
+
     /**
      * Retourne l'objet validator
      *
@@ -59,8 +59,9 @@ abstract class Model
      *
      * @return boolean
      */
-    public function validate() {
-        if(is_object($this->validator)) {
+    public function validate()
+    {
+        if (is_object($this->validator)) {
             $this->errors = $this->validator->validate($this);
         }
 
@@ -70,7 +71,9 @@ abstract class Model
     /**
      * Permet l'initialisation de certains attributs du model ou de certains traitements
      */
-    public function init() {}
+    public function init()
+    {
+    }
 
     /**
      * Utilisé pour les classMap SOAP
@@ -100,26 +103,31 @@ abstract class Model
      */
     public function injectDatas($aDatas = array())
     {
-        if(!is_array($aDatas)) {
+        if (!is_array($aDatas)) {
             $aDatas = array();
         }
         $this->datas = $aDatas;
 
         \Itkg\Helper\DataTransformer::arrayIntoObject($this, $aDatas, true);
     }
+
     /**
      * Renvoi l'objet sous forme XML (pour modéliser une request soap par exemple)
      *
      * @return string
      */
-    public function __toXML() {}
+    public function __toXML()
+    {
+    }
 
     /**
      * Renvoi l'objet sous forme de chaines de caractères (utilisable pour logguer l'objet)
      *
      * @return mixed
      */
-    public function __toLog() {}
+    public function __toLog()
+    {
+    }
 
     /**
      * Formate l'objet courant sous forme de request (Utilisé pour SOAP ou REST)
@@ -135,7 +143,7 @@ abstract class Model
     /**
      * Retourne l'objet sous forme de tableau
      * en supprimant les éléments inutiles
-     *  
+     *
      * @return array
      */
     public function __toArray()
@@ -144,7 +152,7 @@ abstract class Model
         unset($values['datas']);
         unset($values['errors']);
         unset($values['validator']);
-        
+
         return $values;
 
     }
@@ -170,7 +178,7 @@ abstract class Model
         $method = 'set' . ucfirst($name);
         if (method_exists($this, $method)) {
             $this->$method($value);
-        }else {
+        } else {
             $this->$name = $value;
         }
     }
@@ -185,17 +193,18 @@ abstract class Model
     {
         return $this->$name;
     }
-    
+
     /**
-     * méthode magique appelée automagiquement 
+     * méthode magique appelée automagiquement
      * lors d'un appel à empty() sur un attribut protégé
      * Cela afin de pouvoir tester si un attribut est empty sans le stocker
      * dans une variable
-     * 
+     *
      * @param string $name
      * @return boolean
      */
-    public function __isset($name){
+    public function __isset($name)
+    {
         return isset($this->$name);
-    } 
+    }
 }

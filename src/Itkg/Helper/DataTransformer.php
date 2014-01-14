@@ -12,7 +12,8 @@ namespace Itkg\Helper;
  * @abstract
  * @package \Itkg\Helper
  */
-class DataTransformer {
+class DataTransformer
+{
 
     /**
      * converti un objet simpleXML en tableau
@@ -21,19 +22,22 @@ class DataTransformer {
      * @return array
      * @param array $arrayTag
      */
-    public static function simplexml2array($xml, $arrayTag = array()) {
+    public static function simplexml2array($xml, $arrayTag = array())
+    {
         if (is_object($xml) && get_class($xml) == 'SimpleXMLElement') {
             $attributes = $xml->attributes();
             foreach ($attributes as $k => $v) {
-                if ($v)
-                    $a[$k] = (string) $v;
+                if ($v) {
+                    $a[$k] = (string)$v;
+                }
             }
             $x = $xml;
             $xml = get_object_vars($xml);
         }
         if (is_array($xml)) {
-            if (count($xml) == 0)
-                return (string) $x; // for CDATA
+            if (count($xml) == 0) {
+                return (string)$x;
+            } // for CDATA
             foreach ($xml as $key => $value) {
                 if (in_array($key, $arrayTag) && count($value) == 1) {
                     $varArray = array();
@@ -44,7 +48,7 @@ class DataTransformer {
                     $r[$key] = self::simplexml2array($value, $arrayTag);
                 }
             }
-            if (isset($a) && count($a) > 0) {    // Attributes
+            if (isset($a) && count($a) > 0) { // Attributes
                 //$r['@attributes'] = $a;
                 foreach ($a as $k => $v) {
                     $r[$k] = $v;
@@ -52,7 +56,7 @@ class DataTransformer {
             }
             return $r;
         }
-        return (string) $xml;
+        return (string)$xml;
     }
 
     /**
@@ -66,7 +70,8 @@ class DataTransformer {
      * @param array $arrayTag
      * @return object
      */
-    public static function stringxmlToObject($stringXml, $tagName, $mapping = array(), $arrayTag = array()) {
+    public static function stringxmlToObject($stringXml, $tagName, $mapping = array(), $arrayTag = array())
+    {
 
         $xml = simplexml_load_string($stringXml);
         $object = self::simplexmlToObject($xml, $tagName, $mapping, $arrayTag);
@@ -89,7 +94,8 @@ class DataTransformer {
      * @param array $arrayTag
      * @return object|string
      */
-    public static function simplexmlToObject($xml, $tagName, $mapping = array(), $arrayTag = array()) {
+    public static function simplexmlToObject($xml, $tagName, $mapping = array(), $arrayTag = array())
+    {
         // création de la classe en fct du mapping sinon retour de la valeur
         if (isset($mapping[$tagName])) {
             try {
@@ -100,7 +106,7 @@ class DataTransformer {
                 return null; // ne retourne pas d'objet simpleXml
             }
         } else {
-             
+
             //return $xml; //retourne des objets simpleXML
             return null; // ne retourne pas d'objet simpleXml
         }
@@ -111,42 +117,58 @@ class DataTransformer {
                 // cas @attributes
                 if ($varName == '@attributes') {
                     foreach ($varValue as $varNameTmp => $varValueTmp) {
-                        $object->$varNameTmp = (string) $varValueTmp;
+                        $object->$varNameTmp = (string)$varValueTmp;
                     }
                     // cas objet vide
-                } else if (is_object($varValue) && is_null((string) $varValue)) {
-                    $object->$varName = null;
-                    // cas objet non vide
-                } else if (is_object($varValue) && !empty($varValue)) {
-                    $aVarsTmp = get_object_vars($varValue);
-                    // cas objet non vide avec attribut non null
-                    if (count($aVarsTmp)) {
-                        // cas on force la mise sous forme de tableau à 1 élement
-                        if (in_array($varName, $arrayTag)) {
-                            $varArray = array();
-                            $varArray[0] = self::simplexmlToObject($varValue, $varName, $mapping, $arrayTag);
-                            $object->$varName = $varArray;
-                            // objet
-                        } else {
-                            
-                            $object->$varName = self::simplexmlToObject($varValue, $varName, $mapping, $arrayTag);
-                        }
-                        // cas objet non vide avec attribut null
-                    } else {
-                        $object->$varName = null;
-                    }
-                    // cas tableau
-                } else if (is_array($varValue)) {
-                    if (count($varValue)) {
-                        $varArray = array();
-                        foreach ($varValue as $varNameTmp => $varValueTmp) {
-                            $varArray[] = self::simplexmlToObject($varValueTmp, $varName, $mapping, $arrayTag);
-                        }
-                        $object->$varName = $varArray;
-                    }
-                    // cas type simple
                 } else {
-                    $object->$varName = (string)$varValue;
+                    if (is_object($varValue) && is_null((string)$varValue)) {
+                        $object->$varName = null;
+                        // cas objet non vide
+                    } else {
+                        if (is_object($varValue) && !empty($varValue)) {
+                            $aVarsTmp = get_object_vars($varValue);
+                            // cas objet non vide avec attribut non null
+                            if (count($aVarsTmp)) {
+                                // cas on force la mise sous forme de tableau à 1 élement
+                                if (in_array($varName, $arrayTag)) {
+                                    $varArray = array();
+                                    $varArray[0] = self::simplexmlToObject($varValue, $varName, $mapping, $arrayTag);
+                                    $object->$varName = $varArray;
+                                    // objet
+                                } else {
+
+                                    $object->$varName = self::simplexmlToObject(
+                                        $varValue,
+                                        $varName,
+                                        $mapping,
+                                        $arrayTag
+                                    );
+                                }
+                                // cas objet non vide avec attribut null
+                            } else {
+                                $object->$varName = null;
+                            }
+                            // cas tableau
+                        } else {
+                            if (is_array($varValue)) {
+                                if (count($varValue)) {
+                                    $varArray = array();
+                                    foreach ($varValue as $varNameTmp => $varValueTmp) {
+                                        $varArray[] = self::simplexmlToObject(
+                                            $varValueTmp,
+                                            $varName,
+                                            $mapping,
+                                            $arrayTag
+                                        );
+                                    }
+                                    $object->$varName = $varArray;
+                                }
+                                // cas type simple
+                            } else {
+                                $object->$varName = (string)$varValue;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -159,7 +181,8 @@ class DataTransformer {
      * @param array $array
      * @return object
      */
-    public static function arrayToObject($array) {
+    public static function arrayToObject($array)
+    {
         $object = new \stdClass();
 
         foreach ($array as $key => $value) {
@@ -181,7 +204,8 @@ class DataTransformer {
      * @param array $array
      * @return object
      */
-    public static function arrayIntoObject($object, array $array = array(), $bUseMagicMethods = false) {
+    public static function arrayIntoObject($object, array $array = array(), $bUseMagicMethods = false)
+    {
         if (is_array($array)) {
             if (!$bUseMagicMethods) {
                 foreach ($array as $key => $value) {
@@ -209,7 +233,8 @@ class DataTransformer {
      * @param object|array|string $data
      * @return object|array|string
      */
-    public static function trimData($data) {
+    public static function trimData($data)
+    {
         if (is_object($data)) {
             $aVars = get_object_vars($data);
             if (count($aVars)) {
@@ -217,15 +242,17 @@ class DataTransformer {
                     $data->$varName = self::trimData($varValue);
                 }
             }
-        } else if (is_array($data)) {
-            if (count($data)) {
-                foreach ($data as $varName => $varValue) {
-                    $data[$varName] = self::trimData($varValue);
-                }
-            }
         } else {
-            if (is_string($data)) {
-                $data = trim($data);
+            if (is_array($data)) {
+                if (count($data)) {
+                    foreach ($data as $varName => $varValue) {
+                        $data[$varName] = self::trimData($varValue);
+                    }
+                }
+            } else {
+                if (is_string($data)) {
+                    $data = trim($data);
+                }
             }
         }
         return $data;

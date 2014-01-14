@@ -17,11 +17,11 @@ class Client extends Ldap
 {
     /**
      * Retrouve un compte dans l'annuaire
-     * 
+     *
      * @param string $method La méthode a appeler
      * @param string $request Le nom du compte à retrouver
      * @param array $attributes Les attributs à récupérer
-     * @param 
+     * @param
      * @return mixed
      */
     public function call($method, $request, $attributes = array())
@@ -29,7 +29,7 @@ class Client extends Ldap
         // a terminer
         $this->connect();
         $account = $this->$method($request, $attributes);
-        
+
         return $account;
     }
 }

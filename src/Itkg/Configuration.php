@@ -9,48 +9,48 @@ use Itkg\Log\Factory as LogFactory;
  *
  * Cette classe permet de définir les bases de configuration
  * utilisées par les différents composants Itkg
- * 
+ *
  * @author Pascal DENIS <pascal.denis@businessdecision.com>
  */
-class Configuration 
+class Configuration
 {
     /**
      * Identifiant du batch
-     * 
+     *
      * @var string
      */
     protected $identifier;
-    
+
     /**
      * Loggers associés au batch
-     * 
+     *
      * @var array
      */
     protected $loggers;
-    
+
     /**
      * Notifiers associés au batch
-     * 
+     *
      * @var array
      */
     protected $notifiers;
-    
+
     /**
      * Liste des paramètres de configuration du batch
-     * 
+     *
      * @var array
      */
     protected $parameters;
-    
+
     /**
      * Permet l'initialisation de la configuration
      */
-    public function init() 
+    public function init()
     {
         // On initialise les loggers créés sous forme de tableau
         $this->initLoggers();
     }
-    
+
     /**
      * Get parameters
      *
@@ -58,7 +58,7 @@ class Configuration
      */
     public function getParameters()
     {
-        if(!is_array($this->parameters)) {
+        if (!is_array($this->parameters)) {
             $this->parameters = array();
         }
         return $this->parameters;
@@ -73,7 +73,7 @@ class Configuration
     {
         $this->parameters = $parameters;
     }
-    
+
     /**
      * Renvoi un paramètre par son nom ou false si le paramètre n'existe pas
      *
@@ -83,12 +83,12 @@ class Configuration
      */
     public function getParameter($key)
     {
-        if(isset($this->parameters[$key])) {
+        if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
         }
         return false;
     }
-    
+
     /**
      * Ajoute la liste de paramètres à la liste courante
      *
@@ -98,30 +98,30 @@ class Configuration
     {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
-    
+
     /**
      * Getter identifier
-     * 
+     *
      * @return string
      */
     public function getIdentifier()
     {
         return $this->identifier;
     }
-    
+
     /**
      * Setter identifier
-     * 
+     *
      * @param string $identifier
      */
     public function setIdentifier($identifier)
     {
         $this->identifier = $identifier;
     }
-    
+
     /**
      * Ajout d'un logger à la pile
-     * 
+     *
      * @param \Itkg\Log\Writer $logger
      */
     public function addLogger(\Itkg\Log\Writer $logger)
@@ -129,34 +129,34 @@ class Configuration
         $this->getLoggers();
         $this->loggers[] = $logger;
     }
-    
+
     /**
      * Formate la liste des loggers si ceux-ci sont sous forme de tableaux
      * et non d'objets
      */
     public function initLoggers()
     {
-        foreach($this->getLoggers() as $key => $logger) {
+        foreach ($this->getLoggers() as $key => $logger) {
             // Si logger n'est pas encore initialisé
-            if(is_array($logger)) {
+            if (is_array($logger)) {
                 // Si le logger existe
-                if(isset($logger['writer'])) {
+                if (isset($logger['writer'])) {
                     $writer = $logger['writer'];
-                }else {
+                } else {
                     $writer = '';
                 }
 
                 // Si un formatage est défini
-                if(isset($logger['formatter'])) {
+                if (isset($logger['formatter'])) {
                     $formatter = $logger['formatter'];
-                }else {
+                } else {
                     $formatter = '';
                 }
 
                 // S'il y a des parametres
-                if(isset($logger['parameters'])) {
+                if (isset($logger['parameters'])) {
                     $parameters = $logger['parameters'];
-                }else {
+                } else {
                     $parameters = array();
                 }
 
@@ -165,34 +165,34 @@ class Configuration
             }
         }
     }
-            
+
     /**
      * Getter loggers
-     * 
+     *
      * @return array
      */
     public function getLoggers()
     {
-        if(!is_array($this->loggers)) {
+        if (!is_array($this->loggers)) {
             $this->loggers = array();
         }
-        
+
         return $this->loggers;
     }
-    
+
     /**
      * Setter loggers
-     * 
+     *
      * @param array $loggers
      */
     public function setLoggers(array $loggers = array())
     {
         $this->loggers = $loggers;
     }
-    
+
     /**
      * Ajoute un notifier à la pile
-     * 
+     *
      * @param \Itkg\Log\Notifiable $notifier
      */
     public function addNotifier(\Itkg\Log\Notifiable $notifier)
@@ -200,24 +200,24 @@ class Configuration
         $this->getNotifiers();
         $this->notifiers[] = $notifier;
     }
-    
+
     /**
      * Getter notifiers
-     * 
+     *
      * @return array
      */
     public function getNotifiers()
     {
-        if(!is_array($this->notifiers)) {
+        if (!is_array($this->notifiers)) {
             $this->notifiers = array();
         }
-        
+
         return $this->notifiers;
     }
-    
+
     /**
      * Setter notifiers
-     * 
+     *
      * @param array $notifiers
      */
     public function setNotifiers(array $notifiers = array())
