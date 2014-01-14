@@ -14,7 +14,7 @@ use Itkg\Mock\Monitoring\Test as MockTest;
  * @package \Itkg
  * 
  */
-class Test extends \PHPUnit_Framework_TestCase
+class TestTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Writer

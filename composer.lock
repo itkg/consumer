@@ -3,89 +3,8 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "cf5d71f82d7dd79da91a2a32b3fba01e",
+    "hash": "f0ae880fe358841d5450dfbecaea680a",
     "packages": [
-        {
-            "name": "fkooman/guzzle-bearer-auth-plugin",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/guzzle-bearer-auth-plugin.git",
-                "reference": "bc0c672a7dbc9e26808f70689c3921117dc88125"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/guzzle-bearer-auth-plugin/zipball/bc0c672a7dbc9e26808f70689c3921117dc88125",
-                "reference": "bc0c672a7dbc9e26808f70689c3921117dc88125",
-                "shasum": ""
-            },
-            "require": {
-                "guzzle/guzzle": ">=v3.7.0",
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\Guzzle\\Plugin\\BearerAuth": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Guzzle Bearer plugin",
-            "time": "2013-07-06 14:17:35"
-        },
-        {
-            "name": "fkooman/php-oauth-client",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fkooman/php-oauth-client.git",
-                "reference": "42fb5b8cc2c2c5f638446da778765b0417651b3f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fkooman/php-oauth-client/zipball/42fb5b8cc2c2c5f638446da778765b0417651b3f",
-                "reference": "42fb5b8cc2c2c5f638446da778765b0417651b3f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*",
-                "guzzle/guzzle": "3.7.*",
-                "monolog/monolog": "1.6.*",
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "sami/sami": "v1.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "fkooman\\OAuth\\Client": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "François Kooman",
-                    "email": "fkooman@tuxed.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP OAuth 2.0 Client",
-            "time": "2013-10-04 12:52:46"
-        },
         {
             "name": "guzzle/guzzle",
             "version": "v3.7.4",
@@ -179,118 +98,21 @@
             "time": "2013-10-02 20:47:00"
         },
         {
-            "name": "itkg/cache",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/itkg/cache.git",
-                "reference": "80d543672e0bcd6573a48e7a13fa07c8e91a2c89"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/itkg/cache/zipball/80d543672e0bcd6573a48e7a13fa07c8e91a2c89",
-                "reference": "80d543672e0bcd6573a48e7a13fa07c8e91a2c89",
-                "shasum": ""
-            },
-            "require": {
-                "itkg/core": "dev-master",
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Itkg\\Cache": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Interakting",
-                    "email": "itkg@interakting.com"
-                }
-            ],
-            "description": "Itkg cache library",
-            "homepage": "http://github.com/itkg/cache",
-            "keywords": [
-                "cache",
-                "interakting",
-                "itkg",
-                "library"
-            ],
-            "time": "2013-10-26 20:14:47"
-        },
-        {
-            "name": "itkg/core",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/itkg/core.git",
-                "reference": "ad71be73d3c2977d8925bc6026c940ab64c95c63"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/itkg/core/zipball/ad71be73d3c2977d8925bc6026c940ab64c95c63",
-                "reference": "ad71be73d3c2977d8925bc6026c940ab64c95c63",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/config": "v2.3.3",
-                "symfony/dependency-injection": "v2.3.3",
-                "symfony/yaml": "v2.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Itkg\\Core": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Interakting",
-                    "email": "itkg@interakting.com"
-                }
-            ],
-            "description": "Itkg core library",
-            "homepage": "http://github.com/itkg/core",
-            "keywords": [
-                "config",
-                "interkating",
-                "library"
-            ],
-            "time": "2013-10-26 20:33:36"
-        },
-        {
             "name": "itkg/log",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/log.git",
-                "reference": "12f9e7e1992088aee7d321466b7f53d8ab8c8a8f"
+                "reference": "9086f0b5e8f5127b9a2061c34a196c71030f5732"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/log/zipball/12f9e7e1992088aee7d321466b7f53d8ab8c8a8f",
-                "reference": "12f9e7e1992088aee7d321466b7f53d8ab8c8a8f",
+                "url": "https://api.github.com/repos/itkg/log/zipball/9086f0b5e8f5127b9a2061c34a196c71030f5732",
+                "reference": "9086f0b5e8f5127b9a2061c34a196c71030f5732",
                 "shasum": ""
             },
             "require": {
-                "itkg/core": "dev-master",
-                "php": ">=5.3.3",
-                "psr/log": "1.0.0"
+                "php": ">=5.3.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*"
@@ -319,225 +141,64 @@
                 "library",
                 "log"
             ],
-            "time": "2013-10-26 20:14:13"
+            "time": "2014-01-14 16:15:50"
         },
         {
-            "name": "monolog/monolog",
-            "version": "1.6.0",
+            "name": "solarium/solarium",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "f72392d0e6eb855118f5a84e89ac2d257c704abd"
+                "url": "https://github.com/basdenooijer/solarium.git",
+                "reference": "85c698c55f74cae05498aa916ecfe5224bd95e79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/f72392d0e6eb855118f5a84e89ac2d257c704abd",
-                "reference": "f72392d0e6eb855118f5a84e89ac2d257c704abd",
+                "url": "https://api.github.com/repos/basdenooijer/solarium/zipball/85c698c55f74cae05498aa916ecfe5224bd95e79",
+                "reference": "85c698c55f74cae05498aa916ecfe5224bd95e79",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0",
-                "psr/log": "~1.0"
-            },
-            "require-dev": {
-                "doctrine/couchdb": "dev-master",
-                "mlehner/gelf-php": "1.0.*",
-                "raven/raven": "0.5.*"
-            },
-            "suggest": {
-                "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
-                "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-                "ext-mongo": "Allow sending log messages to a MongoDB server",
-                "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
-                "raven/raven": "Allow sending log messages to a Sentry server"
+                "php": ">=5.3.2",
+                "symfony/event-dispatcher": ">=2.1.0,<2.3-dev"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.6.x-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
-                    "Monolog": "src/"
+                    "Solarium": "library/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "NewBSD"
             ],
             "authors": [
                 {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be",
-                    "role": "Developer"
+                    "name": "See GitHub contributors",
+                    "homepage": "https://github.com/basdenooijer/solarium/contributors"
                 }
             ],
-            "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
-            "homepage": "http://github.com/Seldaek/monolog",
+            "description": "PHP Solr client",
+            "homepage": "http://www.solarium-project.org",
             "keywords": [
-                "log",
-                "logging",
-                "psr-3"
+                "php",
+                "search",
+                "solr"
             ],
-            "time": "2013-07-28 22:38:30"
-        },
-        {
-            "name": "psr/log",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "time": "2012-12-21 11:40:51"
-        },
-        {
-            "name": "symfony/config",
-            "version": "v2.3.3",
-            "target-dir": "Symfony/Component/Config",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Config.git",
-                "reference": "65a927c15ca5a911ba2fa277a5457fa8129505b0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/65a927c15ca5a911ba2fa277a5457fa8129505b0",
-                "reference": "65a927c15ca5a911ba2fa277a5457fa8129505b0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/filesystem": "~2.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Config\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Config Component",
-            "homepage": "http://symfony.com",
-            "time": "2013-08-06 05:49:23"
-        },
-        {
-            "name": "symfony/dependency-injection",
-            "version": "v2.3.3",
-            "target-dir": "Symfony/Component/DependencyInjection",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "3678aa969e5bfeb8515a1f3047c63e8104723f5c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/3678aa969e5bfeb8515a1f3047c63e8104723f5c",
-                "reference": "3678aa969e5bfeb8515a1f3047c63e8104723f5c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "symfony/config": "~2.2",
-                "symfony/yaml": "~2.0"
-            },
-            "suggest": {
-                "symfony/config": "",
-                "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them",
-                "symfony/yaml": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\DependencyInjection\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony DependencyInjection Component",
-            "homepage": "http://symfony.com",
-            "time": "2013-07-25 17:13:25"
+            "time": "2013-04-11 07:26:16"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.3.6",
+            "version": "v2.2.11",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "7fc72a7a346a1887d3968cc1ce5642a15cd182e9"
+                "reference": "131423f38d4df06f8652f45548b79f18102ccbc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/7fc72a7a346a1887d3968cc1ce5642a15cd182e9",
-                "reference": "7fc72a7a346a1887d3968cc1ce5642a15cd182e9",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/131423f38d4df06f8652f45548b79f18102ccbc7",
+                "reference": "131423f38d4df06f8652f45548b79f18102ccbc7",
                 "shasum": ""
             },
             "require": {
@@ -547,13 +208,13 @@
                 "symfony/dependency-injection": "~2.0"
             },
             "suggest": {
-                "symfony/dependency-injection": "",
-                "symfony/http-kernel": ""
+                "symfony/dependency-injection": "2.2.*",
+                "symfony/http-kernel": "2.2.*"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.2-dev"
                 }
             },
             "autoload": {
@@ -577,101 +238,93 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2013-09-19 09:45:20"
+            "time": "2013-11-30 09:35:04"
         },
         {
-            "name": "symfony/filesystem",
-            "version": "v2.3.6",
-            "target-dir": "Symfony/Component/Filesystem",
+            "name": "zendframework/zend-ldap",
+            "version": "2.2.0",
+            "target-dir": "Zend/Ldap",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "2b8995042086c5552c94d33b5553c492e9cfc00e"
+                "url": "https://github.com/zendframework/Component_ZendLdap.git",
+                "reference": "d3b4bf796563555cb0d7e6ca2f701d60cd663409"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/2b8995042086c5552c94d33b5553c492e9cfc00e",
-                "reference": "2b8995042086c5552c94d33b5553c492e9cfc00e",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendLdap/zipball/d3b4bf796563555cb0d7e6ca2f701d60cd663409",
+                "reference": "d3b4bf796563555cb0d7e6ca2f701d60cd663409",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-stdlib": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev",
+                    "dev-develop": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Ldap\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "provides support for LDAP operations including but not limited to binding, searching and modifying entries in an LDAP directory",
+            "keywords": [
+                "ldap",
+                "zf2"
+            ],
+            "time": "2013-05-01 21:53:22"
+        },
+        {
+            "name": "zendframework/zend-stdlib",
+            "version": "2.2.0",
+            "target-dir": "Zend/Stdlib",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendStdlib.git",
+                "reference": "9dfa9f225ff62c3cb752fa5b07399d921856ee8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/9dfa9f225ff62c3cb752fa5b07399d921856ee8a",
+                "reference": "9dfa9f225ff62c3cb752fa5b07399d921856ee8a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Filesystem\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Filesystem Component",
-            "homepage": "http://symfony.com",
-            "time": "2013-09-19 09:45:20"
-        },
-        {
-            "name": "symfony/yaml",
-            "version": "v2.3.3",
-            "target-dir": "Symfony/Component/Yaml",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Yaml.git",
-                "reference": "3837ccd0830ef44ed5c5844403bf6f69f7998758"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/3837ccd0830ef44ed5c5844403bf6f69f7998758",
-                "reference": "3837ccd0830ef44ed5c5844403bf6f69f7998758",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
+            "suggest": {
+                "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+                "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.2-dev",
+                    "dev-develop": "2.3-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "Symfony\\Component\\Yaml\\": ""
+                    "Zend\\Stdlib\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-3-Clause"
             ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                }
+            "keywords": [
+                "stdlib",
+                "zf2"
             ],
-            "description": "Symfony Yaml Component",
-            "homepage": "http://symfony.com",
-            "time": "2013-07-21 12:12:18"
+            "time": "2013-05-09 18:00:17"
         }
     ],
     "packages-dev": [
@@ -1041,6 +694,53 @@
                 "xunit"
             ],
             "time": "2013-01-13 10:24:48"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "v2.4.1",
+            "target-dir": "Symfony/Component/Yaml",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Yaml.git",
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4e1a237fc48145fae114b96458d799746ad89aa0",
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Yaml\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-12-28 08:12:03"
         }
     ],
     "aliases": [
@@ -1048,11 +748,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fkooman/guzzle-bearer-auth-plugin": 20,
-        "fkooman/php-oauth-client": 20,
-        "itkg/core": 20,
-        "itkg/log": 20,
-        "itkg/cache": 20
+        "itkg/log": 20
     },
     "platform": {
         "php": ">=5.3.3"

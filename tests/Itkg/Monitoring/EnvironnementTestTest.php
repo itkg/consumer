@@ -14,7 +14,7 @@ use Itkg\Monitoring\EnvironnementTest as MockTest;
  * @package \Itkg
  * 
  */
-class EnvironnementTest extends \PHPUnit_Framework_TestCase
+class EnvironnementTestTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Writer

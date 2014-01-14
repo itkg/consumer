@@ -14,7 +14,7 @@ use Itkg\Monitoring\FilePermissionTest as MockTest;
  * @package \Itkg
  * 
  */
-class FilePermissionTest extends \PHPUnit_Framework_TestCase
+class FilePermissionTestTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Writer
