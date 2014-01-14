@@ -17,15 +17,13 @@
     "require": {
         "php": ">=5.3.3",
         "guzzle/guzzle": "v3.7.4",
-        "fkooman/guzzle-bearer-auth-plugin": "dev-master",
-        "fkooman/php-oauth-client": "dev-master",
-        "itkg/core": "dev-master",
         "itkg/log": "dev-master",
-        "itkg/cache": "dev-master"
+        "solarium/solarium": "3.1.1",
+        "zendframework/zend-ldap": "2.2.0"
     },
     "autoload": {
         "psr-0": {
-            "Itkg\\Consumer": "src"
+            "Itkg": "src"
         }
     }
 }
