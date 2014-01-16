@@ -132,7 +132,7 @@ class Factory
         if (class_exists($sConfigurationClass)) {
             $oConfiguration = new $sConfigurationClass;
         }
-        if (!is_object($oConfiguration)) {
+        if (!$oConfiguration || !is_object($oConfiguration)) {
             throw new \Itkg\Exception\NotFoundException(
                 'La classe de configuration du service '
                 . $service . ' n\'existe pas car la classe ' . $sConfigurationClass . ' n\'est pas définie'
