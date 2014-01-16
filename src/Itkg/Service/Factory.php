@@ -58,7 +58,7 @@ class Factory
         // Vérification de l'accès au service
         if (!$bypassAccess && !$oService->canAccess()) { // Access denied
             throw new UnauthorizedException(
-                'Vous n\'avez pas le droit d\'accéder à ce service', 
+                'Vous n\'avez pas le droit d\'accéder à ce service',
                 UnauthorizedException::NON_ABONNE
             );
         }
