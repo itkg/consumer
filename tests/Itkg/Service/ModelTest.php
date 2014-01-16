@@ -104,6 +104,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testInjectDatas()
     {
+        $this->object->injectDatas(null);
+        $this->assertEquals(0, sizeof($this->object->datas));
+        $this->assertInternalType('array', $this->object->datas);
         $this->object->injectDatas();
         $this->assertEquals(0, sizeof($this->object->datas));
         $this->assertInternalType('array', $this->object->datas);
