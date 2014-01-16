@@ -257,5 +257,4 @@ class DataTransformer
         }
         return $data;
     }
-
 }

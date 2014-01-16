@@ -133,7 +133,7 @@ abstract class Configuration
      */
     public function getRequestModel($method)
     {
-        if (isset($this->models[$method]['request'])) {
+        if (isset($this->models[$method]['request']['model'])) {
             $model = new $this->models[$method]['request']['model'];
             if (isset($this->models[$method]['request']['validator'])) {
                 $model->setValidator(new $this->models[$method]['request']['validator']);
@@ -154,7 +154,7 @@ abstract class Configuration
      */
     public function getResponseModel($method)
     {
-        if (isset($this->models[$method]['response'])) {
+        if (isset($this->models[$method]['response']['model'])) {
             $model = new $this->models[$method]['response']['model'];
             if (isset($this->models[$method]['response']['validator'])) {
                 $model->setValidator(new $this->models[$method]['response']['validator']);

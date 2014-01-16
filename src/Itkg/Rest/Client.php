@@ -3,6 +3,7 @@
 namespace Itkg\Rest;
 
 use Guzzle\Http\Client as BaseClient;
+use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Plugin\History\HistoryPlugin;
 
 /**
@@ -59,57 +60,29 @@ class Client extends BaseClient
      *
      * @param string $method
      * @param string $uri
-     * @param array $datas (Les données à envoyer)
+     * @param array $data (Les données à envoyer)
      * Ces données seront ensuite traitées en fonction des cas pour correspondre
      * au format attendu par les différentes méthodes
      *
-     * @param type $options Les options possibles (headers, cookies)
+     * @param array|\Itkg\Rest\type $options Les options possibles (headers, cookies)
      * @return array('body', 'headers')
      */
-    public function call($method, $uri, $datas = array(), $options = array())
+    public function call($method, $uri, $data = array(), $options = array())
     {
         $request = null;
-        // @TODO : gestion des exceptions
         $this->addOptions($options);
         $headers = null;
         if ($this->options['headers']) {
             $headers = $this->options['headers'];
         }
-        switch ($method) {
-            case 'GET':
-                $uri = $this->makeUrl($uri, $datas);
-
-                $request = $this->get($uri, $headers);
-                break;
-            case 'POST':
-
-                $request = $this->post($uri, $headers, $datas);
-                break;
-            case 'PUT':
-
-                $request = $this->put($uri, $headers, $datas);
-                break;
-            case 'DELETE':
-
-                $request = $this->delete($uri, $headers, $datas);
-                break;
-        }
+        $request = $this->getRequest($method, $uri, $data, $headers);
         if ($request) {
             // Si login et password, on procède à l'authentification
-            if (isset($this->options['login']) && isset($this->options['password'])) {
-                $request->setAuth($this->options['login'], $this->options['password']);
-            }
-
-            // Si des cookies sont présents, on les ajoute à la requete
-            if (isset($this->options['cookies']) && is_array($this->options['cookies'])) {
-                foreach ($this->options['cookies'] as $key => $value) {
-                    $request->addCookie($key, $value);
-                }
-            }
+            $request = $this->hydrateRequest($request);
 
             // Envoi de la requete
             $response = $request->send();
-
+            $aResponseDatas = array();
             // Récupération du header
             $aResponseDatas['headers'] = $response->getMessage();
             // Récupération du body
@@ -125,20 +98,18 @@ class Client extends BaseClient
      * et les valeurs
      *
      * @param string $url
-     * @param array $datas
+     * @param array $data
      * @return string
      */
-    public function makeUrl($url, $datas)
+    public function makeUrl($url, $data)
     {
-        $separator = '?';
-        $valueSeparator = '=';
         $index = 0;
-        if (is_array($datas) && !empty($datas)) {
+        if (is_array($data) && !empty($data)) {
             if (preg_match('/\\?/', $url)) {
                 $index++;
             }
 
-            foreach ($datas as $key => $value) {
+            foreach ($data as $key => $value) {
                 if ($key != '') {
                     $currentKeySeparator = substr($key, 0, 1);
                     if (!in_array($currentKeySeparator, array('.', '/', '&', '?', '#'))) {
@@ -176,5 +147,60 @@ class Client extends BaseClient
     public function addOptions(array $options = array())
     {
         $this->options = array_merge($this->options, $options);
+    }
+
+    /**
+     * Get request for method & params
+     *
+     * @param string $method request method
+     * @param string $uri request uri
+     * @param array $data request params
+     * @param array $headers Request headers
+     * @return \Guzzle\Http\Message\RequestInterface|null
+     */
+    protected function getRequest($method = 'GET', $uri = '', $data = array(), $headers = array())
+    {
+        switch ($method) {
+            case 'GET':
+                $uri = $this->makeUrl($uri, $data);
+
+                return $this->get($uri, $headers);
+                break;
+            case 'POST':
+
+                return $this->post($uri, $headers, $data);
+                break;
+            case 'PUT':
+
+                return $this->put($uri, $headers, $data);
+                break;
+            case 'DELETE':
+
+                return $this->delete($uri, $headers, $data);
+                break;
+        }
+        return null;
+    }
+
+    /**
+     * Hydrate request with client options
+     * 
+     * @param RequestInterface $request
+     * @return RequestInterface
+     */
+    protected function hydrateRequest(RequestInterface $request)
+    {
+        if (isset($this->options['login']) && isset($this->options['password'])) {
+            $request->setAuth($this->options['login'], $this->options['password']);
+        }
+
+        // Si des cookies sont présents, on les ajoute à la requete
+        if (isset($this->options['cookies']) && is_array($this->options['cookies'])) {
+            foreach ($this->options['cookies'] as $key => $value) {
+                $request->addCookie($key, $value);
+            }
+        }
+
+        return $request;
     }
 }

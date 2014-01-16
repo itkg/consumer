@@ -306,7 +306,7 @@ class Monitoring
         if (is_array(self::$tests)) {
             foreach (self::$tests as $test) {
                 $report .= self::getReportForTest($test);
-                if(!$test->isWorking()) {
+                if (!$test->isWorking()) {
                     $working = false;
                 }
             }

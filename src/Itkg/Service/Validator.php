@@ -18,5 +18,5 @@ abstract class Validator
      * @abstract
      * @param \Itkg\Service\Model $model Le modèle à valider
      */
-    public abstract function validate(Model $model);
+    abstract public function validate(Model $model);
 }

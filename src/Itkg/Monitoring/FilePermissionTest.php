@@ -45,15 +45,22 @@ class FilePermissionTest extends Test
     public function execute()
     {
         if (file_exists($this->path)) {
-            $filePermissions = substr(sprintf('%o', fileperms($this->path)), -3);;
+            $filePermissions = substr(sprintf('%o', fileperms($this->path)), -3);
             if (!in_array($filePermissions, $this->permissions)) {
-                throw new \Exception('Le chemin : "' . $this->path . '" n\a pas les droits requis (Droits actuels : ' . $filePermissions . ')');
+                throw new \Exception(
+                    sprintf(
+                        'Le chemin : "%s" n\a pas les droits requis (Droits actuels : %s)',
+                        $this->path,
+                        $filePermissions
+                    )
+                );
             }
             return true;
-        } else {
-            throw new \Exception('Le chemin : "' . $this->path . '" n\existe pas');
         }
 
+        throw new \Exception(
+            sprintf('Le chemin : "%s" n\existe pas', $this->path)
+        );
     }
 
     /**

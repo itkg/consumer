@@ -69,6 +69,5 @@ abstract class Test
     /**
      * Execute le test
      */
-    public abstract function execute();
-
+    abstract public function execute();
 }

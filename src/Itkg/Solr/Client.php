@@ -18,9 +18,10 @@ class Client extends BaseClient
     /**
      * Constructeur
      *
-     * @param string $config
+     * @param array $options
+     * @internal param string $config
      */
-    public function __construct($options = null)
+    public function __construct($options = array())
     {
         parent::__construct($options);
     }
@@ -122,7 +123,7 @@ class Client extends BaseClient
      * Recherche de documents avec filtres
      *
      * @param array $solrQueryString les données de filtrage de la requete
-     * @param array $option Options de recherche possibles
+     * @internal param array $option Options de recherche possibles
      * @return array $resultset Résultat de la recherche
      */
     public function searchDocByFilters($solrQueryString)
@@ -132,6 +133,36 @@ class Client extends BaseClient
 
         $query->setQuery($solrQueryString);
 
+        // this hydrate with client options & executes the query and returns the result
+        $resultset = $this->select($this->hydrateQuery($query));
+
+        if ($this->options['response_format'] == 'phps') {
+            $return = unserialize($resultset->getResponse()->getBody());
+            $return['responseHeader']['status'] = $resultset->getResponse()->getStatusCode();
+            
+            return $return;
+        }
+
+        return $resultset->getResponse()->getBody();
+    }
+
+    /**
+     * Ajoute des options à celles déja existantes
+     *
+     * @param array $options
+     */
+    public function addOptions(array $options = array())
+    {
+        $this->options = array_merge($this->options, $options);
+    }
+
+    /**
+     * Hydrate query with client options
+     *
+     * @param $query
+     */
+    protected function hydrateQuery($query)
+    {
         if (isset($this->options['start']) && $this->options['start'] != '') {
             $query->setStart($this->options['start']);
         }
@@ -162,28 +193,6 @@ class Client extends BaseClient
             $query->setResponseWriter($this->options['response_format']);
         }
 
-        // this executes the query and returns the result
-        $resultset = $this->select($query);
-
-        if ($this->options['response_format'] == 'phps') {
-            $return = unserialize($resultset->getResponse()->getBody());
-            $return['responseHeader']['status'] = $resultset->getResponse()->getStatusCode();
-            
-            return $return;
-        }
-
-        return $resultset->getResponse()->getBody();
+        return $query;
     }
-
-
-    /**
-     * Ajoute des options à celles déja existantes
-     *
-     * @param array $options
-     */
-    public function addOptions(array $options = array())
-    {
-        $this->options = array_merge($this->options, $options);
-    }
-
 }

@@ -24,11 +24,15 @@ class Factory
      * @static
      * @param string $service La clé du service
      * @param array $parameters La liste des paramêtres
+     * @param bool $bypassAccess
+     * @throws \Itkg\Exception\NotFoundException
+     * @throws \Itkg\Exception\UnauthorizedException
      * @return \Itkg\Service
      */
     public static function getService($service, array $parameters = array(), $bypassAccess = false)
     {
-        self::instantiateService($service, $oService, $sServiceClass, $parameters);
+        $oService = self::instantiateService($service, $parameters);
+        $sServiceClass = get_class($oService);
 
         $oConfiguration = self::instantiateConfiguration($service, $sServiceClass);
         /**
@@ -41,8 +45,11 @@ class Factory
             // La définition des paramêtres est obligatoire et doit être initialisé
             // Cela évite les oublis ou les problèmes de nommage
             throw new \Itkg\Exception\NotFoundException(
-                'Aucun paramêtre n\'est défini pour le service '
-                . $service . '. Veuillez définir \Itkg::$config[\'' . $service . '\'][\'PARAMETERS\']'
+                sprintf(
+                    'Aucun paramêtre n\'est défini pour le service %s. Veuillez définir \Itkg::$config[\'%s\'][\'PARAMETERS\']',
+                    $service,
+                    $service
+                )
             );
         }
         // Surcharge de la configuration via la méthode override
@@ -67,7 +74,7 @@ class Factory
 
         return $oService;
     }
-    
+
     /**
      * instancie un service dont la clé est passée en paramêtre
      * Charge l'ensemble de la configuration liée au service
@@ -76,8 +83,10 @@ class Factory
      * @static
      * @param string $service La clé du service
      * @param array $parameters La liste des paramêtres
+     * @throws \Itkg\Exception\NotFoundException
+     * @return
      */
-    private static function instantiateService($service, &$oService, &$sServiceClass, array $parameters = array())
+    protected static function instantiateService($service, array $parameters = array())
     {
         // Instanciation du service par définition
         if (isset(\Itkg::$config[$service]['class'])) {
@@ -101,23 +110,29 @@ class Factory
         }
         if (!isset($oService) || !is_object($oService)) {
             throw new NotFoundException(
-                'Le service ' . $service . ' n\'existe pas car la classe '
-                . $sServiceClass . ' n\'est pas définie'
+                sprintf(
+                    'Le service %s n\'existe pas car la classe %s n\'est pas définie',
+                    $service,
+                    $sServiceClass
+                )
             );
         }
         $oService->setParameters($parameters);
-        
+
+        return $oService;
     }
-    
+
     /**
-     * instancie une configuration du service associé 
+     * instancie une configuration du service associé
      *
      * @codeCoverageIgnore
      * @static
      * @param string $service La clé du service
+     * @param string $sServiceClass La classe du service
+     * @throws \Itkg\Exception\NotFoundException
      * @return \Itkg\Configuration
      */
-    private static function instantiateConfiguration($service, $sServiceClass)
+    protected static function instantiateConfiguration($service, $sServiceClass)
     {
         $oConfiguration = null;
         /**
@@ -137,8 +152,11 @@ class Factory
         }
         if (!$oConfiguration || !is_object($oConfiguration)) {
             throw new \Itkg\Exception\NotFoundException(
-                'La classe de configuration du service '
-                . $service . ' n\'existe pas car la classe ' . $sConfigurationClass . ' n\'est pas définie'
+                sprintf(
+                    'La classe de configuration du service %s n\'existe pas car la classe %s n\'est pas définie',
+                    $service,
+                    $sConfigurationClass
+                )
             );
         }
         return $oConfiguration;

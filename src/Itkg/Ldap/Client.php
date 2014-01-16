@@ -33,4 +33,3 @@ class Client extends Ldap
         return $account;
     }
 }
-    

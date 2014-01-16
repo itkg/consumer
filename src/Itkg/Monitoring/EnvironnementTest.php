@@ -38,7 +38,12 @@ class EnvironnementTest extends Test
     public function execute()
     {
         if (!isset($_ENV[$this->key])) {
-            throw new \Exception('La variable d\'environnement ' . $this->key . ' n\'existe pas');
+            throw new \Exception(
+                sprintf(
+                    'La variable d\'environnement %s n\'existe pas',
+                    $this->key
+                )
+            );
         }
 
         return true;
