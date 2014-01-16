@@ -117,6 +117,7 @@ class Factory
      */
     private static function instantiateConfiguration($service, $sServiceClass)
     {
+        $oConfiguration = null;
         /**
          * Chargement de la configuration depuis la définition du service
          */
