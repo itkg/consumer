@@ -28,9 +28,9 @@ class Factory
      */
     public static function getService($service, array $parameters = array(), $bypassAccess = false)
     {
-        Factory::instantiateService($service, $oService, $sServiceClass, $parameters);
+        self::instantiateService($service, $oService, $sServiceClass, $parameters);
 
-        $oConfiguration = Factory::instantiateConfiguration($service, $sServiceClass);
+        $oConfiguration = self::instantiateConfiguration($service, $sServiceClass);
         /**
          * Chargement des paramètres de configuration du service
          * Utile pour les identifiants de WS ou d'autres parametres dépendant de l'environnement
@@ -41,8 +41,9 @@ class Factory
             // La définition des paramêtres est obligatoire et doit être initialisé
             // Cela évite les oublis ou les problèmes de nommage
             throw new \Itkg\Exception\NotFoundException(
-                                'Aucun paramêtre n\'est défini pour le service '
-                                . $service . '. Veuillez définir \Itkg::$config[\'' . $service . '\'][\'PARAMETERS\']');
+                'Aucun paramêtre n\'est défini pour le service '
+                . $service . '. Veuillez définir \Itkg::$config[\'' . $service . '\'][\'PARAMETERS\']'
+            );
         }
         // Surcharge de la configuration via la méthode override
         $oConfiguration->override($service);
@@ -57,7 +58,9 @@ class Factory
         // Vérification de l'accès au service
         if (!$bypassAccess && !$oService->canAccess()) { // Access denied
             throw new UnauthorizedException(
-                        'Vous n\'avez pas le droit d\'accéder à ce service', UnauthorizedException::NON_ABONNE);
+                'Vous n\'avez pas le droit d\'accéder à ce service', 
+                UnauthorizedException::NON_ABONNE
+            );
         }
         // Initialisation du service
         $oService->init();
@@ -97,8 +100,9 @@ class Factory
         }
         if (!isset($oService) || !is_object($oService)) {
             throw new NotFoundException(
-                        'Le service ' . $service . ' n\'existe pas car la classe '
-                        . $sServiceClass . ' n\'est pas définie');
+                'Le service ' . $service . ' n\'existe pas car la classe '
+                . $sServiceClass . ' n\'est pas définie'
+            );
         }
         $oService->setParameters($parameters);
         
@@ -117,21 +121,22 @@ class Factory
          * Chargement de la configuration depuis la définition du service
          */
         if (isset(\Itkg::$config[$service]['configuration'])) {
-            $oConfiguration = new \Itkg::$config[$service]['configuration'];
+            $sConfigurationClass = \Itkg::$config[$service]['configuration'];
         } else {
             /**
              * Chargement de la configuration en essayant d'instanciant la classe
              * NomService\Configuration
              */
             $sConfigurationClass = $sServiceClass . '\Configuration';
-            if (class_exists($sConfigurationClass)) {
-                $oConfiguration = new $sConfigurationClass;
-            }
+        }
+        if (class_exists($sConfigurationClass)) {
+            $oConfiguration = new $sConfigurationClass;
         }
         if (!is_object($oConfiguration)) {
             throw new \Itkg\Exception\NotFoundException(
-                            'La classe de configuration du service '
-                            . $service . ' n\'existe pas car la classe ' . $sConfigurationClass . ' n\'est pas définie');
+                'La classe de configuration du service '
+                . $service . ' n\'existe pas car la classe ' . $sConfigurationClass . ' n\'est pas définie'
+            );
         }
         return $oConfiguration;
     }
