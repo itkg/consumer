@@ -140,7 +140,53 @@ abstract class Service
     {
         $exception = null;
         $oResponse = null;
-
+        $requestModel = $this->initRequestModelForCall($method, $aDatas);
+        $responseModel = $this->initResponseModelForCall($method);
+        /**
+         * Appel preCall pour actions à réaliser avant l'execution de la méthode
+         */
+        $this->preCall($method, $requestModel, $aDatas);
+        // Initialisation de l'appel
+        $this->start = microtime(true);
+        /**
+         * Récupération du nom de la classe du ResponseModel
+         */
+        $responseModelClass = $this->configuration->getResponseModelClass($method);
+        /**
+         * Récupération du tableau de mapping
+         */
+        $mapping = $this->configuration->getMapping($method);
+        /**
+         * Appel de la méthode
+         */
+        try {
+            $oResponse = $this->$method($requestModel, $responseModelClass, $mapping);
+        } catch (\Exception $e) {
+            $exception = $e;
+            $this->logIncident($method, $exception, $aDatas);
+        }
+        // Fin de l'appel
+        $this->end = microtime(true);
+       
+        $this->displayDebugForCall($oResponse, $method, $aDatas, $bDebug);
+        /**
+         * Retourne le modèle réponse après l'execution de traitements
+         * post-appel
+         */
+        return $this->postCall($oResponse, $requestModel, $exception, $aDatas, $method);
+    }
+    
+    /**
+     * prépare le modèle de requête pour la méthode call
+     *
+     * @codeCoverageIgnore
+     * @param string $method Le nom de la méthode à appeler
+     * @param array $aDatas Les datas à transmettre
+     *
+     * @return mixed
+     */
+    private function initRequestModelForCall($method, $aDatas)
+    {
         /**
          * Création du modèle de requete
          */
@@ -150,10 +196,11 @@ abstract class Service
          * Exception si le requestModel n'est pas défini
          */
         if (!$requestModel || !is_object($requestModel)) {
-            throw new Exception\NotFoundException('Le Request Model pour
-                la méthode ' . $method . ' n\'est pas défini');
+            throw new Exception\NotFoundException(
+                'Le Request Model pour la méthode ' 
+                . $method . ' n\'est pas défini'
+            );
         }
-
         /**
          * Injection des paramètres dans le modèle
          */
@@ -164,53 +211,52 @@ abstract class Service
          * Jette une exception si le modèle n'est pas valide
          */
         if (!$requestModel->validate()) {
-            throw new Exception\ValidationException($requestModel->getErrors(),
-                'Erreur lors de la validation du request model');
+            throw new Exception\ValidationException(
+                $requestModel->getErrors(),
+                'Erreur lors de la validation du request model'
+            );
         }
-
+        return $requestModel;
+    }
+    
+    /**
+     * prépare le modèle de réponse pour la méthode call
+     *
+     * @codeCoverageIgnore
+     * @param string $method Le nom de la méthode à appeler
+     *
+     * @return mixed
+     */
+    private function initResponseModelForCall($method)
+    {
         /**
          * Création du modèle de reponse
          */
         $responseModel = $this->configuration->getResponseModel($method);
-
         /**
          * Exception si le responseModel n'est pas défini
          */
         if (!$responseModel) {
-            throw new Exception\NotFoundException('Le Response Model pour
-                la méthode ' . $method . ' n\'est pas défini');
+            throw new Exception\NotFoundException(
+                'Le Response Model pour la méthode ' 
+                . $method . ' n\'est pas défini'
+            );
         }
-
-        /**
-         * Appel preCall pour actions à réaliser avant l'execution de la méthode
-         */
-        $this->preCall($method, $requestModel, $aDatas);
-
-        // Initialisation de l'appel
-        $this->start = microtime(true);
-
-        /**
-         * Récupération du nom de la classe du ResponseModel
-         */
-        $responseModelClass = $this->configuration->getResponseModelClass($method);
-
-        /**
-         * Récupération du tableau de mapping
-         */
-        $mapping = $this->configuration->getMapping($method);
-
-        /**
-         * Appel de la méthode
-         */
-        try {
-            $oResponse = $this->$method($requestModel, $responseModelClass, $mapping);
-        } catch (\Exception $e) {
-            $exception = $e;
-            $this->logIncident($method, $exception, $aDatas);
-        }
-
-        // Fin de l'appel
-        $this->end = microtime(true);
+        return $responseModel;
+    }
+    /**
+     * affiche le debug de la méthode Call
+     *
+     * @codeCoverageIgnore
+     * @param object $oResponse La réponse à debuguer
+     * @param string $method Le nom de la méthode à appeler
+     * @param array $aDatas Les datas à transmettre
+     * @param boolean $bDebug Pour afficher le debug de l'appel
+     *
+     * @return mixed
+     */
+    private function displayDebugForCall($oResponse, $method, $aDatas, $bDebug)
+    {
         /**
          * Affichage du debug
          */
@@ -238,12 +284,6 @@ abstract class Service
             var_dump($oResponse);
             echo '</pre>';
         }
-
-        /**
-         * Retourne le modèle réponse après l'execution de traitements
-         * post-appel
-         */
-        return $this->postCall($oResponse, $requestModel, $exception, $aDatas, $method);
     }
 
     /**
@@ -287,6 +327,72 @@ abstract class Service
         //trim des datas retournées par le call
         Helper\DataTransformer::trimData($oResponse);
 
+       $this->getRequestAndResponseTrame($requestTrame, $reponseTrame);
+
+        //on logue l'appel à la fin (postCall), pour avoir la trame d'appel (getLastRequest)
+        $paramsLogs["appelRetour"] = "APPEL";
+        $requestToLog = "";
+        if ($oRequestModel) {
+            $requestToLog = $oRequestModel->__toLog();
+        }
+        $this->logger->getFormatter()->setParameters($paramsLogs);
+        $this->logger->write($requestToLog . $requestTrame);
+
+        $paramsLogs["requestTime"] = $this->getDuration();
+        if (is_object($exception)) {
+            $this->logReponseKO($oRequestModel, $exception, $reponseTrame, $paramsLogs);
+            throw $exception;
+        } else {
+            $this->logReponseOK($oResponse, $reponseTrame, $paramsLogs);
+        }
+
+        return $oResponse;
+    }
+
+    /**
+     * log la réponse OK
+     *
+     * @codeCoverageIgnore
+     * @param string $requestTrame La trame de requête SOAP
+     * @param string $reponseTrame La trame de réponse SOAP
+     */
+    private function logReponseOK($oResponse, $reponseTrame, &$paramsLogs)
+    {
+        $paramsLogs["appelRetour"] = "REPONSE OK";
+        $sLogResponseModel = "";
+        if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
+            $sLogResponseModel = $oResponse->__toLog();
+        }
+        $this->logger->getFormatter()->setParameters($paramsLogs);
+        $this->logger->write($sLogResponseModel . $reponseTrame);
+    }
+    /**
+     * log la réponse KO
+     *
+     * @codeCoverageIgnore
+     * @param string $requestTrame La trame de requête SOAP
+     * @param string $reponseTrame La trame de réponse SOAP
+     */
+    private function logReponseKO($oRequestModel, $exception, $reponseTrame, &$paramsLogs)
+    {
+        $paramsLogs["appelRetour"] = "REPONSE KO";
+        $sLogRequestModel = "";
+        if (is_object($oRequestModel) && method_exists($oRequestModel, "__toLog")) {
+            $sLogRequestModel = ' - ' . $oRequestModel->__toLog();
+        }
+        $this->logger->getFormatter()->setParameters($paramsLogs);
+        $this->logger->write('Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame);
+    }
+    
+    /**
+     * récupère la trame de réponse dans le cas d'un client SOAP'
+     *
+     * @codeCoverageIgnore
+     * @param string $requestTrame La trame de requête SOAP
+     * @param string $reponseTrame La trame de réponse SOAP
+     */
+    private function getRequestAndResponseTrame(&$requestTrame, &$reponseTrame)
+    {
         //récupération des trames dans le cas d'un client SOAP
         if ($this->configuration->getParameter("disableLogTrame") != "true"
             && (is_subclass_of($this->client, "SoapClient")
@@ -303,37 +409,6 @@ abstract class Service
                 $reponseTrame = " - " . $reponseTrame;
             }
         }
-
-        //on logue l'appel à la fin (postCall), pour avoir la trame d'appel (getLastRequest)
-        $paramsLogs["appelRetour"] = "APPEL";
-        $requestToLog = "";
-        if ($oRequestModel) {
-            $requestToLog = $oRequestModel->__toLog();
-        }
-        $this->logger->getFormatter()->setParameters($paramsLogs);
-        $this->logger->write($requestToLog . $requestTrame);
-
-        $paramsLogs["requestTime"] = $this->getDuration();
-        if (is_object($exception)) {
-            $paramsLogs["appelRetour"] = "REPONSE KO";
-            $sLogRequestModel = "";
-            if (is_object($oRequestModel) && method_exists($oRequestModel, "__toLog")) {
-                $sLogRequestModel = ' - ' . $oRequestModel->__toLog();
-            }
-            $this->logger->getFormatter()->setParameters($paramsLogs);
-            $this->logger->write('Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame);
-            throw $exception;
-        } else {
-            $paramsLogs["appelRetour"] = "REPONSE OK";
-            $sLogResponseModel = "";
-            if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
-                $sLogResponseModel = $oResponse->__toLog();
-            }
-            $this->logger->getFormatter()->setParameters($paramsLogs);
-            $this->logger->write($sLogResponseModel . $reponseTrame);
-        }
-
-        return $oResponse;
     }
 
     /**
