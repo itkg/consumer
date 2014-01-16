@@ -144,6 +144,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function test__toArray()
     {
+        $this->object = new Model;
         $result = $this->object->__toArray();
         $this->assertInternalType('array', $result);
         $this->assertNull($result['datas']);
