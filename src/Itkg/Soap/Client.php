@@ -79,7 +79,6 @@ class Client extends \SoapClient
             "features" => SOAP_SINGLE_ELEMENT_ARRAYS,
         );
 
-
         $this->options = array_merge($this->options, $options);
 
         // login et password htaccess/header sécurisé
@@ -198,12 +197,24 @@ class Client extends \SoapClient
         }
         if ($this->loginHeaderSecurity != '' && $this->passwordHeaderSecurity != '') {
 
-            $sHeader = '<wsse:Security ' . $sMust . ' xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-				<wsse:UsernameToken wsu:Id="UsernameToken-6868426" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-					<wsse:Username>' . $this->loginHeaderSecurity . '</wsse:Username>
-					<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">' . $this->passwordHeaderSecurity . '</wsse:Password>
-				</wsse:UsernameToken>
-			</wsse:Security>';
+            $sHeader = sprintf(
+                '<wsse:Security %s
+                    xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+				    <wsse:UsernameToken wsu:Id="UsernameToken-6868426"
+				        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                        <wsse:Username>%s</wsse:Username>
+                        <wsse:Password
+                            Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">
+                                %s
+                        </wsse:Password>
+				    </wsse:UsernameToken>
+			    </wsse:Security>',
+                $sMust,
+                $this->loginHeaderSecurity,
+                $this->passwordHeaderSecurity
+            );
+
+                ;
             if ($this->options['signature'] && $this->options['signature_ns']) {
                 $sHeader .= '<Signature xmlns="' . $this->options['signature_ns'] . '">' . $this->options['signature'] . '</Signature>';
             }
@@ -224,7 +235,12 @@ class Client extends \SoapClient
     {
         // Les timeout doivent être définis pour chaque client Soap
         if (!isset($this->options['timeout']) || empty($this->options['timeout'])) {
-            throw new \Itkg\Exception\NotFoundException('Paramêtre timeout non défini pour le WS ' . $method);
+            throw new \Itkg\Exception\NotFoundException(
+                sprintf(
+                    'Paramêtre timeout non défini pour le WS %s',
+                    $method
+                )
+            );
         }
     }
 

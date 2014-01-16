@@ -13,5 +13,4 @@ namespace Itkg\Exception;
  */
 class NotFoundException extends \Exception
 {
-
 }

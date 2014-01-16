@@ -18,5 +18,4 @@ class UnauthorizedException extends \Exception
     const NON_ABONNE = 0;
     const NON_INSCRIT = 1;
     const MAUVAIS_PROFIL = 2;
-
 }

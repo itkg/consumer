@@ -92,7 +92,7 @@ class Configuration
     /**
      * Ajoute la liste de paramètres à la liste courante
      *
-     * @param array $aParameters
+     * @param array $parameters
      */
     public function loadParameters(array $parameters = array())
     {
@@ -225,4 +225,3 @@ class Configuration
         $this->notifiers = $notifiers;
     }
 }
-

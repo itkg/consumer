@@ -13,7 +13,7 @@ use Solarium\Client as BaseClient;
  */
 class Client extends BaseClient
 {
-    protected $options_itkg = array();
+    protected $options = array();
 
     /**
      * Constructeur
@@ -43,7 +43,7 @@ class Client extends BaseClient
     {
         $response = null;
         $this->addOptions($options);
-
+        $aResponseDatas = array();
         switch ($method) {
             case 'ADD_DOCUMENT':
                 $response = $this->addDocIntoIndex($datas);
@@ -58,11 +58,7 @@ class Client extends BaseClient
                 break;
         }
 
-        if ($aResponseDatas) {
-            return $aResponseDatas;
-        }
-
-        return null;
+        return $aResponseDatas;
     }
 
 
@@ -136,16 +132,16 @@ class Client extends BaseClient
 
         $query->setQuery($solrQueryString);
 
-        if (isset($this->options_itkg['start']) && $this->options_itkg['start'] != '') {
-            $query->setStart($this->options_itkg['start']);
+        if (isset($this->options['start']) && $this->options['start'] != '') {
+            $query->setStart($this->options['start']);
         }
 
-        if (isset($this->options_itkg['rows']) && $this->options_itkg['rows'] != '') {
-            $query->setRows($this->options_itkg['rows']);
+        if (isset($this->options['rows']) && $this->options['rows'] != '') {
+            $query->setRows($this->options['rows']);
         }
 
-        if (isset($this->options_itkg['sort'])) {
-            $aSort = $this->options_itkg['sort'];
+        if (isset($this->options['sort'])) {
+            $aSort = $this->options['sort'];
         }
 
         if (is_array($aSort)) {
@@ -162,16 +158,17 @@ class Client extends BaseClient
             }
         }
 
-        if (isset($this->options_itkg['response_format']) && $this->options_itkg['response_format'] != '') {
-            $query->setResponseWriter($this->options_itkg['response_format']);
+        if (isset($this->options['response_format']) && $this->options['response_format'] != '') {
+            $query->setResponseWriter($this->options['response_format']);
         }
 
         // this executes the query and returns the result
         $resultset = $this->select($query);
 
-        if ($this->options_itkg['response_format'] == 'phps') {
+        if ($this->options['response_format'] == 'phps') {
             $return = unserialize($resultset->getResponse()->getBody());
             $return['responseHeader']['status'] = $resultset->getResponse()->getStatusCode();
+            
             return $return;
         }
 
@@ -186,7 +183,7 @@ class Client extends BaseClient
      */
     public function addOptions(array $options = array())
     {
-        $this->options_itkg = array_merge($this->options_itkg, $options);
+        $this->options = array_merge($this->options, $options);
     }
 
 }

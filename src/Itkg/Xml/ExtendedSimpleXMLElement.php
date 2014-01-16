@@ -11,12 +11,17 @@ namespace Itkg\Xml;
  */
 class ExtendedSimpleXMLElement extends \SimpleXMLElement
 {
-    public function addCData($cdata_text)
+    /**
+     * Add cdata section
+     * 
+     * @param $cdataText
+     */
+    public function addCData($cdataText)
     {
         $node = dom_import_simplexml($this);
         $no = $node->ownerDocument;
         $node->appendChild(
-            $no->createCDATASection($cdata_text)
+            $no->createCDATASection($cdataText)
         );
     }
 }

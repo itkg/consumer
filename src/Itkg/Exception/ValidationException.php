@@ -13,24 +13,44 @@ namespace Itkg\Exception;
  */
 class ValidationException extends \Exception
 {
+    /**
+     * Messages validation
+     *
+     * @var array
+     */
     protected $aMessages;
 
+    /**
+     * Constructor
+     * @param array $aMessages Messages validation
+     * @param null $message Main message
+     * @param int $code Exception code
+     * @param null $previous
+     */
     public function __construct($aMessages = array(), $message = null, $code = 0, $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->aMessages = $aMessages;
-
-        return $this;
     }
 
+    /**
+     * Get messages
+     *
+     * @return array
+     */
     public function getAllMessages()
     {
         return $this->aMessages;
     }
 
-
-    public function getParameterMessage($parameter)
+    /**
+     * Get specific message
+     *
+     * @param string $key key
+     * @return mixed
+     */
+    public function getParameterMessage($key)
     {
-        return $this->aMessages[$parameter];
+        return $this->aMessages[$key];
     }
 }

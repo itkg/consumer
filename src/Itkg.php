@@ -6,7 +6,7 @@
  *
  * @author Pascal DENIS pascal.denis@businessdecision.com
  */
-class Itkg 
+class Itkg
 {
     /**
      * Conteneur de paramêres
@@ -26,7 +26,7 @@ class Itkg
                 'file'      => 'Itkg\Log\Writer\FileWriter'
             ),
             'FORMATTERS' => array(
-                'simple' => 'Itkg\Log\Formatter\SimpleFormatter',  
+                'simple' => 'Itkg\Log\Formatter\SimpleFormatter',
                 'string' => 'Itkg\Log\Formatter\StringFormatter',
                 'xml'    => 'Itkg\Log\Formatter\XMLFormatter'
             ),
@@ -38,5 +38,5 @@ class Itkg
             'oauth'  => 'Itkg\Authentication\Provider\OAuth',
             'oauth2' => 'Itkg\Authentication\Provider\OAuth2'
         )
-    );    
+    );
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace Itkg\Service;
+use Itkg\Helper\DataTransformer;
 
 /**
  * Class abstraite représentant un model simple
@@ -17,7 +18,7 @@ abstract class Model
 {
     /**
      *
-     * @var Itkg\Validator
+     * @var \Itkg\Service\Validator
      */
     protected $validator;
 
@@ -37,7 +38,7 @@ abstract class Model
     /**
      * Retourne l'objet validator
      *
-     * @return Itkg\Service\Validator
+     * @return \Itkg\Service\Validator
      */
     public function getValidator()
     {
@@ -47,7 +48,7 @@ abstract class Model
     /**
      * Set un validator
      *
-     * @param Itkg\Service\Validator $validator
+     * @param \Itkg\Service\Validator $validator
      */
     public function setValidator(Validator $validator)
     {
@@ -108,7 +109,7 @@ abstract class Model
         }
         $this->datas = $aDatas;
 
-        \Itkg\Helper\DataTransformer::arrayIntoObject($this, $aDatas, true);
+        DataTransformer::arrayIntoObject($this, $aDatas, true);
     }
 
     /**

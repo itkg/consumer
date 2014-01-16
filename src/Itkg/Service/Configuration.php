@@ -217,7 +217,7 @@ abstract class Configuration
      * Si aucun logger n'est défini pour le service on récupère le logger par défaut
      *
      * @param string $method
-     * @return Itkg\Log\Writer
+     * @return \Itkg\Log\Writer
      */
     public function getLogger($method)
     {
@@ -307,7 +307,7 @@ abstract class Configuration
      * Si aucun logger n'est défini pour la méthode on ne renvoie rien
      *
      * @param string $method
-     * @return Itkg\Log\Writer
+     * @return \Itkg\Log\Writer
      */
     public function getMethodIncidentLogger($method)
     {

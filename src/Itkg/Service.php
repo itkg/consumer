@@ -21,7 +21,7 @@ abstract class Service
     /**
      * Configuration du service
      *
-     * @var Itkg\Service\Configuration
+     * @var \Itkg\Service\Configuration
      */
     protected $configuration;
 
@@ -57,7 +57,7 @@ abstract class Service
     /**
      * Get la configuration du service
      *
-     * @return Itkg\Service\Configuration
+     * @return \Itkg\Service\Configuration
      */
     public function getConfiguration()
     {
@@ -67,7 +67,7 @@ abstract class Service
     /**
      * Set la configuration du service
      *
-     * @param Itkg\Service\Configuration $configuration
+     * @param \Itkg\Service\Configuration $configuration
      */
     public function setConfiguration(ServiceConfiguration $configuration)
     {
