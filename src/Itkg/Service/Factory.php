@@ -72,6 +72,7 @@ class Factory
      * instancie un service dont la clé est passée en paramêtre
      * Charge l'ensemble de la configuration liée au service
      *
+     * @codeCoverageIgnore
      * @static
      * @param string $service La clé du service
      * @param array $parameters La liste des paramêtres
@@ -111,6 +112,7 @@ class Factory
     /**
      * instancie une configuration du service associé 
      *
+     * @codeCoverageIgnore
      * @static
      * @param string $service La clé du service
      * @return \Itkg\Configuration
