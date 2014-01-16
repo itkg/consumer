@@ -18,9 +18,4 @@ class Model extends BaseModel
 {
     protected $login;
     protected $password;
-    
-    public function validate()
-    {
-        return $this->validator->validate($this);
-    }
 }
