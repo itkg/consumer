@@ -147,9 +147,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->object = new Model;
         $result = $this->object->__toArray();
         $this->assertInternalType('array', $result);
-        $this->assertNull($result['datas']);
-        $this->assertNull($result['errors']);
-        $this->assertNull($result['validator']);
+        $this->assertArrayNotHasKey('datas', $result);
+        $this->assertArrayNotHasKey('errors', $result);
+        $this->assertArrayNotHasKey('validator', $result);
     }
 
     /**
