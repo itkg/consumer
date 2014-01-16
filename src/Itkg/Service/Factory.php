@@ -28,7 +28,7 @@ class Factory
      */
     public static function getService($service, array $parameters = array(), $bypassAccess = false)
     {
-        Factory::instantiateService($service, $oService, $sServiceClass, $parameters, $bypassAccess);
+        Factory::instantiateService($service, $oService, $sServiceClass, $parameters);
 
         $oConfiguration = Factory::instantiateConfiguration($service, $sServiceClass);
         /**
@@ -73,7 +73,7 @@ class Factory
      * @param string $service La clé du service
      * @param array $parameters La liste des paramêtres
      */
-    private static function instantiateService($service, &$oService, &$sServiceClass, array $parameters = array(), $bypassAccess = false)
+    private static function instantiateService($service, &$oService, &$sServiceClass, array $parameters = array())
     {
         // Instanciation du service par définition
         if (isset(\Itkg::$config[$service]['class'])) {
