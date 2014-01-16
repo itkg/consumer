@@ -30,7 +30,7 @@ class Factory
     {
         Factory::instantiateService($service, $oService, $sServiceClass, $parameters, $bypassAccess);
 
-        $oConfiguration = Factory::instantiateConfiguration($service);
+        $oConfiguration = Factory::instantiateConfiguration($service, $sServiceClass);
         /**
          * Chargement des paramètres de configuration du service
          * Utile pour les identifiants de WS ou d'autres parametres dépendant de l'environnement
@@ -108,7 +108,7 @@ class Factory
      * @param string $service La clé du service
      * @return \Itkg\Configuration
      */
-    private static function instantiateConfiguration($service)
+    private static function instantiateConfiguration($service, $sServiceClass)
     {
         /**
          * Chargement de la configuration depuis la définition du service

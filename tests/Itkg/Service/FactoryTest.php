@@ -86,7 +86,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             $this->object->getService($service);
             $this->fail('getService doit renvoyer une exception Itkg\Exception\NotFoundException');
         } catch(\Exception $e) {
-var_dump($e->getMessage());
             $this->assertEquals('Itkg\Exception\NotFoundException', get_class($e));
             $this->assertEquals($e->getMessage(), "La classe de configuration du service MY_MOCK_SERVICE n'existe pas car la classe \Configuration n'est pas définie");
         }
