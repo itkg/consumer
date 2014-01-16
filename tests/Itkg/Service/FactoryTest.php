@@ -53,6 +53,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetService()
     {
+        //cas du service null -----------------------------------
         $service = null;
         try {
             $this->object->getService($service);
@@ -61,6 +62,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
              $this->assertEquals($e->getMessage(), "Le service  n'existe pas car la classe \Service\ n'est pas définie");
              $this->assertEquals('Itkg\Exception\NotFoundException', get_class($e));
         }
+        //cas du service qui n'existe pas -----------------------------------
         $service = 'test';
         try {
             $this->object->getService($service);
@@ -69,23 +71,26 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 
              $this->assertEquals($e->getMessage(), "Le service test n'existe pas car la classe Test\Service\Test n'est pas définie");
              $this->assertEquals('Itkg\Exception\NotFoundException', get_class($e));
-        }       
+        }  
+        //cas OK -----------------------------------        
         $service = 'MY_MOCK_SERVICE';        
         try {
             $this->object->getService($service);
         } catch(\Exception $e) {
             $this->fail('getService ne doit pas renvoyer d\'exception');
         }
+        //cas de la config qui n'existe pas -----------------------------------
         $service = 'MY_MOCK_SERVICE';   
         \Itkg::$config['MY_MOCK_SERVICE']['configuration'] = null;         
         try {
             $this->object->getService($service);
             $this->fail('getService doit renvoyer une exception Itkg\Exception\NotFoundException');
         } catch(\Exception $e) {
-
+var_dump($e->getMessage());
             $this->assertEquals('Itkg\Exception\NotFoundException', get_class($e));
             $this->assertEquals($e->getMessage(), "La classe de configuration du service MY_MOCK_SERVICE n'existe pas car la classe \Configuration n'est pas définie");
         }
+        //cas des paramètres non définis -----------------------------------
         $service = 'MY_MOCK_SERVICE';   
         \Itkg::$config['MY_MOCK_SERVICE']['configuration'] = 'Itkg\Mock\Service\Configuration';
         \Itkg::$config['MY_MOCK_SERVICE']['PARAMETERS'] = null;         
