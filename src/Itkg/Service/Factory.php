@@ -40,8 +40,9 @@ class Factory
         } else {
             // La définition des paramêtres est obligatoire et doit être initialisé
             // Cela évite les oublis ou les problèmes de nommage
-            throw new \Itkg\Exception\NotFoundException('Aucun paramêtre n\'est défini pour le service ' 
-                . $service . '. Veuillez définir \Itkg::$config[\'' . $service . '\'][\'PARAMETERS\']');
+            throw new \Itkg\Exception\NotFoundException(
+                                'Aucun paramêtre n\'est défini pour le service '
+                                . $service . '. Veuillez définir \Itkg::$config[\'' . $service . '\'][\'PARAMETERS\']');
         }
         // Surcharge de la configuration via la méthode override
         $oConfiguration->override($service);
@@ -55,7 +56,8 @@ class Factory
 
         // Vérification de l'accès au service
         if (!$bypassAccess && !$oService->canAccess()) { // Access denied
-            throw new UnauthorizedException('Vous n\'avez pas le droit d\'accéder à ce service', UnauthorizedException::NON_ABONNE);
+            throw new UnauthorizedException(
+                        'Vous n\'avez pas le droit d\'accéder à ce service', UnauthorizedException::NON_ABONNE);
         }
         // Initialisation du service
         $oService->init();
@@ -94,8 +96,9 @@ class Factory
             }
         }
         if (!isset($oService) || !is_object($oService)) {
-            throw new NotFoundException('Le service ' . $service . ' n\'existe pas car la classe ' 
-            . $sServiceClass . ' n\'est pas définie');
+            throw new NotFoundException(
+                        'Le service ' . $service . ' n\'existe pas car la classe '
+                        . $sServiceClass . ' n\'est pas définie');
         }
         $oService->setParameters($parameters);
         
@@ -126,8 +129,9 @@ class Factory
             }
         }
         if (!is_object($oConfiguration)) {
-            throw new \Itkg\Exception\NotFoundException('La classe de configuration du service ' 
-                . $service . ' n\'existe pas car la classe ' . $sConfigurationClass . ' n\'est pas définie');
+            throw new \Itkg\Exception\NotFoundException(
+                            'La classe de configuration du service '
+                            . $service . ' n\'existe pas car la classe ' . $sConfigurationClass . ' n\'est pas définie');
         }
         return $oConfiguration;
     }
