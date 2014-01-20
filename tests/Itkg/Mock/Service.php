@@ -16,6 +16,8 @@ use Itkg\Service as BaseService;
  */
 class Service extends BaseService 
 {
+    protected $client = null;
+    
     public function init() {
     }
     

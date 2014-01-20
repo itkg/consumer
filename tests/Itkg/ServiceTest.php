@@ -76,6 +76,25 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             $this->fail($e->getMessage());
         } 
     }
+    
+    /**
+     * @covers Itkg\Service::init
+     */
+    public function testInit()
+    {
+        $this->object->init();
+        $this->assertNull($this->object->getConfiguration());
+    }
+
+    /**
+     * @covers Itkg\Service::logIncident
+     */    
+    public function testLogIncident() {
+        $configuration = new \Itkg\Mock\Service\Configuration();
+        $this->object->setConfiguration($configuration);
+        $exception = new \Itkg\Exception\NotFoundException;
+        $this->object->logIncident("test", $exception);
+    }
 
     /**
      * @covers Itkg\Service::postCall
@@ -160,15 +179,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->object->setConfiguration($configuration);
         $this->assertEquals($configuration, $this->object->getConfiguration());
     }
-    
-    /**
-     * @covers Itkg\Service::logIncident
-     * @todo   Implement testLogIncident().
-     */
-    public function testLogIncident()
-    {
-    }
-    
+ 
     /**
      * @covers \Itkg\Service::monitor
      */
