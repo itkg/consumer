@@ -29,7 +29,7 @@ class Client extends BaseClient
     /**
      * Méthode commune aux appels à solr
      *
-     *
+     * @codeCoverageIgnore
      * @param string $method
      * @param array $datas
      *      les données envoyés à solr sont de natures différentes selon la méthode :
@@ -65,7 +65,7 @@ class Client extends BaseClient
 
     /**
      * Ajoute un document dans l'index
-     *
+     * @codeCoverageIgnore
      * @param array $datas Les données de reférencement d'un document
      * @return string Statut
      */
@@ -100,7 +100,7 @@ class Client extends BaseClient
 
     /**
      * Supprime un document de l'index
-     *
+     * @codeCoverageIgnore
      * @param int $id L'identifiant unique du document à supprimer
      * @return string Statut
      */
@@ -121,7 +121,7 @@ class Client extends BaseClient
 
     /**
      * Recherche de documents avec filtres
-     *
+     * @codeCoverageIgnore
      * @param array $solrQueryString les données de filtrage de la requete
      * @internal param array $option Options de recherche possibles
      * @return array $resultset Résultat de la recherche
@@ -158,7 +158,7 @@ class Client extends BaseClient
 
     /**
      * Hydrate query with client options
-     *
+     * @codeCoverageIgnore
      * @param $query
      */
     protected function hydrateQuery($query)

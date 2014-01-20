@@ -17,7 +17,7 @@ class Client extends Ldap
 {
     /**
      * Retrouve un compte dans l'annuaire
-     *
+     * @codeCoverageIgnore
      * @param string $method La méthode a appeler
      * @param string $request Le nom du compte à retrouver
      * @param array $attributes Les attributs à récupérer
