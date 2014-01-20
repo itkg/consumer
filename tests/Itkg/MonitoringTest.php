@@ -62,12 +62,73 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @covers Itkg\Monitoring::getDuration
+     * @covers Itkg\Monitoring::setDuration
      */
     public function testDuration()
     {
         $this->assertNull($this->object->getDuration());
         $this->object->setDuration(2);
         $this->assertEquals(2, $this->object->getDuration());
+    }
+    
+    /**
+     * @covers Itkg\Monitoring::addLogger
+     */
+    public function testAddLogger()
+    {
+        $formatter = new \Itkg\Log\Formatter\StringFormatter;
+        $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+        $this->object->addLogger($logger, "test");
+        $attr = \PHPUnit_Framework_Assert::readAttribute($this->object, 'loggers');
+        $this->assertEquals($logger, $attr["test"]);
+    }
+    
+     /**
+     * @covers Itkg\Monitoring::logReport
+     */
+    public function testLogReport()
+    {
+        try {
+            $formatter = new \Itkg\Log\Formatter\StringFormatter;
+            $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+            $this->object->addLogger($logger, "test");
+            $this->object->logReport();
+        } catch(\Exception $e) {
+            $this->fail($e->getMessage());
+        }  
+    }
+    /**
+     * @covers Itkg\Monitoring::log
+     */
+    public function testLog()
+    {
+        try {
+            $formatter = new \Itkg\Log\Formatter\StringFormatter;
+            $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+            $this->object->addLogger($logger, "test");
+            $this->object->log("test");
+        } catch(\Exception $e) {
+            $this->fail($e->getMessage());
+        }  
+    }
+    
+        /**
+     * @covers Itkg\Monitoring::getTest
+     */
+    public function testGetTest()
+    {
+        $formatter = new \Itkg\Log\Formatter\StringFormatter;
+        $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+        $tests = $this->object->getTests();
+        $this->assertInternalType("array", $tests);
+    }
+       
+    /**
+     * @covers Itkg\Monitoring::getReportForTest
+     */
+    public function testReportForTest()
+    {
+        \Itkg\Monitoring::getReportForTest($this->object);
     }
     
     /**
@@ -114,6 +175,7 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
      * @covers Itkg\Monitoring::addTest
      * @covers Itkg\Monitoring::clear
      * @covers Itkg\Monitoring\Test::getMonitoring
+     * @covers Itkg\Monitoring\Test::getIdentifier
      */
     public function testAddTest()
     {
