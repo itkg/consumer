@@ -149,6 +149,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * @covers Itkg\Service::test
+     */
+    public function testTest()
+    {
+        $this->assertNull($this->object->getConfiguration());
+    }
+    
+    /**
      * @covers Itkg\Service::getDuration
      */
     public function testDuration()
