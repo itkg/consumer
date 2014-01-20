@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_errors', 'on');
-//ini_set('error_reporting', E_ALL );
+ini_set('error_reporting', E_ALL );
 $loader = require_once('vendor/autoload.php');
 
 $loader->add('Itkg', array(

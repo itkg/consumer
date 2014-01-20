@@ -71,11 +71,11 @@ class DataTransformerTest extends \PHPUnit_Framework_TestCase
             </Message>";
        
             $sTagName = "Message";
-            $aMapping = array("Message" => "Itkg\Mail\Client");
+            $aMapping = array("Message" => "Itkg\Mock\Client");
              
-         //   $this->assertTrue(is_object($this->object->stringxmlToObject($xmlstr, $sTagName, $aMapping)));
+            $this->assertTrue(is_object($this->object->stringxmlToObject($xmlstr, $sTagName, $aMapping)));
 
-         //   $this->assertNull($this->object->stringxmlToObject($xmlstr, $sTagName));
+            $this->assertNull($this->object->stringxmlToObject($xmlstr, $sTagName));
             
     }
     
@@ -98,7 +98,7 @@ class DataTransformerTest extends \PHPUnit_Framework_TestCase
             $sTagName = "<Message>";
             $aMapping = array("<Message>" => "Itkg\Mock\Client");
             $testXmlElement = new \SimpleXMLElement($xmlstr);
-         //   $this->assertTrue(is_object($this->object->simplexmlToObject($testXmlElement, $sTagName, $aMapping)));
+            $this->assertTrue(is_object($this->object->simplexmlToObject($testXmlElement, $sTagName, $aMapping)));
         
     }
 
@@ -118,16 +118,10 @@ class DataTransformerTest extends \PHPUnit_Framework_TestCase
      */
     public function testArrayIntoObject()
     {
-       $aArrayMethods = array(
-           'From' => 'clement.guinet@businessdecision.com',
-           'To' => 'guinet.clement@businessdecision.com',
-           'Subject' => 'mon sujet',
-           'Body' => 'mon body',
-       );
+       $aArrayMethods = array();
+       $object = new \Itkg\Mock\Client;
        
-
-       
-    //   $this->assertTrue(is_object($this->object->arrayIntoObject($object, $aArrayMethods)));
+       $this->assertTrue(is_object($this->object->arrayIntoObject($object, $aArrayMethods)));
        
     }
 
