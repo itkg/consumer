@@ -57,7 +57,7 @@ class Client extends BaseClient
      *
      * Traitement des options après merge
      * Gère les cookies, les headers
-     *
+     * @codeCoverageIgnore
      * @param string $method
      * @param string $uri
      * @param array $data (Les données à envoyer)
@@ -151,7 +151,7 @@ class Client extends BaseClient
 
     /**
      * Get request for method & params
-     *
+     * @codeCoverageIgnore
      * @param string $method request method
      * @param string $uri request uri
      * @param array $data request params
@@ -184,7 +184,7 @@ class Client extends BaseClient
 
     /**
      * Hydrate request with client options
-     * 
+     * @codeCoverageIgnore
      * @param RequestInterface $request
      * @return RequestInterface
      */
