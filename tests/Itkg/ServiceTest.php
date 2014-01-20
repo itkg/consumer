@@ -42,7 +42,23 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testCall()
     {
-              
+        $configuration = new \Itkg\Mock\Service\Configuration();
+        $this->object->setConfiguration($configuration);
+        $method = null;
+        try {
+            $this->object->call($method) ;     
+            $this->fail('call doit renvoyer une exception Itkg\Exception\NotFoundException');
+        } catch(\Exception $e) {
+            $this->assertEquals($e->getMessage(), "Le Request Model pour la méthode  n'est pas défini");
+            $this->assertEquals('Itkg\Exception\NotFoundException', get_class($e));
+        }  
+        $method = "test";
+        try {
+            $this->object->call($method) ;
+            $this->fail("call doit renvoyer une exception ");            
+        } catch(\Exception $e) {
+            $this->assertEquals($e->getMessage(), "Erreur lors de la validation du request model");
+        }  
     }
 
     /**
@@ -51,7 +67,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testPreCall()
     {
-     
+        $configuration = new \Itkg\Mock\Service\Configuration();
+        $this->object->setConfiguration($configuration);
+        $method = null;
+        try {
+            $this->object->preCall($method) ;     
+        } catch(\Exception $e) {
+            $this->fail($e->getMessage());
+        } 
     }
 
     /**
@@ -60,6 +83,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostCall()
     {
+        $configuration = new \Itkg\Mock\Service\Configuration();
+        $this->object->setConfiguration($configuration);
+        $this->object->logger = $this->object->getConfiguration()->getLogger("test");
+        try {
+            $this->object->postCall(null) ;     
+        } catch(\Exception $e) {
+            $this->fail($e->getMessage());
+        } 
     }
 
     /**

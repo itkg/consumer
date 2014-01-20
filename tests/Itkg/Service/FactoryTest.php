@@ -90,13 +90,13 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         
         //cas de la config qui n'existe pas -----------------------------------
         $service = 'MY_MOCK_SERVICE';   
-        \Itkg::$config['MY_MOCK_SERVICE']['configuration'] = 'toto';         
+        \Itkg::$config['MY_MOCK_SERVICE']['configuration'] = 'test_class_doesnt_exists';         
         try {
             $this->object->getService($service);
             $this->fail('getService doit renvoyer une exception Itkg\Exception\NotFoundException');
         } catch(\Exception $e) {
             $this->assertEquals('Itkg\Exception\NotFoundException', get_class($e));
-            $this->assertEquals($e->getMessage(), "La classe de configuration du service MY_MOCK_SERVICE n'existe pas car la classe toto n'est pas définie");
+            $this->assertEquals($e->getMessage(), "La classe de configuration du service MY_MOCK_SERVICE n'existe pas car la classe test_class_doesnt_exists n'est pas définie");
         }
         
         //cas du access denied -----------------------------------
