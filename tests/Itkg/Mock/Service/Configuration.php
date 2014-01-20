@@ -47,4 +47,8 @@ class Configuration extends BaseConfiguration
     {
         
     }
+    public function setMethodsIncidentLogger($methodsIncidentLogger)
+    {
+        $this->methodsIncidentLogger = $methodsIncidentLogger;
+    }
 }

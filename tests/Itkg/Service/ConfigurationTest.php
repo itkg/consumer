@@ -76,6 +76,55 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertNotNull($this->object->getMethodIdentifiers());
     }
+    /**
+     * 
+     * @covers Itkg\Service\Configuration::getResponseModelClass
+     */
+    public function testGetResponseModelClass()
+    {
+        $method = null;
+        $this->assertFalse($this->object->getResponseModelClass($method));
+        $models = array();
+        $models['tests']['response']['model'] = "test2";
+        $this->object->setModels($models);
+        $method = 'tests';
+        $this->assertEquals("test2", $this->object->getResponseModelClass($method));
+    }
+    /**
+     * 
+     * @covers Itkg\Service\Configuration::getMapping
+     */
+    public function testGetMapping()
+    {
+        $method = null;
+        $this->assertInternalType("array", $this->object->getMapping($method));
+        $this->assertTrue(count($this->object->getMapping($method))==0);
+        $models = array();
+        $models['tests']['response']['mapping'] = "test2";
+        $this->object->setModels($models);
+        $method = 'tests';
+        $this->assertEquals("test2", $this->object->getMapping($method));
+    }   
+    /**
+     * 
+     * @covers Itkg\Service\Configuration::getMethodIncidentLogger
+     */
+    public function testGetMethodIncidentLogger()
+    {
+        $method = null;
+        $this->assertNull($this->object->getMethodIncidentLogger($method));
+        $attr = \PHPUnit_Framework_Assert::readAttribute($this->object, 'loggers');
+        $methodsIncidentLogger = array();
+        $method = "tests";
+        $methodsIncidentLogger['tests']['writer']="testWritter" ;
+        $methodsIncidentLogger['tests']['formatter']="testFormatter" ;
+        $methodsIncidentLogger['tests']['parameters']=array('one', 'two');
+        \Itkg\Log::$config['FORMATTERS']['testFormatter'] = "\Itkg\Log\Formatter\StringFormatter";
+        \Itkg\Log::$config['WRITERS']['testWritter'] = "\Itkg\Log\Writer\EchoWriter";
+        $this->object->setMethodsIncidentLogger($methodsIncidentLogger);
+        $this->assertNotNull($this->object->getMethodIncidentLogger($method));
+    }      
+    
     
     
     /**
@@ -237,34 +286,51 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Itkg\Service\Configuration::getMethodIncidentLogger
-     */
-    public function testGetMethodIncidentLogger()
-    {
-        
-    }
-
-    /**
      * @covers \Itkg\Service\Configuration::loadDev
      */
-    public function testLoadDev(){
+    public function testLoadDev()
+    {
+        $this->object->loadDev();
     }
 
     /**
      * @covers \Itkg\Service\Configuration::loadPreprod
      */
-    public function testLoadPreprod(){}
+    public function testLoadPreprod()
+    {
+        $this->object->loadPreprod();
+    }
 
     /**
      * @covers \Itkg\Service\Configuration::loadRecette
      */
-    public function testLoadRecette(){}
+    public function testLoadRecette()
+    {
+        $this->object->loadRecette();
+    }
 
     /**
      * @covers \Itkg\Service\Configuration::loadProd
      */
-    public function testLoadProd(){}
+    public function testLoadProd()
+    {
+        $this->object->loadProd();
+    }
     
+    /**
+     * @covers \Itkg\Service\Configuration::isEnabled
+     */
+    public function testIsEnabled()
+    {
+        $this->assertTrue($this->object->isEnabled());
+    }    
+    /**
+     * @covers \Itkg\Service\Configuration::isMonitored
+     */
+    public function testIsMonitored()
+    {
+        $this->assertTrue($this->object->isMonitored());
+    }       
     
      /**
      * @covers \Itkg\Service\Configuration::init
