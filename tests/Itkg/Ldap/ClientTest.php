@@ -38,25 +38,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
      */
     public function testGetoptions()
     {
-        $optsToTest = array (
-            'host' => null,
-            'port' => 0,
-            'useSsl' => false,
-            'username' => null,
-            'password' => null,
-            'bindRequiresDn' => false,
-            'baseDn' => null,
-            'accountCanonicalForm' => null,
-            'accountDomainName' => null,
-            'accountDomainNameShort' => null,
-            'accountFilterFormat' => null,
-            'allowEmptyPassword' => false,
-            'useStartTls' => false,
-            'optReferrals' => false,
-            'tryUsernameSplit' => true,
-            'networkTimeout' => null
-        );
         $opts = $this->object->getOptions();
-        $this->assertEquals($opts, $optsToTest);
+        $this->assertNull($opts);
     }     
 }
