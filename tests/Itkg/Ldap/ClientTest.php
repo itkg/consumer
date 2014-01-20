@@ -3,7 +3,7 @@
 
 namespace Itkg\Ldap;
 
-use Itkg\Ldap\Client;
+use Itkg\Mock\Ldap\Client;
 
 /**
  * Class Client
@@ -23,7 +23,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
      */
     protected function setUp()
     {         
-      $this->object = new \Itkg\Ldap\Client();
+      $this->object = new \Itkg\Mock\Ldap\Client();
     }
 
     /**
