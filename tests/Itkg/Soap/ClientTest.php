@@ -55,7 +55,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testCheckRequiredOptions()
     {
         try {
-            $this->assertNull($this->object->checkRequiredOptions());
+            $this->assertNull($this->object->checkRequiredOptions(''));
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
