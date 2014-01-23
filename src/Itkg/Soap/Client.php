@@ -82,8 +82,8 @@ class Client extends \SoapClient
         $this->options = array_merge($this->options, $options);
 
         // login et password htaccess/header sécurisé
-        $this->loginHeaderSecurity = $this->options['login'];
-        $this->passwordHeaderSecurity = $this->options['password'];
+        $this->loginHeaderSecurity = isset($this->options['login'])?$this->options['login']:null;
+        $this->passwordHeaderSecurity = isset($this->options['password'])?$this->options['password']:null;
         unset($this->options['login']);
         unset($this->options['password']);
 
@@ -96,7 +96,7 @@ class Client extends \SoapClient
      * Appelle de la méthode __soapCall après initialisation des options
      *
      * Renvoie une Itkg\Soap\Exception\SoapException en cas d'erreur
-     *
+     * @codeCoverageIgnore
      * @param type $method
      * @param type $request
      */
