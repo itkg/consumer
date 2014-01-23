@@ -50,16 +50,35 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         }
     }
     /**
-     * @covers Itkg\Soap\Client::checkRequiredOptions
+     * @covers Itkg\Soap\Client::__getLastRequest
      */
-    public function testCheckRequiredOptions()
+    public function test__getLastRequest()
     {
         try {
-            $this->assertNull($this->object->checkRequiredOptions(''));
+            $this->assertNull($this->object->__getLastRequest(''));
         } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
-    }    
+    } 
+    /**
+     * @covers Itkg\Soap\Client::setOptions
+     */
+    public function testSetOptions()
+    {
+        $myopt = array("test");
+        $this->object->setOptions($myopt);
+        $attr = \PHPUnit_Framework_Assert::readAttribute($this->object, 'options');
+        $this->assertEquals($myopt, $attr);
+    }   
+    /**
+     * @covers Itkg\Soap\Client::getDuration
+     */
+    public function testGetDuration()
+    {
+        $duration = $this->object->getDuration();
+        $this->assertEquals($duration, 0);
+    }
+    
     
 
 }
