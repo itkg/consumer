@@ -109,9 +109,9 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
             $this->object->log("test");
         } catch(\Exception $e) {
             $this->fail($e->getMessage());
-        }  
+        }
     }
-    
+
         /**
      * @covers Itkg\Monitoring::getTest
      */

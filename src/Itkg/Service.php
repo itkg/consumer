@@ -156,8 +156,7 @@ abstract class Service
          * Exception si le requestModel n'est pas défini
          */
         if(!$requestModel || !is_object($requestModel)) {
-            throw new Exception\NotFoundException('Le Request Model pour
-                la méthode '.$method.' n\'est pas défini');
+            throw new Exception\NotFoundException('Le Request Model pour la méthode '.$method.' n\'est pas défini');
         }
 
         /**
