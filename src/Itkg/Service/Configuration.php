@@ -67,7 +67,6 @@ abstract class Configuration
     {
 
     }
-
     /**
      * Get parameters
      *
@@ -97,7 +96,7 @@ abstract class Configuration
      */
     public function getParameter($key)
     {
-        if (isset($this->parameters[$key])) {
+        if(isset($this->parameters[$key])) {
             return $this->parameters[$key];
         }
         return false;
@@ -133,9 +132,9 @@ abstract class Configuration
      */
     public function getRequestModel($method)
     {
-        if (isset($this->models[$method]['request']['model'])) {
+        if(isset($this->models[$method]['request'])) {
             $model = new $this->models[$method]['request']['model'];
-            if (isset($this->models[$method]['request']['validator'])) {
+            if(isset($this->models[$method]['request']['validator'])) {
                 $model->setValidator(new $this->models[$method]['request']['validator']);
             }
             $model->init();
@@ -154,9 +153,9 @@ abstract class Configuration
      */
     public function getResponseModel($method)
     {
-        if (isset($this->models[$method]['response']['model'])) {
+        if(isset($this->models[$method]['response'])) {
             $model = new $this->models[$method]['response']['model'];
-            if (isset($this->models[$method]['response']['validator'])) {
+            if(isset($this->models[$method]['response']['validator'])) {
                 $model->setValidator(new $this->models[$method]['response']['validator']);
             }
             $model->init();
@@ -175,7 +174,7 @@ abstract class Configuration
      */
     public function getResponseModelClass($method)
     {
-        if (isset($this->models[$method]['response']['model'])) {
+        if(isset($this->models[$method]['response']['model'])){
             return $this->models[$method]['response']['model'];
         }
 
@@ -192,7 +191,7 @@ abstract class Configuration
     public function getMapping($method)
     {
         $aMapping = array();
-        if (isset($this->models[$method]['response']['mapping'])) {
+        if(isset($this->models[$method]['response']['mapping'])) {
             $aMapping = $this->models[$method]['response']['mapping'];
         }
         return $aMapping;
@@ -205,7 +204,7 @@ abstract class Configuration
      */
     public function loadParameters(array $aParameters = array())
     {
-        if (!is_array($this->parameters)) {
+        if(!is_array($this->parameters)) {
             $this->parameters = array();
         }
         $this->parameters = array_merge($this->parameters, $aParameters);
@@ -217,36 +216,36 @@ abstract class Configuration
      * Si aucun logger n'est défini pour le service on récupère le logger par défaut
      *
      * @param string $method
-     * @return \Itkg\Log\Writer
+     * @return Itkg\Log\Writer
      */
     public function getLogger($method)
     {
-        if (isset($this->loggers[$method])) {
+        if(isset($this->loggers[$method])) {
             $logger = $this->loggers[$method];
-        } else {
-            if (isset($this->loggers['default'])) {
+        }else {
+            if(isset($this->loggers['default'])) {
                 $logger = $this->loggers['default'];
             }
         }
 
         // Si le logger existe
-        if (isset($logger['writer'])) {
+        if(isset($logger['writer'])) {
             $writer = $logger['writer'];
-        } else {
+        }else {
             $writer = '';
         }
 
         // Si un formatage est défini
-        if (isset($logger['formatter'])) {
+        if(isset($logger['formatter'])) {
             $formatter = $logger['formatter'];
-        } else {
+        }else {
             $formatter = '';
         }
 
         // S'il y a des parametres
-        if (isset($logger['parameters'])) {
+        if(isset($logger['parameters'])) {
             $parameters = $logger['parameters'];
-        } else {
+        }else {
             $parameters = array();
         }
 
@@ -260,6 +259,26 @@ abstract class Configuration
      * @return string
      */
     public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * L'identifiant du service utilisé par le logger
+     *
+     * @return string
+     */
+    public function getIdentifierForLogger()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * L'identifiant du service utilisé par le monitoring
+     *
+     * @return string
+     */
+    public function getIdentifierForMonitoring()
     {
         return $this->identifier;
     }
@@ -295,11 +314,42 @@ abstract class Configuration
     public function getMethodIdentifier($method = '')
     {
         // Formatage de l'identifiant de la méthode préfixée par l'identifiant du service
-        if (isset($this->methodIdentifiers[$method])) {
-            return $this->getIdentifier() . ' - ' . $this->methodIdentifiers[$method];
+        if(isset($this->methodIdentifiers[$method])) {
+            return $this->getIdentifier().' - '.$this->methodIdentifiers[$method];
         }
 
         return $this->getIdentifier();
+    }
+
+    /**
+     * Retourne la trame utilisée par le logger identifiant la méthode du service
+     * dont le nom est passée en paramètre
+     *
+     * @param string $method
+     * @return string
+     */
+    public function getMethodIdentifierForLogger($method = '')
+    {
+        // Formatage de l'identifiant de la méthode préfixée par l'identifiant du service
+        if(isset($this->methodIdentifiers[$method])) {
+            return $this->getIdentifierForLogger().' - '.$this->methodIdentifiers[$method];
+        }
+
+        return $this->getIdentifierForLogger();
+    }
+
+    /**
+     * Renvoie true si l'écriture des trames dans les logs est activée, false dans le cas contraire
+     * Par défaut l'écriture des trames dans les logs est activée
+     *
+     * @return boolean
+     */
+    public function logTrameEnabled()
+    {
+        if (isset($this->parameters['disableLogTrame'])) {
+            return !$this->parameters['disableLogTrame'];
+        }
+        return true;
     }
 
     /**
@@ -307,26 +357,26 @@ abstract class Configuration
      * Si aucun logger n'est défini pour la méthode on ne renvoie rien
      *
      * @param string $method
-     * @return \Itkg\Log\Writer
+     * @return Itkg\Log\Writer
      */
     public function getMethodIncidentLogger($method)
     {
-        if (is_array($this->methodsIncidentLogger[$method])) {
-            if (isset($this->methodsIncidentLogger[$method]['writer'])) {
+        if(is_array($this->methodsIncidentLogger[$method])) {
+            if(isset($this->methodsIncidentLogger[$method]['writer'])) {
                 $writer = $this->methodsIncidentLogger[$method]['writer'];
-            } else {
+            }else {
                 $writer = '';
             }
 
-            if (isset($this->methodsIncidentLogger[$method]['formatter'])) {
+            if(isset($this->methodsIncidentLogger[$method]['formatter'])) {
                 $formatter = $this->methodsIncidentLogger[$method]['formatter'];
-            } else {
+            }else {
                 $formatter = '';
             }
 
-            if (isset($this->methodsIncidentLogger[$method]['parameters'])) {
+            if(isset($this->methodsIncidentLogger[$method]['parameters'])) {
                 $parameters = $this->methodsIncidentLogger[$method]['parameters'];
-            } else {
+            }else {
                 $parameters = array();
             }
             return LogFactory::getWriter($writer, $formatter, $parameters);
@@ -341,9 +391,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadDev()
-    {
-    }
+    public function loadDev(){}
 
     /**
      * Méthode appelée sur l'environnement de préproduction
@@ -352,9 +400,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadPreprod()
-    {
-    }
+    public function loadPreprod(){}
 
     /**
      * Méthode appelée sur l'environnement de recette
@@ -363,9 +409,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadRecette()
-    {
-    }
+    public function loadRecette(){}
 
     /**
      * Méthode appelée sur l'environnement de production
@@ -374,9 +418,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadProd()
-    {
-    }
+    public function loadProd(){}
 
     /**
      * Méthode appelée avant l'initialisation du service par la Factory.
@@ -384,8 +426,7 @@ abstract class Configuration
      *
      * @param string $serviceIdentifier Identifiant alphanumérique du service
      */
-    public function override($serviceIdentifier)
-    {
+    public function override($serviceIdentifier){
 
     }
 

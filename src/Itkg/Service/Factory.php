@@ -52,6 +52,8 @@ class Factory
                 )
             );
         }
+
+
         // Surcharge de la configuration via la méthode override
         $oConfiguration->override($service);
         $oConfiguration->init();

@@ -195,7 +195,7 @@ class Monitoring
      */
     public function addService(\Itkg\Service $service, $method)
     {
-        if ($service->getConfiguration()->isMonitored()) {
+        if($service->getConfiguration()->isMonitored()) {
             $this->start = microtime(true);
             // Initialisation des attributs de monitoring + lancement du test et traitement
             try {
@@ -222,7 +222,7 @@ class Monitoring
 
             $this->duration = $this->end - $this->start;
         }
-        $this->identifier = $service->getConfiguration()->getIdentifier();
+        $this->identifier = $service->getConfiguration()->getIdentifierForMonitoring();
         $this->service = $service;
         self::$tests[] = $this;
     }
@@ -292,12 +292,8 @@ class Monitoring
      * @param string $generalWork Message si general OK
      * @param string $generalFail Message si general KO
      */
-    public static function logReport(
-        $work = 'OK',
-        $fail = 'KO',
-        $generalWork = '[GLOBAL : OKSFR]',
-        $generalFail = '[GLOBAL : KOSFR]'
-    ) {
+    public static function logReport($work = 'OK', $fail = 'KO', $generalWork = '[GLOBAL : OKSFR]', $generalFail = '[GLOBAL : KOSFR]')
+    {
         // $working indique l'état général
         $working = true;
 
@@ -305,85 +301,58 @@ class Monitoring
         // Log des rapports
         if (is_array(self::$tests)) {
             foreach (self::$tests as $test) {
-                $report .= self::getReportForTest($test);
-                if (!$test->isWorking()) {
-                    $working = false;
+                if(isset($test->service)){
+                    $serviceConfiguration = $test->service->getConfiguration();
+                }
+                if (!isset($serviceConfiguration) || $serviceConfiguration->isMonitored()) {
+                    //si le service est supervisé
+                    if(!isset($serviceConfiguration) || $serviceConfiguration->isEnabled()){
+                        //si le service est activé
+                        if ($test->isWorking()) {
+                            $report .= '<span class="libelle working">' . $test->getIdentifier() . '</span><br /><span class="working">' . $work . ' (' . number_format($test->getDuration(), 4) . 'sec) </span><br />';
+                        } else {
+                            $e=$test->getException();
+                            $report .= '<span class="libelle error">' . $test->getIdentifier() . '</span><br /><span class="error">' . $fail . ' (' . number_format($test->getDuration(), 4) . 'sec)' . (!empty($e)?(" - ".$e->getMessage()):"") . '</span><br />';
+                            //si un service supervisé ne répond pas => état général KO
+                            $working = false;
+                        }
+                    } else {
+                        //si le service est désactivé
+                        if ($test->isWorking()) {
+                            $report .= '<span class="libelle working disabled">' . $test->getIdentifier() . ' (d&eacute;sactiv&eacute;)</span><br /><span class="working disabled">' . $work . ' (' . number_format($test->getDuration(), 4) . 'sec) </span><br />';
+                        } else {
+                            $e=$test->getException();
+                            $report .= '<span class="libelle error disabled">' . $test->getIdentifier() . ' (d&eacute;sactiv&eacute;)</span><br /><span class="error disabled">' . $fail . ' (' . number_format($test->getDuration(), 4) . 'sec)' . (!empty($e)?(" - ".$e->getMessage()):"") . '</span><br />';
+                            //on ne prend pas en compte ce service dans l'état général car il est désactivé
+                        }
+                    }
+                } else {
+                    //si le service n'est pas supervisé
+                    $report .= '<span class="libelle nomon">' . $test->getIdentifier() . ' (non supervis&eacute;)</span><br /><br />';
                 }
             }
         }
 
         //Etat général
-        if ($working) {
-            $report .= '<br />' . $generalWork;
-        } else {
-            $report .= '<br />' . $generalFail;
+        if($working) {
+            $report .= '<br />'.$generalWork;
+        }else {
+            $report .= '<br />'.$generalFail;
         }
 
-        self::log($report);
-    }
+        if(is_array(self::$loggers)) {
 
-    /**
-     * Create log
-     *
-     * @param $report
-     */
-    public static function log($report)
-    {
-        if (is_array(self::$loggers)) {
-
-            foreach (self::$loggers as $index => $logger) {
+            foreach(self::$loggers as $index => $logger) {
                 // Les balises html ne s'affichent que dans le cas d'un echo
-                if ($index == 'echo') {
+                if($index == 'echo') {
                     $logger->write($report);
-                } else {
+                }else {
                     $report = str_replace('<br />', "\r\n", $report);
                     $report = strip_tags($report);
                     $logger->write($report);
                 }
             }
         }
-    }
-
-    /**
-     * @param Monitoring $test
-     */
-    public static function getReportForTest(Monitoring $test, $work = 'OK', $fail = 'KO')
-    {
-        if (isset($test->service)) {
-            $serviceConfiguration = $test->service->getConfiguration();
-        }
-        if (!isset($serviceConfiguration) || $serviceConfiguration->isMonitored()) {
-            //si le service est supervisé
-            $disabled = '';
-            if (!isset($serviceConfiguration) || $serviceConfiguration->isEnabled()) {
-                $disabled = 'disabled';
-            }
-            if ($test->isWorking()) {
-                return sprintf(
-                    '<span class="libelle working %s">%s</span><br /><span class="working %s">%s (%s sec) </span><br />',
-                    $disabled,
-                    $test->getIdentifier(),
-                    $disabled,
-                    $work,
-                    number_format($test->getDuration(), 4)
-                );
-            }
-            $e = $test->getException();
-            return sprintf(
-                '<span class="libelle working %s">%s</span><br /><span class="working %s">%s (%s sec) %s</span><br />',
-                $disabled,
-                $test->getIdentifier(),
-                $disabled,
-                $fail,
-                number_format($test->getDuration(), 4),
-                (!empty($e) ? (" - " . $e->getMessage()) : "")
-            );
-        }
-            //si le service n'est pas supervisé
-         return sprintf(
-            '<span class="libelle nomon">%s (non supervis&eacute;)</span><br /><br />',
-            $test->getIdentifier()
-        );
     }
 
     /**
@@ -394,7 +363,7 @@ class Monitoring
      */
     public static function getTests()
     {
-        if (!is_array(self::$tests)) {
+        if(!is_array(self::$tests)) {
             self::$tests = array();
         }
         return self::$tests;

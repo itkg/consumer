@@ -101,7 +101,7 @@ class DataTransformer
             try {
                 $object = new $mapping[$tagName];
             } catch (Exception $exc) {
-                echo 'ok';
+
                 //return $xml; //retourne des objets simpleXml
                 return null; // ne retourne pas d'objet simpleXml
             }
@@ -110,8 +110,9 @@ class DataTransformer
             //return $xml; //retourne des objets simpleXML
             return null; // ne retourne pas d'objet simpleXml
         }
-
-        $aVars = get_object_vars($xml);
+        if (is_object($xml)) {
+            $aVars = get_object_vars($xml);
+        }
         if (count($aVars)) {
             foreach ($aVars as $varName => $varValue) {
                 // cas @attributes
