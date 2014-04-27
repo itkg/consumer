@@ -216,7 +216,7 @@ abstract class Configuration
      * Si aucun logger n'est défini pour le service on récupère le logger par défaut
      *
      * @param string $method
-     * @return Itkg\Log\Writer
+     * @return \Itkg\Log\Logger
      */
     public function getLogger($method)
     {
@@ -228,29 +228,8 @@ abstract class Configuration
             }
         }
 
-        // Si le logger existe
-        if(isset($logger['writer'])) {
-            $writer = $logger['writer'];
-        }else {
-            $writer = '';
-        }
-
-        // Si un formatage est défini
-        if(isset($logger['formatter'])) {
-            $formatter = $logger['formatter'];
-        }else {
-            $formatter = '';
-        }
-
-        // S'il y a des parametres
-        if(isset($logger['parameters'])) {
-            $parameters = $logger['parameters'];
-        }else {
-            $parameters = array();
-        }
-
         // Renvoi du logger créé
-        return LogFactory::getWriter($writer, $formatter, $parameters);
+        return LogFactory::getLogger($logger, $method);
     }
 
     /**
@@ -357,7 +336,7 @@ abstract class Configuration
      * Si aucun logger n'est défini pour la méthode on ne renvoie rien
      *
      * @param string $method
-     * @return Itkg\Log\Writer
+     * @return \Itkg\Log\Logger
      */
     public function getMethodIncidentLogger($method)
     {
