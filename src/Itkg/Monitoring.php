@@ -2,6 +2,8 @@
 
 namespace Itkg;
 
+use Itkg\Log\Logger;
+
 /**
  * Classe de monitoring de Service
  * Cette classe permet le monitoring de différents services et effectue
@@ -172,7 +174,7 @@ class Monitoring
      * @static
      * @param \Itkg\Log\Writer $logger
      */
-    public static function addLogger(\Itkg\Log\Writer $logger, $id)
+    public static function addLogger(Logger $logger, $id)
     {
         self::$loggers[$id] = $logger;
     }
@@ -334,11 +336,11 @@ class Monitoring
             foreach (self::$loggers as $index => $logger) {
                 // Les balises html ne s'affichent que dans le cas d'un echo
                 if ($index == 'echo') {
-                    $logger->write($report);
+                    $logger->addInfo($report);
                 } else {
                     $report = str_replace('<br />', "\r\n", $report);
                     $report = strip_tags($report);
-                    $logger->write($report);
+                    $logger->addInfo($report);
                 }
             }
         }
