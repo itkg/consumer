@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/log.git",
-                "reference": "1ed0d441e7b07886cfe85af2a1b6bfd81ce5af7a"
+                "reference": "96094c52e2e0058b5c0ed502c9b2dc7ec2bdf23f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/log/zipball/1ed0d441e7b07886cfe85af2a1b6bfd81ce5af7a",
-                "reference": "1ed0d441e7b07886cfe85af2a1b6bfd81ce5af7a",
+                "url": "https://api.github.com/repos/itkg/log/zipball/96094c52e2e0058b5c0ed502c9b2dc7ec2bdf23f",
+                "reference": "96094c52e2e0058b5c0ed502c9b2dc7ec2bdf23f",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 "library",
                 "log"
             ],
-            "time": "2014-04-30 18:59:48"
+            "time": "2014-04-30 22:42:44"
         },
         {
             "name": "monolog/monolog",
@@ -336,7 +336,9 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Symfony Community",
