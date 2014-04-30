@@ -331,8 +331,7 @@ abstract class Service
         if ($oRequestModel) {
             $requestToLog = $oRequestModel->__toLog();
         }
-        $this->logger->getFormatter()->setParameters($paramsLogs);
-        $this->logger->write($requestToLog . $requestTrame);
+        $this->logger->addInfo($requestToLog . $requestTrame, $paramsLogs);
 
         $paramsLogs["requestTime"] = $this->getDuration();
         if (is_object($exception)) {
@@ -361,8 +360,7 @@ abstract class Service
         if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
             $sLogResponseModel = $oResponse->__toLog();
         }
-        $this->logger->getFormatter()->setParameters($paramsLogs);
-        $this->logger->write($sLogResponseModel . $reponseTrame);
+        $this->logger->addInfo($sLogResponseModel . $reponseTrame, $paramsLogs);
     }
 
     /**
@@ -382,8 +380,7 @@ abstract class Service
         if (is_object($oRequestModel) && method_exists($oRequestModel, "__toLog")) {
             $sLogRequestModel = ' - ' . $oRequestModel->__toLog();
         }
-        $this->logger->getFormatter()->setParameters($paramsLogs);
-        $this->logger->write('Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame);
+        $this->logger->addError('Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame, $paramsLogs);
     }
     
     /**
@@ -457,7 +454,7 @@ abstract class Service
         if ($logger) {
             if ($e instanceof \Itkg\Soap\Exception\SoapException) {
                 $e->setDatas($aDatas);
-                $logger->write($e->getTrame());
+                $logger->addCritical($e->getTrame());
             }
         }
     }
