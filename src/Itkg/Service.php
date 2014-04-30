@@ -323,9 +323,6 @@ abstract class Service
         $reponseTrame = "";
         $requestTrame = "";
 
-        //trim des datas retournées par le call
-        Helper\DataTransformer::trimData($oResponse);
-
         $this->getRequestAndResponseTrame($requestTrame, $reponseTrame);
 
         //on logue l'appel à la fin (postCall), pour avoir la trame d'appel (getLastRequest)
