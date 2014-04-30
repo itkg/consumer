@@ -2,6 +2,8 @@
 
 namespace Itkg;
 
+use Itkg\Log\Handler\EchoHandler;
+
 /**
  * Classe pour les test phpunit pour la classe Service
  *
@@ -76,8 +78,7 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddLogger()
     {
-        $formatter = new \Itkg\Log\Formatter\StringFormatter;
-        $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+        $logger = \Itkg\Log\Factory::getLogger(array(array('handler' => new EchoHandler())));
         $this->object->addLogger($logger, "test");
         $attr = \PHPUnit_Framework_Assert::readAttribute($this->object, 'loggers');
         $this->assertEquals($logger, $attr["test"]);
@@ -89,8 +90,7 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
     public function testLogReport()
     {
         try {
-            $formatter = new \Itkg\Log\Formatter\StringFormatter;
-            $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+            $logger = \Itkg\Log\Factory::getLogger(array(array('handler' => new EchoHandler())));
             $this->object->addLogger($logger, "test");
             $this->object->logReport();
         } catch(\Exception $e) {
@@ -103,8 +103,7 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
     public function testLog()
     {
         try {
-            $formatter = new \Itkg\Log\Formatter\StringFormatter;
-            $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+            $logger = \Itkg\Log\Factory::getLogger(array(array('handler' => new EchoHandler())));
             $this->object->addLogger($logger, "test");
             $this->object->log("test");
         } catch(\Exception $e) {
@@ -117,8 +116,7 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetTest()
     {
-        $formatter = new \Itkg\Log\Formatter\StringFormatter;
-        $logger = new \Itkg\Log\Writer\EchoWriter($formatter);
+        $logger = \Itkg\Log\Factory::getLogger(array(array('handler' => new EchoHandler())));
         $tests = $this->object->getTests();
         $this->assertInternalType("array", $tests);
     }

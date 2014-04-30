@@ -116,11 +116,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $attr = \PHPUnit_Framework_Assert::readAttribute($this->object, 'loggers');
         $methodsIncidentLogger = array();
         $method = "tests";
-        $methodsIncidentLogger['tests']['writer']="testWritter" ;
-        $methodsIncidentLogger['tests']['formatter']="testFormatter" ;
-        $methodsIncidentLogger['tests']['parameters']=array('one', 'two');
-        \Itkg\Log::$config['FORMATTERS']['testFormatter'] = "\Itkg\Log\Formatter\StringFormatter";
-        \Itkg\Log::$config['WRITERS']['testWritter'] = "\Itkg\Log\Writer\EchoWriter";
+        $methodsIncidentLogger['tests'] = array(array('handler' => new \Itkg\Log\Handler\SoapHandler('', '')));
         $this->object->setMethodsIncidentLogger($methodsIncidentLogger);
         $this->assertNotNull($this->object->getMethodIncidentLogger($method));
     }      

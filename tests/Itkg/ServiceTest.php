@@ -104,7 +104,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $configuration = new \Itkg\Mock\Service\Configuration();
         $this->object->setConfiguration($configuration);
-        $this->object->logger = $this->object->getConfiguration()->getLogger("test");
+        $this->testPreCall('test');
         try {
             $this->object->postCall(null) ;     
         } catch(\Exception $e) {

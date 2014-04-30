@@ -47,6 +47,12 @@ abstract class Service
     protected $end;
 
     /**
+     * Current Logger
+     * @var \Itkg\Log\Logger
+     */
+    protected $logger;
+
+    /**
      * Initialisation du service
      * Cette méthode est appelée automatiquement par la Factory
      */
@@ -296,6 +302,7 @@ abstract class Service
     public function preCall($method, $oRequestModel = null, array $aDatas = array())
     {
         $this->logger = $this->configuration->getLogger($method);
+
         $this->logger->init($this->configuration->getMethodIdentifierForLogger($method));
     }
 
@@ -336,6 +343,7 @@ abstract class Service
         $paramsLogs["requestTime"] = $this->getDuration();
         if (is_object($exception)) {
             $this->logResponseKO($oRequestModel, $exception, $reponseTrame, $paramsLogs);
+            /** @var $exception \Exception */
             throw $exception;
         } else {
             $this->logResponseOK($oResponse, $reponseTrame, $paramsLogs);

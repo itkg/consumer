@@ -2,6 +2,7 @@
 
 namespace Itkg\Mock\Service;
 
+use Itkg\Log\Handler\EchoHandler;
 use Itkg\Service\Configuration as BaseConfiguration;
 
 /**
@@ -23,10 +24,10 @@ class Configuration extends BaseConfiguration
         );        
         
         $this->loggers = array(
-            'test' => array(
-                'writer' => 'echo',
+            'test' => array(array(
+                'handler' => new EchoHandler(),
                 'formatter' => 'simple'
-            )
+            ))
         );
         
         $this->models = array(

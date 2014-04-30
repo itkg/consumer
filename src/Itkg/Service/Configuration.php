@@ -220,6 +220,7 @@ abstract class Configuration
      */
     public function getLogger($method)
     {
+        $logger = array();
         if(isset($this->loggers[$method])) {
             $logger = $this->loggers[$method];
         }else {
@@ -341,24 +342,7 @@ abstract class Configuration
     public function getMethodIncidentLogger($method)
     {
         if(is_array($this->methodsIncidentLogger[$method])) {
-            if(isset($this->methodsIncidentLogger[$method]['writer'])) {
-                $writer = $this->methodsIncidentLogger[$method]['writer'];
-            }else {
-                $writer = '';
-            }
-
-            if(isset($this->methodsIncidentLogger[$method]['formatter'])) {
-                $formatter = $this->methodsIncidentLogger[$method]['formatter'];
-            }else {
-                $formatter = '';
-            }
-
-            if(isset($this->methodsIncidentLogger[$method]['parameters'])) {
-                $parameters = $this->methodsIncidentLogger[$method]['parameters'];
-            }else {
-                $parameters = array();
-            }
-            return LogFactory::getWriter($writer, $formatter, $parameters);
+            return LogFactory::getLogger($this->methodsIncidentLogger[$method], $method);
         }
         return null;
     }
