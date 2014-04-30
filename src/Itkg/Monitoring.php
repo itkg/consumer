@@ -197,7 +197,7 @@ class Monitoring
      */
     public function addService(\Itkg\Service $service, $method)
     {
-        if($service->getConfiguration()->isMonitored()) {
+        if ($service->getConfiguration()->isMonitored()) {
             $this->start = microtime(true);
             // Initialisation des attributs de monitoring + lancement du test et traitement
             try {
@@ -387,6 +387,7 @@ class Monitoring
             $test->getIdentifier()
         );
     }
+
     /**
      * Getter tests
      *
@@ -395,7 +396,7 @@ class Monitoring
      */
     public static function getTests()
     {
-        if(!is_array(self::$tests)) {
+        if (!is_array(self::$tests)) {
             self::$tests = array();
         }
         return self::$tests;

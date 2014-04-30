@@ -248,6 +248,7 @@ abstract class Service
         }
         return $responseModel;
     }
+
     /**
      * affiche le debug de la méthode Call
      *
@@ -388,7 +389,10 @@ abstract class Service
         if (is_object($oRequestModel) && method_exists($oRequestModel, "__toLog")) {
             $sLogRequestModel = ' - ' . $oRequestModel->__toLog();
         }
-        $this->logger->addError('Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame, $paramsLogs);
+        $this->logger->addError(
+            'Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame,
+            $paramsLogs
+        );
     }
 
     /**

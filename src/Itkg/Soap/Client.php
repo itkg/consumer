@@ -82,8 +82,8 @@ class Client extends \SoapClient
         $this->options = array_merge($this->options, $options);
 
         // login et password htaccess/header sécurisé
-        $this->loginHeaderSecurity = isset($this->options['login'])?$this->options['login']:null;
-        $this->passwordHeaderSecurity = isset($this->options['password'])?$this->options['password']:null;
+        $this->loginHeaderSecurity = isset($this->options['login']) ? $this->options['login'] : null;
+        $this->passwordHeaderSecurity = isset($this->options['password']) ? $this->options['password'] : null;
         unset($this->options['login']);
         unset($this->options['password']);
 
@@ -212,9 +212,7 @@ class Client extends \SoapClient
                 $sMust,
                 $this->loginHeaderSecurity,
                 $this->passwordHeaderSecurity
-            );
-
-                ;
+            );;
             if ($this->options['signature'] && $this->options['signature_ns']) {
                 $sHeader .= '<Signature xmlns="' . $this->options['signature_ns'] . '">' . $this->options['signature'] . '</Signature>';
             }

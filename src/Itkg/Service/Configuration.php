@@ -67,6 +67,7 @@ abstract class Configuration
     {
 
     }
+
     /**
      * Get parameters
      *
@@ -96,7 +97,7 @@ abstract class Configuration
      */
     public function getParameter($key)
     {
-        if(isset($this->parameters[$key])) {
+        if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
         }
         return false;
@@ -132,9 +133,9 @@ abstract class Configuration
      */
     public function getRequestModel($method)
     {
-        if(isset($this->models[$method]['request'])) {
+        if (isset($this->models[$method]['request'])) {
             $model = new $this->models[$method]['request']['model'];
-            if(isset($this->models[$method]['request']['validator'])) {
+            if (isset($this->models[$method]['request']['validator'])) {
                 $model->setValidator(new $this->models[$method]['request']['validator']);
             }
             $model->init();
@@ -153,9 +154,9 @@ abstract class Configuration
      */
     public function getResponseModel($method)
     {
-        if(isset($this->models[$method]['response'])) {
+        if (isset($this->models[$method]['response'])) {
             $model = new $this->models[$method]['response']['model'];
-            if(isset($this->models[$method]['response']['validator'])) {
+            if (isset($this->models[$method]['response']['validator'])) {
                 $model->setValidator(new $this->models[$method]['response']['validator']);
             }
             $model->init();
@@ -174,7 +175,7 @@ abstract class Configuration
      */
     public function getResponseModelClass($method)
     {
-        if(isset($this->models[$method]['response']['model'])){
+        if (isset($this->models[$method]['response']['model'])) {
             return $this->models[$method]['response']['model'];
         }
 
@@ -191,7 +192,7 @@ abstract class Configuration
     public function getMapping($method)
     {
         $aMapping = array();
-        if(isset($this->models[$method]['response']['mapping'])) {
+        if (isset($this->models[$method]['response']['mapping'])) {
             $aMapping = $this->models[$method]['response']['mapping'];
         }
         return $aMapping;
@@ -204,7 +205,7 @@ abstract class Configuration
      */
     public function loadParameters(array $aParameters = array())
     {
-        if(!is_array($this->parameters)) {
+        if (!is_array($this->parameters)) {
             $this->parameters = array();
         }
         $this->parameters = array_merge($this->parameters, $aParameters);
@@ -221,10 +222,10 @@ abstract class Configuration
     public function getLogger($method)
     {
         $logger = array();
-        if(isset($this->loggers[$method])) {
+        if (isset($this->loggers[$method])) {
             $logger = $this->loggers[$method];
-        }else {
-            if(isset($this->loggers['default'])) {
+        } else {
+            if (isset($this->loggers['default'])) {
                 $logger = $this->loggers['default'];
             }
         }
@@ -294,8 +295,8 @@ abstract class Configuration
     public function getMethodIdentifier($method = '')
     {
         // Formatage de l'identifiant de la méthode préfixée par l'identifiant du service
-        if(isset($this->methodIdentifiers[$method])) {
-            return $this->getIdentifier().' - '.$this->methodIdentifiers[$method];
+        if (isset($this->methodIdentifiers[$method])) {
+            return $this->getIdentifier() . ' - ' . $this->methodIdentifiers[$method];
         }
 
         return $this->getIdentifier();
@@ -311,8 +312,8 @@ abstract class Configuration
     public function getMethodIdentifierForLogger($method = '')
     {
         // Formatage de l'identifiant de la méthode préfixée par l'identifiant du service
-        if(isset($this->methodIdentifiers[$method])) {
-            return $this->getIdentifierForLogger().' - '.$this->methodIdentifiers[$method];
+        if (isset($this->methodIdentifiers[$method])) {
+            return $this->getIdentifierForLogger() . ' - ' . $this->methodIdentifiers[$method];
         }
 
         return $this->getIdentifierForLogger();
@@ -341,7 +342,7 @@ abstract class Configuration
      */
     public function getMethodIncidentLogger($method)
     {
-        if(is_array($this->methodsIncidentLogger[$method])) {
+        if (is_array($this->methodsIncidentLogger[$method])) {
             return LogFactory::getLogger($this->methodsIncidentLogger[$method], $method);
         }
         return null;
@@ -354,7 +355,9 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadDev() {}
+    public function loadDev()
+    {
+    }
 
     /**
      * Méthode appelée sur l'environnement de préproduction
@@ -363,7 +366,9 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadPreprod() {}
+    public function loadPreprod()
+    {
+    }
 
     /**
      * Méthode appelée sur l'environnement de recette
@@ -372,7 +377,9 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadRecette() {}
+    public function loadRecette()
+    {
+    }
 
     /**
      * Méthode appelée sur l'environnement de production
@@ -381,7 +388,9 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadProd() {}
+    public function loadProd()
+    {
+    }
 
     /**
      * Méthode appelée avant l'initialisation du service par la Factory.
