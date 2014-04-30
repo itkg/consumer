@@ -173,7 +173,7 @@ abstract class Service
         }
         // Fin de l'appel
         $this->end = microtime(true);
-       
+
         $this->displayDebugForCall($oResponse, $method, $aDatas, $bDebug);
         /**
          * Retourne le modèle réponse après l'execution de traitements
@@ -181,7 +181,7 @@ abstract class Service
          */
         return $this->postCall($oResponse, $requestModel, $exception, $aDatas, $method);
     }
-    
+
     /**
      * prépare le modèle de requête pour la méthode call
      *
@@ -223,7 +223,7 @@ abstract class Service
         }
         return $requestModel;
     }
-    
+
     /**
      * prépare le modèle de réponse pour la méthode call
      *
@@ -390,7 +390,7 @@ abstract class Service
         }
         $this->logger->addError('Erreur : ' . $exception->getMessage() . $sLogRequestModel . $reponseTrame, $paramsLogs);
     }
-    
+
     /**
      * récupère la trame de réponse dans le cas d'un client SOAP'
      *

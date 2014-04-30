@@ -10,9 +10,9 @@ class Itkg
 {
     /**
      * Conteneur de paramêres
-     * 
+     *
      * @static
-     * @var array 
+     * @var array
      */
     public static $config = array(
         'LOG_PATH'           => '/var/logs',

@@ -13,7 +13,7 @@ class ExtendedSimpleXMLElement extends \SimpleXMLElement
 {
     /**
      * Add cdata section
-     * 
+     *
      * @param $cdataText
      */
     public function addCData($cdataText)

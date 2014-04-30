@@ -354,7 +354,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadDev(){}
+    public function loadDev() {}
 
     /**
      * Méthode appelée sur l'environnement de préproduction
@@ -363,7 +363,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadPreprod(){}
+    public function loadPreprod() {}
 
     /**
      * Méthode appelée sur l'environnement de recette
@@ -372,7 +372,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadRecette(){}
+    public function loadRecette() {}
 
     /**
      * Méthode appelée sur l'environnement de production
@@ -381,7 +381,7 @@ abstract class Configuration
      *
      * Méthode appelée par défaut dans la Factory
      */
-    public function loadProd(){}
+    public function loadProd() {}
 
     /**
      * Méthode appelée avant l'initialisation du service par la Factory.
@@ -389,8 +389,8 @@ abstract class Configuration
      *
      * @param string $serviceIdentifier Identifiant alphanumérique du service
      */
-    public function override($serviceIdentifier){
-
+    public function override($serviceIdentifier)
+    {
     }
 
     /**

@@ -139,7 +139,7 @@ class Client extends BaseClient
         if ($this->options['response_format'] == 'phps') {
             $return = unserialize($resultset->getResponse()->getBody());
             $return['responseHeader']['status'] = $resultset->getResponse()->getStatusCode();
-            
+
             return $return;
         }
 
