@@ -69,7 +69,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $configuration = new \Itkg\Mock\Service\Configuration();
         $this->object->setConfiguration($configuration);
-        $method = null;
+        $method = 'test';
         try {
             $this->object->preCall($method) ;     
         } catch(\Exception $e) {
@@ -98,7 +98,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Itkg\Service::postCall
-     * @todo   Implement testPostCall().
      */
     public function testPostCall()
     {
@@ -106,7 +105,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->object->setConfiguration($configuration);
         $this->testPreCall('test');
         try {
-            $this->object->postCall(null) ;     
+            $this->object->postCall('test') ;
         } catch(\Exception $e) {
             $this->fail($e->getMessage());
         } 

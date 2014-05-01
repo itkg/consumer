@@ -153,6 +153,7 @@ class MonitoringTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddService()
     {
+        \Itkg\Log::$config['DEFAULT_HANDLER'] = new \Itkg\Log\Handler\EchoHandler();
         \Itkg\Monitoring::clear();
         $this->assertEquals(array(), \Itkg\Monitoring::getTests());
         $service = new \Itkg\Mock\Service();

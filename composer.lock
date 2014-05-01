@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/itkg/log.git",
-                "reference": "96094c52e2e0058b5c0ed502c9b2dc7ec2bdf23f"
+                "reference": "4d24c6b234fbc9f9237d5f7dd304d0f5b3d1efb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/itkg/log/zipball/96094c52e2e0058b5c0ed502c9b2dc7ec2bdf23f",
-                "reference": "96094c52e2e0058b5c0ed502c9b2dc7ec2bdf23f",
+                "url": "https://api.github.com/repos/itkg/log/zipball/4d24c6b234fbc9f9237d5f7dd304d0f5b3d1efb4",
+                "reference": "4d24c6b234fbc9f9237d5f7dd304d0f5b3d1efb4",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 "library",
                 "log"
             ],
-            "time": "2014-04-30 22:42:44"
+            "time": "2014-04-30 22:51:11"
         },
         {
             "name": "monolog/monolog",
