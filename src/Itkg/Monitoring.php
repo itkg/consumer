@@ -217,7 +217,7 @@ class Monitoring
         if ($service->getConfiguration()->isMonitored()) {
             // Initialisation des attributs de monitoring + lancement du test et traitement
             $response = $this->execute($service, $method);
-            $service  = $this->postExecute($service, $response);
+            $service = $this->postExecute($service, $response);
         }
         $this->identifier = $service->getConfiguration()->getIdentifierForMonitoring();
         $this->service = $service;
@@ -327,6 +327,7 @@ class Monitoring
             $this->working = false;
         }
     }
+
     /**
      * Initialise les tests
      */

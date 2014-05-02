@@ -269,7 +269,7 @@ abstract class Service
         if ($bDebug) {
             $logger = \Itkg\Log\Factory::getLogger(array(array('handler' => new EchoHandler())));
 
-            $message  = '<br/><br/><strong>=============== Appel methode ' . $method . ' ================</strong><br/>';
+            $message = '<br/><br/><strong>=============== Appel methode ' . $method . ' ================</strong><br/>';
             $message .= '<br/>--------------------------------- Paramètres ws ---------------------------------<br/>';
             $aParametres = $this->configuration->getParameters();
             if (is_array($aParametres)) {
@@ -280,16 +280,16 @@ abstract class Service
             $message .= '<br/>--------------------------------- Données ws ---------------------------------<br/>';
             if (is_array($aDatas)) {
                 foreach ($aDatas as $key => $value) {
-                    $message .=  $key . ' : ' . $value . '<br/>';
+                    $message .= $key . ' : ' . $value . '<br/>';
                 }
             }
-            $message .=  '<br/>--------------------------------- Trame appel ---------------------------------<br/>';
-            $message .=  htmlentities($this->client->__getLastRequest()) . '<br/>';
-            $message .=  '<br/>--------------------------------- Trame reponse ---------------------------------<br/>';
-            $message .=  htmlentities($this->client->__getLastResponse()) . '<br/>';
+            $message .= '<br/>--------------------------------- Trame appel ---------------------------------<br/>';
+            $message .= htmlentities($this->client->__getLastRequest()) . '<br/>';
+            $message .= '<br/>--------------------------------- Trame reponse ---------------------------------<br/>';
+            $message .= htmlentities($this->client->__getLastResponse()) . '<br/>';
             $message .= '<br/>--------------------------------- Reponse model ---------------------------------<br/>';
 
-            $message .= '<pre>'.print_r($oResponse, true).'</pre>';
+            $message .= '<pre>' . print_r($oResponse, true) . '</pre>';
             $logger->addInfo($message);
         }
     }

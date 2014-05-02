@@ -245,7 +245,7 @@ class DataTransformer
                 $data[$varName] = self::trimData($varValue);
             }
         } else {
-            $data = trim((string) $data);
+            $data = trim((string)$data);
         }
 
         return $data;

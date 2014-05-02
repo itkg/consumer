@@ -184,8 +184,8 @@ class Client extends BaseClient
      */
     protected function addSort(Query $query)
     {
-        if(isset($this->options['sort']) && is_array($this->options['sort'])) {
-            foreach($this->options['sort'] as $key => $value) {
+        if (isset($this->options['sort']) && is_array($this->options['sort'])) {
+            foreach ($this->options['sort'] as $key => $value) {
                 switch ($value) {
                     case "ASC" :
                         $query->addSort($key, $query::SORT_ASC);

@@ -23,7 +23,7 @@ class Client
             return $headers["X-Forwarded-For"];
         }
 
-        if(getenv('HTTP_X_FORWARDED_FOR')) {
+        if (getenv('HTTP_X_FORWARDED_FOR')) {
             return getenv('HTTP_X_FORWARDED_FOR');
         }
 

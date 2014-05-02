@@ -103,7 +103,7 @@ class Client extends BaseClient
      */
     public function makeUrl($url, $data)
     {
-        if(!is_array($data) || empty($data)) {
+        if (!is_array($data) || empty($data)) {
             return $url;
         }
 
