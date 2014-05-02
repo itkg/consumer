@@ -3,6 +3,7 @@
 namespace Itkg\Solr;
 
 use Solarium\Client as BaseClient;
+use Solarium\QueryType\Select\Query\Query;
 
 /**
  * Client Solr
@@ -160,9 +161,9 @@ class Client extends BaseClient
      * Hydrate query with client options
      * @codeCoverageIgnore
      *
-     * @param $query
+     * @param Query $query
      */
-    protected function hydrateQuery($query)
+    protected function hydrateQuery(Query $query)
     {
         $query = $this->paginate($query);
 
@@ -178,10 +179,10 @@ class Client extends BaseClient
     /**
      * Manage sorts
      *
-     * @param $query
+     * @param Query $query
      * @return mixed
      */
-    protected function addSort($query)
+    protected function addSort(Query $query)
     {
         if(isset($this->options['sort']) && is_array($this->options['sort'])) {
             foreach($this->options['sort'] as $key => $value) {
@@ -202,10 +203,10 @@ class Client extends BaseClient
     /**
      * Add pagination
      *
-     * @param $query
+     * @param Query $query
      * @return mixed
      */
-    protected function paginate($query)
+    protected function paginate(Query $query)
     {
         if (isset($this->options['start']) && $this->options['start'] != '') {
             $query->setStart($this->options['start']);

@@ -408,10 +408,11 @@ class Monitoring
      */
     public static function getReportForTest(Monitoring $test, $work = 'OK', $fail = 'KO')
     {
+        $serviceConfiguration = null;
         if ($test->getService()) {
             $serviceConfiguration = $test->getService()->getConfiguration();
         }
-        if (isset($serviceConfiguration) && !$serviceConfiguration->isMonitored()) {
+        if ($serviceConfiguration && !$serviceConfiguration->isMonitored()) {
             //si le service n'est pas supervisé
             return sprintf(
                 '<span class="libelle nomon">%s (non supervis&eacute;)</span><br /><br />',
@@ -421,12 +422,8 @@ class Monitoring
 
         //si le service est supervisé
         $disabled = '';
-        if (!isset($serviceConfiguration) || $serviceConfiguration->isEnabled()) {
+        if ($serviceConfiguration && !$serviceConfiguration->isEnabled()) {
             $disabled = 'disabled';
-        }
-        $value = $fail;
-        if ($test->isWorking()) {
-            $value = $work;
         }
 
         $e = $test->getException();
@@ -435,7 +432,7 @@ class Monitoring
             $disabled,
             $test->getIdentifier(),
             $disabled,
-            $value,
+            ($test->isWorking()) ? $work : $fail,
             number_format($test->getDuration(), 4),
             (!empty($e) ? (" - " . $e->getMessage()) : "")
         );
