@@ -99,44 +99,49 @@ class Client extends BaseClient
      *
      * @param string $url
      * @param array $data
-     * @return string
+     * @retur n string
      */
     public function makeUrl($url, $data)
     {
+        if(!is_array($data) || empty($data)) {
+            return $url;
+        }
+
         $index = 0;
-        if (is_array($data) && !empty($data)) {
+        $separator = '?';
+
+        foreach ($data as $key => $value) {
             if (preg_match('/\\?/', $url)) {
-                $index++;
+                $separator = '&';
             }
 
-            foreach ($data as $key => $value) {
-                if ($key != '') {
-                    $currentKeySeparator = substr($key, 0, 1);
-                    if (!in_array($currentKeySeparator, array('.', '/', '&', '?', '#'))) {
-                        if ($index > 0) {
-                            $separator = '&';
-                        } else {
-                            $separator = '?';
-                        }
-                        $index++;
-                    } else {
-                        $separator = '';
-                    }
-                    $key = $separator . $key;
-                }
-                $currentValueSeparator = substr($value, 0, 1);
-                if (!in_array($currentValueSeparator, array('.', '/', '&', '?', '#'))) {
+            $url .= $this->createParams($key, $value, $separator); //$key . $valueSeparator . $value;
 
-                    $valueSeparator = '=';
-                } else {
-                    $valueSeparator = '';
-                }
-
-                $url .= $key . $valueSeparator . $value;
-
-            }
         }
         return $url;
+    }
+
+    /**
+     * Return URL params
+     *
+     * @param $key
+     * @param $value
+     * @param $separator
+     */
+    public function createParams($key, $value, $separator)
+    {
+        $separators = array('.', '/', '&', '?', '#');
+        $valueSeparator = '';
+
+        if ($key != '') {
+            $key = $separator . $key;
+        }
+        $currentValueSeparator = substr($value, 0, 1);
+        if (!in_array($currentValueSeparator, $separators)) {
+            $valueSeparator = '=';
+        }
+
+        return $key . $valueSeparator . $value;
     }
 
     /**

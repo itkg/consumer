@@ -237,25 +237,36 @@ class DataTransformer
     public static function trimData($data)
     {
         if (is_object($data)) {
-            $aVars = get_object_vars($data);
-            if (count($aVars)) {
-                foreach ($aVars as $varName => $varValue) {
-                    $data->$varName = self::trimData($varValue);
-                }
+            return self::trimObject($data);
+        }
+
+        if (is_array($data)) {
+            foreach ($data as $varName => $varValue) {
+                $data[$varName] = self::trimData($varValue);
             }
         } else {
-            if (is_array($data)) {
-                if (count($data)) {
-                    foreach ($data as $varName => $varValue) {
-                        $data[$varName] = self::trimData($varValue);
-                    }
-                }
-            } else {
-                if (is_string($data)) {
-                    $data = trim($data);
-                }
+            $data = trim((string) $data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Trim object attributes
+     *
+     * @param $data
+     * @return mixed
+     */
+    protected static function trimObject($data)
+    {
+        $aVars = get_object_vars($data);
+        if (is_array($aVars)) {
+            foreach ($aVars as $varName => $varValue) {
+                $data->$varName = self::trimData($varValue);
             }
         }
+
         return $data;
     }
 }
+

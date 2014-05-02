@@ -3,6 +3,7 @@
 namespace Itkg;
 
 use Itkg\Log\Logger;
+use Itkg\Monitoring\Test;
 
 /**
  * Classe de monitoring de Service
@@ -26,6 +27,13 @@ class Monitoring
      * @var array
      */
     protected static $tests;
+
+    /**
+     * Tests report
+     *
+     * @var string
+     */
+    protected static $report;
 
     /**
      * Les loggers courants
@@ -70,6 +78,13 @@ class Monitoring
      * @var string
      */
     protected $identifier;
+
+    /**
+     * Monitored service
+     *
+     * @var Service
+     */
+    protected $service;
 
     /**
      * Test courant
@@ -197,36 +212,60 @@ class Monitoring
      */
     public function addService(\Itkg\Service $service, $method)
     {
+        $response = null;
+
         if ($service->getConfiguration()->isMonitored()) {
-            $this->start = microtime(true);
             // Initialisation des attributs de monitoring + lancement du test et traitement
-            try {
-                $service->preCall($method);
-
-                $oResponse = $service->$method();
-                $this->working = true;
-
-            } catch (\Exception $e) {
-                $this->exception = $e;
-                $this->working = false;
-            }
-
-            $this->end = microtime(true);
-
-            //pour logguer les appels monitoring
-            try {
-                $service->setStart($this->start);
-                $service->setEnd($this->end);
-                $service->postCall($oResponse, null, $this->exception);
-            } catch (\Exception $e) {
-                // on ne fait rien dans le cas du monitoring
-            }
-
-            $this->duration = $this->end - $this->start;
+            $response = $this->execute($service, $method);
+            $service  = $this->postExecute($service, $response);
         }
         $this->identifier = $service->getConfiguration()->getIdentifierForMonitoring();
         $this->service = $service;
         self::$tests[] = $this;
+    }
+
+    /**
+     * Execute service monitoring method
+     */
+    protected function execute(Service $service, $method)
+    {
+        $this->start = microtime(true);
+        $oResponse = null;
+        try {
+            $service->preCall($method);
+
+            $oResponse = $service->$method();
+            $this->working = true;
+
+        } catch (\Exception $e) {
+            $this->exception = $e;
+            $this->working = false;
+        }
+
+        return $oResponse;
+    }
+
+    /**
+     * Some actions after service execute
+     *
+     * @param Service $service
+     * @param mixed $response
+     */
+    protected function postExecute(Service $service, $response)
+    {
+        $this->end = microtime(true);
+        //pour logguer les appels monitoring
+        try {
+            $service->setStart($this->start);
+            $service->setEnd($this->end);
+            $service->postCall($response, null, $this->exception);
+        } catch (\Exception $e) {
+            // on ne fait rien dans le cas du monitoring
+        }
+
+        $this->duration = $this->end - $this->start;
+
+        return $service;
     }
 
     /**
@@ -256,13 +295,29 @@ class Monitoring
      *
      * @param \Itkg\Monitoring\Test $test
      */
-    public function addTest(\Itkg\Monitoring\Test $test)
+    public function addTest(Test $test)
     {
         $this->start = microtime(true);
         // Initialisation des attributs de monitoring + lancement du test et traitement
 
-        try {
+        $this->executeTest($test);
 
+        $this->end = microtime(true);
+        $this->duration = $this->end - $this->start;
+        $this->identifier = $test->getIdentifier();
+        self::$tests[] = $this;
+    }
+
+    /**
+     * Execute a test
+     *
+     * @param Test $test
+     */
+    protected function executeTest(Test $test)
+    {
+        $this->test = $test;
+
+        try {
             $test->execute();
             $this->working = true;
 
@@ -271,13 +326,7 @@ class Monitoring
             $this->exception = $e;
             $this->working = false;
         }
-        $this->test = $test;
-        $this->end = microtime(true);
-        $this->duration = $this->end - $this->start;
-        $this->identifier = $test->getIdentifier();
-        self::$tests[] = $this;
     }
-
     /**
      * Initialise les tests
      */
@@ -285,6 +334,7 @@ class Monitoring
     {
         // Initialisation des tests
         self::$tests = array();
+        self::$report = '';
     }
 
     /**
@@ -300,28 +350,35 @@ class Monitoring
         $generalWork = '[GLOBAL : OKSFR]',
         $generalFail = '[GLOBAL : KOSFR]'
     ) {
-        // $working indique l'état général
-        $working = true;
+        //Etat général
+        if (self::isUP()) {
+            self::$report .= '<br />' . $generalWork;
+        } else {
+            self::$report .= '<br />' . $generalFail;
+        }
 
-        $report = '';
+        self::log(self::$report);
+    }
+
+    /**
+     * Tests stack is OK ?
+     *
+     * @return boolean
+     */
+    public static function isUP()
+    {
+        $working = true;
         // Log des rapports
         if (is_array(self::$tests)) {
             foreach (self::$tests as $test) {
-                $report .= self::getReportForTest($test);
+                self::$report .= self::getReportForTest($test);
                 if (!$test->isWorking()) {
                     $working = false;
                 }
             }
         }
 
-        //Etat général
-        if ($working) {
-            $report .= '<br />' . $generalWork;
-        } else {
-            $report .= '<br />' . $generalFail;
-        }
-
-        self::log($report);
+        return $working;
     }
 
     /**
@@ -351,40 +408,36 @@ class Monitoring
      */
     public static function getReportForTest(Monitoring $test, $work = 'OK', $fail = 'KO')
     {
-        if (isset($test->service)) {
-            $serviceConfiguration = $test->service->getConfiguration();
+        if ($test->getService()) {
+            $serviceConfiguration = $test->getService()->getConfiguration();
         }
-        if (!isset($serviceConfiguration) || $serviceConfiguration->isMonitored()) {
-            //si le service est supervisé
-            $disabled = '';
-            if (!isset($serviceConfiguration) || $serviceConfiguration->isEnabled()) {
-                $disabled = 'disabled';
-            }
-            if ($test->isWorking()) {
-                return sprintf(
-                    '<span class="libelle working %s">%s</span><br /><span class="working %s">%s (%s sec) </span><br />',
-                    $disabled,
-                    $test->getIdentifier(),
-                    $disabled,
-                    $work,
-                    number_format($test->getDuration(), 4)
-                );
-            }
-            $e = $test->getException();
+        if (isset($serviceConfiguration) && !$serviceConfiguration->isMonitored()) {
+            //si le service n'est pas supervisé
             return sprintf(
-                '<span class="libelle working %s">%s</span><br /><span class="working %s">%s (%s sec) %s</span><br />',
-                $disabled,
-                $test->getIdentifier(),
-                $disabled,
-                $fail,
-                number_format($test->getDuration(), 4),
-                (!empty($e) ? (" - " . $e->getMessage()) : "")
+                '<span class="libelle nomon">%s (non supervis&eacute;)</span><br /><br />',
+                $test->getIdentifier()
             );
         }
-        //si le service n'est pas supervisé
+
+        //si le service est supervisé
+        $disabled = '';
+        if (!isset($serviceConfiguration) || $serviceConfiguration->isEnabled()) {
+            $disabled = 'disabled';
+        }
+        $value = $fail;
+        if ($test->isWorking()) {
+            $value = $work;
+        }
+
+        $e = $test->getException();
         return sprintf(
-            '<span class="libelle nomon">%s (non supervis&eacute;)</span><br /><br />',
-            $test->getIdentifier()
+            '<span class="libelle working %s">%s</span><br /><span class="working %s">%s (%s sec) %s</span><br />',
+            $disabled,
+            $test->getIdentifier(),
+            $disabled,
+            $value,
+            number_format($test->getDuration(), 4),
+            (!empty($e) ? (" - " . $e->getMessage()) : "")
         );
     }
 

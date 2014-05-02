@@ -159,25 +159,32 @@ class Client extends BaseClient
     /**
      * Hydrate query with client options
      * @codeCoverageIgnore
+     *
      * @param $query
      */
     protected function hydrateQuery($query)
     {
-        if (isset($this->options['start']) && $this->options['start'] != '') {
-            $query->setStart($this->options['start']);
+        $query = $this->paginate($query);
+
+        $query = $this->addSort($query);
+
+        if (isset($this->options['response_format']) && $this->options['response_format'] != '') {
+            $query->setResponseWriter($this->options['response_format']);
         }
 
-        if (isset($this->options['rows']) && $this->options['rows'] != '') {
-            $query->setRows($this->options['rows']);
-        }
+        return $query;
+    }
 
-        if (isset($this->options['sort'])) {
-            $aSort = $this->options['sort'];
-        }
-
-        if (is_array($aSort)) {
-            // sort the results
-            foreach ($aSort as $key => $value) {
+    /**
+     * Manage sorts
+     *
+     * @param $query
+     * @return mixed
+     */
+    protected function addSort($query)
+    {
+        if(isset($this->options['sort']) && is_array($this->options['sort'])) {
+            foreach($this->options['sort'] as $key => $value) {
                 switch ($value) {
                     case "ASC" :
                         $query->addSort($key, $query::SORT_ASC);
@@ -189,8 +196,23 @@ class Client extends BaseClient
             }
         }
 
-        if (isset($this->options['response_format']) && $this->options['response_format'] != '') {
-            $query->setResponseWriter($this->options['response_format']);
+        return $query;
+    }
+
+    /**
+     * Add pagination
+     *
+     * @param $query
+     * @return mixed
+     */
+    protected function paginate($query)
+    {
+        if (isset($this->options['start']) && $this->options['start'] != '') {
+            $query->setStart($this->options['start']);
+        }
+
+        if (isset($this->options['rows']) && $this->options['rows'] != '') {
+            $query->setRows($this->options['rows']);
         }
 
         return $query;

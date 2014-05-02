@@ -64,6 +64,13 @@ class Client extends \SoapClient
     protected $requestOverride;
 
     /**
+     * Current timeout (before override)
+     *
+     * @var int
+     */
+    protected $currentTimeout;
+
+    /**
      * Constructeur
      *
      * @param string $wsdl
@@ -97,47 +104,81 @@ class Client extends \SoapClient
      *
      * Renvoie une Itkg\Soap\Exception\SoapException en cas d'erreur
      * @codeCoverageIgnore
+     *
      * @param type $method
      * @param type $request
+     * @return mixed|null
      */
     public function call($method, $request)
     {
         $this->checkRequiredOptions($method);
+        $oResponse = null;
 
         try {
-            // Set timeout
-            if (isset($this->options['timeout']) && is_numeric($this->options['timeout'])) {
-                $currentTimeout = ini_get('default_socket_timeout');
-                ini_set('default_socket_timeout', $this->options['timeout']);
-            }
-
-            // Entete
-            $this->makeHeaders();
-
-            // Client SOAP
-            $oSoapRequest = new \SoapVar($request, XSD_ANYXML);
-            if (isset($this->options['location'])) {
-                $this->__setLocation($this->options['location']);
-            }
-            // Appel Soap de la methode
-            $this->start = microtime(true);
+            $oSoapRequest = $this->preCall($method, $request);
 
             $oResponse = $this->__soapCall($method, array($oSoapRequest), $this->options, $this->header);
-            $this->end = microtime(true);
 
-            // Remise en place du timeout
-            if ($currentTimeout) {
-                ini_set('default_socket_timeout', $currentTimeout);
-            }
+            $this->postCall();
 
         } catch (\SoapFault $e) {
-            $exception = new \Itkg\Soap\Exception\SoapException($e->faultcode, $e->getMessage());
-            $exception->setTrame($this->__getLastRequest());
-
-            throw $exception;
+            $this->manageException($e);
         }
 
         return $oResponse;
+    }
+
+    /**
+     * Manage soap exception
+     *
+     * @param \SoapFault $e
+     * @throws Exception\SoapException
+     */
+    protected function manageException(\SoapFault $e)
+    {
+        $exception = new \Itkg\Soap\Exception\SoapException($e->faultcode, $e->getMessage());
+        $exception->setTrame($this->__getLastRequest());
+
+        throw $exception;
+    }
+
+    /**
+     * Some initialisation before soap call
+     *
+     * @param $request
+     * @return int Current timeout
+     */
+    protected function preCall($request)
+    {
+        // Set timeout
+        if (isset($this->options['timeout']) && is_numeric($this->options['timeout'])) {
+            $this->currentTimeout = ini_get('default_socket_timeout');
+            ini_set('default_socket_timeout', $this->options['timeout']);
+        }
+
+        // Entete
+        $this->makeHeaders();
+
+        // Client SOAP
+        $oSoapRequest = new \SoapVar($request, XSD_ANYXML);
+        if (isset($this->options['location'])) {
+            $this->__setLocation($this->options['location']);
+        }
+        // Appel Soap de la methode
+        $this->start = microtime(true);
+
+        return $oSoapRequest;
+    }
+
+    /**
+     * Actions to execute after soap call
+     */
+    protected function postCall()
+    {
+        $this->end = microtime(true);
+
+        // Remise en place du timeout
+        ini_set('default_socket_timeout', $this->currentTimeout);
     }
 
     /**

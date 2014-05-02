@@ -18,20 +18,16 @@ class Client
      */
     public static function getIp()
     {
-        $ipClient = '';
-        if (getenv('HTTP_X_FORWARDED_FOR') === false) {
-            if (function_exists('apache_request_headers')) {
-                $headers = apache_request_headers();
-                $ipClient = $headers["X-Forwarded-For"];
-            }
+        if (getenv('HTTP_X_FORWARDED_FOR') === false && function_exists('apache_request_headers')) {
+            $headers = apache_request_headers();
+            return $headers["X-Forwarded-For"];
+        }
 
-        } else {
-            $ipClient = getenv('HTTP_X_FORWARDED_FOR');
+        if(getenv('HTTP_X_FORWARDED_FOR')) {
+            return getenv('HTTP_X_FORWARDED_FOR');
         }
-        if (!$ipClient) {
-            $ipClient = $_SERVER["REMOTE_ADDR"];
-        }
-        return $ipClient;
+
+        return $_SERVER["REMOTE_ADDR"];
     }
 
     /**

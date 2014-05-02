@@ -54,6 +54,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
     {
         $data = array("test1"=>"testvalue","test2"=>"testvalue2");
         $this->assertEquals("http://test.com?test1=testvalue&test2=testvalue2", $this->object->makeUrl("http://test.com", $data));
+
+        $data = array(""=>"/testvalue","test2"=>"testvalue2");
+        $this->assertEquals("http://test.com/testvalue?test2=testvalue2", $this->object->makeUrl("http://test.com", $data));
+
+        $data = array("test1"=>"testvalue","test2"=>"testvalue2");
+        $this->assertEquals("http://test.com?first=one&test1=testvalue&test2=testvalue2", $this->object->makeUrl("http://test.com?first=one", $data));
     }    
     /**
      * @covers Itkg\Rest\Client::addOptions

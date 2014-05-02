@@ -80,7 +80,7 @@ abstract class Model
     /**
      * Utilisé pour les classMap SOAP
      *
-     * @return $string le nom du model courant
+     * @return string le nom du model courant
      */
     public function getClassMap()
     {

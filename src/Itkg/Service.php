@@ -2,6 +2,7 @@
 
 namespace Itkg;
 
+use Itkg\Log\Handler\EchoHandler;
 use Itkg\Service\Configuration as ServiceConfiguration;
 
 /**
@@ -147,7 +148,7 @@ abstract class Service
         $exception = null;
         $oResponse = null;
         $requestModel = $this->initRequestModelForCall($method, $aDatas);
-        $responseModel = $this->initResponseModelForCall($method);
+
         /**
          * Appel preCall pour actions à réaliser avant l'execution de la méthode
          */
@@ -266,28 +267,30 @@ abstract class Service
          * Affichage du debug
          */
         if ($bDebug) {
-            echo '<br/><br/><strong>=============== Appel methode ' . $method . ' ================</strong><br/>';
-            echo '<br/>--------------------------------- Paramètres ws ---------------------------------<br/>';
+            $logger = \Itkg\Log\Factory::getLogger(array(array('handler' => new EchoHandler())));
+
+            $message  = '<br/><br/><strong>=============== Appel methode ' . $method . ' ================</strong><br/>';
+            $message .= '<br/>--------------------------------- Paramètres ws ---------------------------------<br/>';
             $aParametres = $this->configuration->getParameters();
-            if (is_array($aParametres) && !empty($aParametres)) {
+            if (is_array($aParametres)) {
                 foreach ($aParametres as $key => $value) {
-                    echo($key . ' : ' . $value . '<br/>');
+                    $message .= $key . ' : ' . $value . '<br/>';
                 }
             }
-            echo '<br/>--------------------------------- Données ws ---------------------------------<br/>';
-            if (is_array($aDatas) && !empty($aDatas)) {
+            $message .= '<br/>--------------------------------- Données ws ---------------------------------<br/>';
+            if (is_array($aDatas)) {
                 foreach ($aDatas as $key => $value) {
-                    echo($key . ' : ' . $value . '<br/>');
+                    $message .=  $key . ' : ' . $value . '<br/>';
                 }
             }
-            echo '<br/>--------------------------------- Trame appel ---------------------------------<br/>';
-            echo(htmlentities($this->client->__getLastRequest()) . '<br/>');
-            echo '<br/>--------------------------------- Trame reponse ---------------------------------<br/>';
-            echo(htmlentities($this->client->__getLastResponse()) . '<br/>');
-            echo '<br/>--------------------------------- Reponse model ---------------------------------<br/>';
-            echo '<pre>';
-            var_dump($oResponse);
-            echo '</pre>';
+            $message .=  '<br/>--------------------------------- Trame appel ---------------------------------<br/>';
+            $message .=  htmlentities($this->client->__getLastRequest()) . '<br/>';
+            $message .=  '<br/>--------------------------------- Trame reponse ---------------------------------<br/>';
+            $message .=  htmlentities($this->client->__getLastResponse()) . '<br/>';
+            $message .= '<br/>--------------------------------- Reponse model ---------------------------------<br/>';
+
+            $message .= '<pre>'.print_r($oResponse, true).'</pre>';
+            $logger->addInfo($message);
         }
     }
 

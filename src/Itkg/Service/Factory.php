@@ -4,6 +4,7 @@ namespace Itkg\Service;
 
 use Itkg\Exception\NotFoundException;
 use Itkg\Exception\UnauthorizedException;
+use Itkg\Service;
 
 /**
  * Classe de création des Services
@@ -31,10 +32,10 @@ class Factory
      */
     public static function getService($service, array $parameters = array(), $bypassAccess = false)
     {
-        $oService = self::instantiateService($service, $parameters);
+        $oService = self::createService($service, $parameters);
         $sServiceClass = get_class($oService);
 
-        $oConfiguration = self::instantiateConfiguration($service, $sServiceClass);
+        $oConfiguration = self::createConfiguration($service, $sServiceClass);
         /**
          * Chargement des paramètres de configuration du service
          * Utile pour les identifiants de WS ou d'autres parametres dépendant de l'environnement
@@ -53,28 +54,42 @@ class Factory
             );
         }
 
-
         // Surcharge de la configuration via la méthode override
         $oConfiguration->override($service);
-        $oConfiguration->init();
+
+        return self::initService($oService, $oConfiguration, $bypassAccess);
+    }
+
+    /**
+     * Some initialisation for service and configuration
+     *
+     * @param Service $service
+     * @param Configuration $configuration
+     * @param $bypassAccess
+     * @return Service
+     * @throws \Itkg\Exception\UnauthorizedException
+     */
+    static protected function initService(Service $service, Configuration $configuration, $bypassAccess)
+    {
+        $configuration->init();
         if (isset(\Itkg::$config['TYPE_ENVIRONNEMENT'])) {
             $method = 'load' . ucFirst(\Itkg::$config['TYPE_ENVIRONNEMENT']);
-            call_user_func_array(array($oConfiguration, $method), array());
+            call_user_func_array(array($configuration, $method), array());
         }
         // Chargement de la configuration
-        $oService->setConfiguration($oConfiguration);
+        $service->setConfiguration($configuration);
 
         // Vérification de l'accès au service
-        if (!$bypassAccess && !$oService->canAccess()) { // Access denied
+        if (!$bypassAccess && !$service->canAccess()) { // Access denied
             throw new UnauthorizedException(
                 'Vous n\'avez pas le droit d\'accéder à ce service',
                 UnauthorizedException::NON_ABONNE
             );
         }
         // Initialisation du service
-        $oService->init();
+        $service->init();
 
-        return $oService;
+        return $service;
     }
 
     /**
@@ -88,7 +103,7 @@ class Factory
      * @throws \Itkg\Exception\NotFoundException
      * @return
      */
-    protected static function instantiateService($service, array $parameters = array())
+    protected static function createService($service, array $parameters = array())
     {
         // Instanciation du service par définition
         if (isset(\Itkg::$config[$service]['class'])) {
@@ -134,7 +149,7 @@ class Factory
      * @throws \Itkg\Exception\NotFoundException
      * @return \Itkg\Configuration
      */
-    protected static function instantiateConfiguration($service, $sServiceClass)
+    protected static function createConfiguration($service, $sServiceClass)
     {
         $oConfiguration = null;
         /**
