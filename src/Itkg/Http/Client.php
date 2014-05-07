@@ -20,14 +20,17 @@ class Client
     {
         if (getenv('HTTP_X_FORWARDED_FOR') === false && function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
-            return $headers["X-Forwarded-For"];
+
+	        if(isset($headers["X-Forwarded-For"])) {
+                return $headers["X-Forwarded-For"];
+	        }
         }
 
         if (getenv('HTTP_X_FORWARDED_FOR')) {
-            return getenv('HTTP_X_FORWARDED_FOR');
-        }
 
-        return $_SERVER["REMOTE_ADDR"];
+	        return getenv('HTTP_X_FORWARDED_FOR');
+        }
+	    return $_SERVER["REMOTE_ADDR"];
     }
 
     /**
