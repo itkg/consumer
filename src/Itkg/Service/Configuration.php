@@ -424,4 +424,27 @@ abstract class Configuration
     {
         return true;
     }
+
+    /**
+     * Fonction permettant de détecter l'activation log d'appel au cache
+     * Par défaut, un service est activé 
+     * 
+     * @return boolean
+     */
+    public function isCacheEnabled()
+    {
+        return TRUE;
+    }
+
+    /**
+     * Fonction permettant de détecter l'activation des log si les WS sont débrayés
+     * Par défaut, un service est activé 
+     * 
+     * @return boolean
+     */
+    public function isDisplayWsEnabled()
+    {
+        return TRUE;
+    }
+    
 }

@@ -48,6 +48,13 @@ abstract class Service
     protected $end;
 
     /**
+     * Variable d'appel du service en direct sans passer par le cache
+     *
+     * @var boolean
+     */
+    protected $isDirect = true;
+
+    /**
      * Current Logger
      * @var \Itkg\Log\Logger
      */
@@ -168,6 +175,12 @@ abstract class Service
          */
         try {
             $oResponse = $this->$method($requestModel, $responseModelClass, $mapping);
+            if ($this->configuration->isEnabled() || !$this->isDirect) {
+                $oResponse = $this->$method($requestModel, $responseModelClass, $mapping);
+            } else if ($this->configuration->isDisplayWsEnabled()) {
+                // on ne remonte l'exception que si l'écriture des logs des WS débrayés est activée
+                throw new \Exception('Le service ' . $this->configuration->getIdentifier() . ' a été désactivé dans le back office');
+            }
         } catch (\Exception $e) {
             $exception = $e;
             $this->logIncident($method, $exception, $aDatas);
@@ -180,7 +193,13 @@ abstract class Service
          * Retourne le modèle réponse après l'execution de traitements
          * post-appel
          */
-        return $this->postCall($oResponse, $requestModel, $exception, $aDatas, $method);
+        if (!$this->configuration->isEnabled() 
+            && !$this->configuration->isDisplayWsEnabled()) {
+            return $oResponse;
+        }
+        else {
+            return $this->postCall($oResponse, $requestModel, $exception, $aDatas, $method);
+        }
     }
 
     /**
@@ -337,22 +356,34 @@ abstract class Service
         $this->getRequestAndResponseTrame($requestTrame, $reponseTrame);
 
         //on logue l'appel à la fin (postCall), pour avoir la trame d'appel (getLastRequest)
-        $paramsLogs["appelRetour"] = "APPEL";
-        $requestToLog = "";
-        if ($oRequestModel) {
-            $requestToLog = $oRequestModel->__toLog();
+        if (!isset($paramsLogs["appelRetour"])) {
+            $paramsLogs["appelRetour"] = "APPEL";
         }
-        $this->logger->addInfo($requestToLog . $requestTrame, $paramsLogs);
-
-        $paramsLogs["requestTime"] = $this->getDuration();
-        if (is_object($exception)) {
-            $this->logResponseKO($oRequestModel, $exception, $reponseTrame, $paramsLogs);
-            /** @var $exception \Exception */
-            throw $exception;
-        } else {
-            $this->logResponseOK($oResponse, $reponseTrame, $paramsLogs);
+        
+        $bWriteLogs = TRUE;
+        
+        // pas d'écriture des logs d'appel au cache si c'est désactivé en BO.         
+        if(!$this->configuration->isCacheEnabled() 
+            && preg_match('#FROM CACHE#', $paramsLogs["appelRetour"])) {
+            $bWriteLogs = false;
         }
-
+        
+        if($bWriteLogs) {
+            $requestToLog = "";
+            if ($oRequestModel) {
+                $requestToLog = $oRequestModel->__toLog();
+            }
+            $this->logger->addInfo($requestToLog . $requestTrame, $paramsLogs);
+    
+            $paramsLogs["requestTime"] = $this->getDuration();
+            if (is_object($exception)) {
+                $this->logResponseKO($oRequestModel, $exception, $reponseTrame, $paramsLogs);
+                /** @var $exception \Exception */
+                throw $exception;
+            } else {
+                $this->logResponseOK($oResponse, $reponseTrame, $paramsLogs);
+            }
+        }
         return $oResponse;
     }
 
@@ -408,19 +439,19 @@ abstract class Service
     protected function getRequestAndResponseTrame(&$requestTrame, &$reponseTrame)
     {
         //récupération des trames dans le cas d'un client SOAP
-        if ($this->configuration->getParameter("disableLogTrame") != "true"
+        if ($this->configuration->logTrameEnabled()
             && (is_subclass_of($this->client, "SoapClient")
-                || is_subclass_of($this->client, "Guzzle\\Http\\Client"))
+                || is_subclass_of($this->client, "Guzzle\\Http\\Client")
+                || is_subclass_of($this->client,"Solarium\Client")
+            )
         ) {
             $requestTrame = $this->client->__getLastRequest();
             if (strlen($requestTrame) > 0) {
-                $requestTrame = str_replace(CHR(13) . CHR(10), "", $requestTrame);
-                $requestTrame = " - " . $requestTrame;
+                $requestTrame = preg_replace('/\s\s+/', ' ', str_replace(PHP_EOL, ' ', $requestTrame));
             }
             $reponseTrame = $this->client->__getLastResponse();
             if (strlen($reponseTrame) > 0) {
-                $reponseTrame = str_replace(CHR(13) . CHR(10), "", $reponseTrame);
-                $reponseTrame = " - " . $reponseTrame;
+                $reponseTrame = preg_replace('/\s\s+/', ' ', str_replace(PHP_EOL, ' ', $reponseTrame));
             }
         }
     }
