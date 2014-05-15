@@ -320,12 +320,29 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->object->isEnabled());
     }    
+
     /**
      * @covers \Itkg\Service\Configuration::isMonitored
      */
     public function testIsMonitored()
     {
         $this->assertTrue($this->object->isMonitored());
+    }       
+    
+    /**
+     * @covers \Itkg\Service\Configuration::isCacheEnabled
+     */
+    public function testIsCacheEnabled()
+    {
+        $this->assertTrue($this->object->isCacheEnabled());
+    }       
+    
+    /**
+     * @covers \Itkg\Service\Configuration::isDisplayWsEnabled
+     */
+    public function testIsDisplayWsEnabled()
+    {
+        $this->assertTrue($this->object->isDisplayWsEnabled());
     }       
     
      /**
