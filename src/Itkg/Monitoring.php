@@ -426,14 +426,16 @@ class Monitoring
         if ($serviceConfiguration && !$serviceConfiguration->isEnabled()) {
             $disabled = 'disabled';
         }
-
+		$class = ($test->isWorking()) ? 'working' : 'error';
         $e = $test->getException();
         return sprintf(
-            '<span class="libelle working %s">%s</span><br /><span class="working %s">%s (%s sec) %s</span><br />',
-            $disabled,
+            '<span class="libelle %s %s">%s</span><br /><span class="%s %s">%s (%s sec) %s</span><br />',
+	        $class,
+	        $disabled,
             $test->getIdentifier(),
-            $disabled,
-            ($test->isWorking()) ? $work : $fail,
+	        $class,
+	        $disabled,
+	        ($test->isWorking()) ? $work : $fail,
             number_format($test->getDuration(), 4),
             (!empty($e) ? (" - " . $e->getMessage()) : "")
         );
