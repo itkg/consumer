@@ -174,7 +174,6 @@ abstract class Service
          * Appel de la méthode
          */
         try {
-            $oResponse = $this->$method($requestModel, $responseModelClass, $mapping);
             if ($this->configuration->isEnabled() || !$this->isDirect) {
                 $oResponse = $this->$method($requestModel, $responseModelClass, $mapping);
             } else if ($this->configuration->isDisplayWsEnabled()) {
