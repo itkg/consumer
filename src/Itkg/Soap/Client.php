@@ -64,13 +64,6 @@ class Client extends \SoapClient
     protected $requestOverride;
 
     /**
-     * Current timeout (before override)
-     *
-     * @var int
-     */
-    protected $currentTimeout;
-
-    /**
      * Constructeur
      *
      * @param string $wsdl
@@ -79,21 +72,27 @@ class Client extends \SoapClient
     public function __construct($wsdl = '', array $options = array())
     {
         $this->options = array(
-            "connection_timeout" => 2,
-            "trace" => true,
-            "encoding" => "UTF8",
-            "soap_version" => SOAP_1_1,
+            "connection_timeout"=>2,
+            "trace"=>true,
+            "encoding"=>"UTF8",
+            "soap_version"=>SOAP_1_1,
             "features" => SOAP_SINGLE_ELEMENT_ARRAYS,
         );
+
 
         $this->options = array_merge($this->options, $options);
 
         // login et password htaccess/header sécurisé
-        $this->loginHeaderSecurity = isset($this->options['login']) ? $this->options['login'] : null;
-        $this->passwordHeaderSecurity = isset($this->options['password']) ? $this->options['password'] : null;
+        $this->loginHeaderSecurity = $this->options['login'];
+        $this->passwordHeaderSecurity = $this->options['password'];
         unset($this->options['login']);
         unset($this->options['password']);
-
+        if (isset($this->options['http_auth_login']) && isset($this->options['http_auth_password'])) {
+            // login pour authentification http
+            $this->options['login'] = $this->options['http_auth_login'];
+            // password pour authentification http
+            $this->options['password'] = $this->options['http_auth_password'];
+        }
         parent::__construct($wsdl, $this->options);
 
     }
@@ -103,82 +102,48 @@ class Client extends \SoapClient
      * Appelle de la méthode __soapCall après initialisation des options
      *
      * Renvoie une Itkg\Soap\Exception\SoapException en cas d'erreur
-     * @codeCoverageIgnore
      *
      * @param type $method
      * @param type $request
-     * @return mixed|null
      */
     public function call($method, $request)
     {
         $this->checkRequiredOptions($method);
-        $oResponse = null;
 
         try {
-            $oSoapRequest = $this->preCall($method, $request);
+            // Set timeout
+            if(isset($this->options['timeout']) && is_numeric($this->options['timeout'])) {
+                $currentTimeout = ini_get('default_socket_timeout');
+                ini_set('default_socket_timeout', $this->options['timeout']);
+            }
+
+            // Entete
+            $this->makeHeaders();
+
+            // Client SOAP
+            $oSoapRequest = new \SoapVar($request, XSD_ANYXML);
+            if(isset($this->options['location'])) {
+                $this->__setLocation($this->options['location']);
+            }
+            // Appel Soap de la methode
+            $this->start = microtime(true);
 
             $oResponse = $this->__soapCall($method, array($oSoapRequest), $this->options, $this->header);
+            $this->end = microtime(true);
 
-            $this->postCall();
+            // Remise en place du timeout
+            if($currentTimeout) {
+                ini_set('default_socket_timeout', $currentTimeout);
+            }
 
-        } catch (\SoapFault $e) {
-            $this->manageException($e);
+        }catch(\SoapFault $e) {
+            $exception = new \Itkg\Soap\Exception\SoapException($e->faultcode, $e->getMessage());
+            $exception->setTrame($this->__getLastRequest());
+
+            throw $exception;
         }
 
         return $oResponse;
-    }
-
-    /**
-     * Manage soap exception
-     *
-     * @param \SoapFault $e
-     * @throws Exception\SoapException
-     */
-    protected function manageException(\SoapFault $e)
-    {
-        $exception = new \Itkg\Soap\Exception\SoapException($e->faultcode, $e->getMessage());
-        $exception->setTrame($this->__getLastRequest());
-
-        throw $exception;
-    }
-
-    /**
-     * Some initialisation before soap call
-     *
-     * @param $request
-     * @return int Current timeout
-     */
-    protected function preCall($request)
-    {
-        // Set timeout
-        if (isset($this->options['timeout']) && is_numeric($this->options['timeout'])) {
-            $this->currentTimeout = ini_get('default_socket_timeout');
-            ini_set('default_socket_timeout', $this->options['timeout']);
-        }
-
-        // Entete
-        $this->makeHeaders();
-
-        // Client SOAP
-        $oSoapRequest = new \SoapVar($request, XSD_ANYXML);
-        if (isset($this->options['location'])) {
-            $this->__setLocation($this->options['location']);
-        }
-        // Appel Soap de la methode
-        $this->start = microtime(true);
-
-        return $oSoapRequest;
-    }
-
-    /**
-     * Actions to execute after soap call
-     */
-    protected function postCall()
-    {
-        $this->end = microtime(true);
-
-        // Remise en place du timeout
-        ini_set('default_socket_timeout', $this->currentTimeout);
     }
 
     /**
@@ -229,35 +194,25 @@ class Client extends \SoapClient
     public function makeHeaders()
     {
         $namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
-        if (isset($this->options['namespace'])) {
+        if(isset($this->options['namespace'])) {
             $namespace = $this->options['namespace'];
         }
         $sMust = '';
-        if (isset($this->options['mustunderstand']) && $this->options['mustunderstand']) {
+        if(isset($this->options['mustunderstand']) && $this->options['mustunderstand']) {
             $sMust = 'SOAP-ENV:mustUnderstand="1"';
         }
-        if ($this->loginHeaderSecurity != '' && $this->passwordHeaderSecurity != '') {
+        if($this->loginHeaderSecurity != '' && $this->passwordHeaderSecurity != '') {
 
-            $sHeader = sprintf(
-                '<wsse:Security %s
-                    xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-                    <wsse:UsernameToken wsu:Id="UsernameToken-6868426"
-                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-                        <wsse:Username>%s</wsse:Username>
-                        <wsse:Password
-                            Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">
-                                %s
-                        </wsse:Password>
-                    </wsse:UsernameToken>
-                </wsse:Security>',
-                $sMust,
-                $this->loginHeaderSecurity,
-                $this->passwordHeaderSecurity
-            );;
-            if ($this->options['signature'] && $this->options['signature_ns']) {
-                $sHeader .= '<Signature xmlns="' . $this->options['signature_ns'] . '">' . $this->options['signature'] . '</Signature>';
+            $sHeader = '<wsse:Security '.$sMust.' xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+				<wsse:UsernameToken wsu:Id="UsernameToken-6868426" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+					<wsse:Username>'.$this->loginHeaderSecurity.'</wsse:Username>
+					<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">'.$this->passwordHeaderSecurity.'</wsse:Password>
+				</wsse:UsernameToken>
+			</wsse:Security>';
+            if($this->options['signature']) {
+                $sHeader .='<Signature xmlns="http://www.canal-plus.com/signature">'.$this->options['signature'].'</Signature>';
             }
-            $authvars = new \SoapVar($sHeader, XSD_ANYXML, null, $namespace);
+            $authvars = new \SoapVar($sHeader, XSD_ANYXML, NULL, $namespace);
 
 
             $this->header = new \SoapHeader($namespace, "Security", $authvars);
@@ -273,13 +228,8 @@ class Client extends \SoapClient
     protected function checkRequiredOptions($method)
     {
         // Les timeout doivent être définis pour chaque client Soap
-        if (!isset($this->options['timeout']) || empty($this->options['timeout'])) {
-            throw new \Itkg\Exception\NotFoundException(
-                sprintf(
-                    'Paramêtre timeout non défini pour le WS %s',
-                    $method
-                )
-            );
+        if(!isset($this->options['timeout']) || empty($this->options['timeout'])) {
+            throw new \Itkg\Exception\NotFoundException('Paramêtre timeout non défini pour le WS '.$method);
         }
     }
 
@@ -297,20 +247,17 @@ class Client extends \SoapClient
      */
     public function __doRequest($request, $location, $action, $version, $one_way = 0)
     {
-        if (isset($this->options['namespaces'])) {
+        if(isset($this->options['namespaces'])) {
             $namespaces = $this->options['namespaces'];
             $compteurNamespace = 2; //commence à 2 car les deux premiers namespace sont déclarés avant
 
-            if (is_array($namespaces) && !empty($namespaces)) {
-                foreach ($namespaces as $namespace) {
+            if(is_array($namespaces)&& !empty($namespaces)){
+                foreach($namespaces as $namespace){
                     $compteurNamespace++;
-                    $request = str_replace(
-                        '><SOAP-ENV:Header>',
-                        ' xmlns:ns' . $compteurNamespace . '="' . $namespace . '"><SOAP-ENV:Header>',
-                        $request
-                    );
+                    $request = str_replace( '><SOAP-ENV:Header>',' xmlns:ns'.$compteurNamespace.'="'.$namespace.'"><SOAP-ENV:Header>' , $request);
                 }
             }
+
             $this->requestOverride = $request;
         }
         return parent::__doRequest($request, $location, $action, $version, $one_way = 0);
@@ -323,9 +270,9 @@ class Client extends \SoapClient
      */
     public function __getLastRequest()
     {
-        if ($this->requestOverride) {
+        if($this->requestOverride){
             return $this->requestOverride;
-        } else {
+        }else{
             return parent::__getLastRequest();
         }
     }
