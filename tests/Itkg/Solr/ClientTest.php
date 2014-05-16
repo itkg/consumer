@@ -33,14 +33,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
     protected function tearDown()
     {
     }
-    /**
-     * @covers Itkg\Solr\Client::addOptions
-     */
-    public function testAddoptions()
-    {
-        $myopt = array("test");
-        $this->object->addOptions($myopt);
-        $attr = \PHPUnit_Framework_Assert::readAttribute($this->object, 'options');
-        $this->assertEquals($myopt, $attr);
-    }     
 }
