@@ -82,11 +82,14 @@ class Client extends \SoapClient
 
         $this->options = array_merge($this->options, $options);
 
-        // login et password htaccess/header sécurisé
-        $this->loginHeaderSecurity = $this->options['login'];
-        $this->passwordHeaderSecurity = $this->options['password'];
-        unset($this->options['login']);
-        unset($this->options['password']);
+        if(isset($this->options['login']) && isset($this->options['password'])) {
+            // login et password htaccess/header sécurisé
+            $this->loginHeaderSecurity = $this->options['login'];
+            $this->passwordHeaderSecurity = $this->options['password'];
+            unset($this->options['login']);
+            unset($this->options['password']);
+        }
+        
         if (isset($this->options['http_auth_login']) && isset($this->options['http_auth_password'])) {
             // login pour authentification http
             $this->options['login'] = $this->options['http_auth_login'];
