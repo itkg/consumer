@@ -79,7 +79,6 @@ class Client extends \SoapClient
             "features" => SOAP_SINGLE_ELEMENT_ARRAYS,
         );
 
-
         $this->options = array_merge($this->options, $options);
 
         if(isset($this->options['login']) && isset($this->options['password'])) {
@@ -89,7 +88,7 @@ class Client extends \SoapClient
             unset($this->options['login']);
             unset($this->options['password']);
         }
-        
+
         if (isset($this->options['http_auth_login']) && isset($this->options['http_auth_password'])) {
             // login pour authentification http
             $this->options['login'] = $this->options['http_auth_login'];

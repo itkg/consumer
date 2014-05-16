@@ -3,7 +3,6 @@
 namespace Itkg\Solr;
 
 use Solarium\Client as BaseClient;
-use Solarium\QueryType\Select\Query\Query;
 
 /**
  * Client Solr
@@ -14,23 +13,32 @@ use Solarium\QueryType\Select\Query\Query;
  */
 class Client extends BaseClient
 {
-    protected $options = array();
+    protected $options_itkg = array();
 
     /**
      * Constructeur
      *
-     * @param array $options
-     * @internal param string $config
+     * @param string $config
      */
-    public function __construct($options = array())
+    public function __construct($options = null)
     {
         parent::__construct($options);
+    }
+
+    public function __getLastRequest()
+    {
+        return $this->getAdapter()->getZendHttp()->getLastRequest();
+    }
+
+    public function __getLastResponse()
+    {
+        return $this->getAdapter()->getZendHttp()->getLastResponse();
     }
 
     /**
      * Méthode commune aux appels à solr
      *
-     * @codeCoverageIgnore
+     *
      * @param string $method
      * @param array $datas
      *      les données envoyés à solr sont de natures différentes selon la méthode :
@@ -45,8 +53,10 @@ class Client extends BaseClient
     {
         $response = null;
         $this->addOptions($options);
-        $aResponseDatas = array();
-        switch ($method) {
+        $this->setAdapter('Solarium\Core\Client\Adapter\ZendHttp');
+
+        switch($method)
+        {
             case 'ADD_DOCUMENT':
                 $response = $this->addDocIntoIndex($datas);
                 $aResponseDatas['status'] = $response;
@@ -60,13 +70,17 @@ class Client extends BaseClient
                 break;
         }
 
-        return $aResponseDatas;
+        if ($aResponseDatas) {
+            return $aResponseDatas;
+        }
+
+        return null;
     }
 
 
     /**
      * Ajoute un document dans l'index
-     * @codeCoverageIgnore
+     *
      * @param array $datas Les données de reférencement d'un document
      * @return string Statut
      */
@@ -101,7 +115,7 @@ class Client extends BaseClient
 
     /**
      * Supprime un document de l'index
-     * @codeCoverageIgnore
+     *
      * @param int $id L'identifiant unique du document à supprimer
      * @return string Statut
      */
@@ -122,9 +136,9 @@ class Client extends BaseClient
 
     /**
      * Recherche de documents avec filtres
-     * @codeCoverageIgnore
+     *
      * @param array $solrQueryString les données de filtrage de la requete
-     * @internal param array $option Options de recherche possibles
+     * @param array $option Options de recherche possibles
      * @return array $resultset Résultat de la recherche
      */
     public function searchDocByFilters($solrQueryString)
@@ -134,18 +148,45 @@ class Client extends BaseClient
 
         $query->setQuery($solrQueryString);
 
-        // this hydrate with client options & executes the query and returns the result
-        $resultset = $this->select($this->hydrateQuery($query));
+        if (isset($this->options_itkg['start']) && $this->options_itkg['start']!='') {
+            $query->setStart($this->options_itkg['start']);
+        }
 
-        if ($this->options['response_format'] == 'phps') {
+        if (isset($this->options_itkg['rows']) && $this->options_itkg['rows']!='') {
+            $query->setRows($this->options_itkg['rows']);
+        }
+
+        if (isset($this->options_itkg['sort'])) {
+            $aSort = $this->options_itkg['sort'];
+        }
+
+        if (is_array($aSort)) {
+            // sort the results
+            foreach($aSort as $key=>$value) {
+                switch($value)
+                {
+                    case "ASC" :  $query->addSort($key, $query::SORT_ASC); break;
+                    case "DESC" : $query->addSort($key, $query::SORT_DESC); break;
+                }
+            }
+        }
+
+        if (isset($this->options_itkg['response_format']) && $this->options_itkg['response_format']!='') {
+            $query->setResponseWriter($this->options_itkg['response_format']);
+        }
+
+        // this executes the query and returns the result
+        $resultset = $this->select($query);
+
+        if ($this->options_itkg['response_format'] == 'phps') {
             $return = unserialize($resultset->getResponse()->getBody());
             $return['responseHeader']['status'] = $resultset->getResponse()->getStatusCode();
-
             return $return;
         }
 
         return $resultset->getResponse()->getBody();
     }
+
 
     /**
      * Ajoute des options à celles déja existantes
@@ -154,68 +195,6 @@ class Client extends BaseClient
      */
     public function addOptions(array $options = array())
     {
-        $this->options = array_merge($this->options, $options);
-    }
-
-    /**
-     * Hydrate query with client options
-     * @codeCoverageIgnore
-     *
-     * @param Query $query
-     */
-    protected function hydrateQuery(Query $query)
-    {
-        $query = $this->paginate($query);
-
-        $query = $this->addSort($query);
-
-        if (isset($this->options['response_format']) && $this->options['response_format'] != '') {
-            $query->setResponseWriter($this->options['response_format']);
-        }
-
-        return $query;
-    }
-
-    /**
-     * Manage sorts
-     *
-     * @param Query $query
-     * @return mixed
-     */
-    protected function addSort(Query $query)
-    {
-        if (isset($this->options['sort']) && is_array($this->options['sort'])) {
-            foreach ($this->options['sort'] as $key => $value) {
-                switch ($value) {
-                    case "ASC" :
-                        $query->addSort($key, $query::SORT_ASC);
-                        break;
-                    case "DESC" :
-                        $query->addSort($key, $query::SORT_DESC);
-                        break;
-                }
-            }
-        }
-
-        return $query;
-    }
-
-    /**
-     * Add pagination
-     *
-     * @param Query $query
-     * @return mixed
-     */
-    protected function paginate(Query $query)
-    {
-        if (isset($this->options['start']) && $this->options['start'] != '') {
-            $query->setStart($this->options['start']);
-        }
-
-        if (isset($this->options['rows']) && $this->options['rows'] != '') {
-            $query->setRows($this->options['rows']);
-        }
-
-        return $query;
+        $this->options_itkg = array_merge($this->options_itkg, $options);
     }
 }
