@@ -446,16 +446,4 @@ abstract class Configuration
     {
         return TRUE;
     }
-
-    /**
-     * Fonction permettant de détecter l'activation log d'appel au cache
-     * Par défaut, un service est activé
-     *
-     * @return boolean
-     */
-    public function logLevel()
-    {
-        return TRUE;
-    }
-
 }

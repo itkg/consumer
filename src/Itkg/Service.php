@@ -395,14 +395,12 @@ abstract class Service
      */
     protected function logResponseOK($oResponse, $reponseTrame, &$paramsLogs)
     {
-        if ($this->configuration->logLevel() == '1') {
-            $paramsLogs["appelRetour"] = "REPONSE OK";
-            $sLogResponseModel = "";
-            if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
-                $sLogResponseModel = $oResponse->__toLog();
-            }
-            $this->logger->addInfo($sLogResponseModel . $reponseTrame, $paramsLogs);
+        $paramsLogs["appelRetour"] = "REPONSE OK";
+        $sLogResponseModel = "";
+        if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
+            $sLogResponseModel = $oResponse->__toLog();
         }
+        $this->logger->addInfo($sLogResponseModel . $reponseTrame, $paramsLogs);
     }
 
     /**
