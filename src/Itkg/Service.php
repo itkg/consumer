@@ -358,15 +358,13 @@ abstract class Service
         if (!isset($paramsLogs["appelRetour"])) {
             $paramsLogs["appelRetour"] = "APPEL";
         }
-        
         $bWriteLogs = TRUE;
-        
         // pas d'écriture des logs d'appel au cache si c'est désactivé en BO.         
         if(!$this->configuration->isCacheEnabled() 
             && preg_match('#FROM CACHE#', $paramsLogs["appelRetour"])) {
             $bWriteLogs = false;
         }
-        
+
         if($bWriteLogs) {
             $requestToLog = "";
             if ($oRequestModel) {
@@ -397,12 +395,14 @@ abstract class Service
      */
     protected function logResponseOK($oResponse, $reponseTrame, &$paramsLogs)
     {
-        $paramsLogs["appelRetour"] = "REPONSE OK";
-        $sLogResponseModel = "";
-        if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
-            $sLogResponseModel = $oResponse->__toLog();
+        if ($this->configuration->logLevel() == '1') {
+            $paramsLogs["appelRetour"] = "REPONSE OK";
+            $sLogResponseModel = "";
+            if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
+                $sLogResponseModel = $oResponse->__toLog();
+            }
+            $this->logger->addInfo($sLogResponseModel . $reponseTrame, $paramsLogs);
         }
-        $this->logger->addInfo($sLogResponseModel . $reponseTrame, $paramsLogs);
     }
 
     /**
