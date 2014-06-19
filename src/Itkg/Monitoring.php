@@ -65,7 +65,7 @@ class Monitoring
      * L'état du test
      * @var boolean
      */
-    protected $working;
+    protected $working = true;
 
     /**
      * La durée du test
@@ -374,6 +374,7 @@ class Monitoring
             foreach (self::$tests as $test) {
                 self::$report .= self::getReportForTest($test);
                 if (!$test->isWorking()) {
+
                     $working = false;
                 }
             }
@@ -428,6 +429,7 @@ class Monitoring
         }
 		$class = ($test->isWorking()) ? 'working' : 'error';
         $e = $test->getException();
+
         return sprintf(
             '<span class="libelle %s %s">%s</span><br /><span class="%s %s">%s (%s sec) %s</span><br />',
 	        $class,

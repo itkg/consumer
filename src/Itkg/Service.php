@@ -354,20 +354,17 @@ abstract class Service
 
         $this->getRequestAndResponseTrame($requestTrame, $reponseTrame);
 
-
         //on logue l'appel à la fin (postCall), pour avoir la trame d'appel (getLastRequest)
         if (!isset($paramsLogs["appelRetour"])) {
             $paramsLogs["appelRetour"] = "APPEL";
         }
-        
-        $bWriteLogs = TRUE;
-
+        $bWriteLogs = true;
         // pas d'écriture des logs d'appel au cache si c'est désactivé en BO.         
         if(!$this->configuration->isCacheEnabled() 
             && preg_match('#FROM CACHE#', $paramsLogs["appelRetour"])) {
             $bWriteLogs = false;
         }
-        
+
         if($bWriteLogs) {
             $requestToLog = "";
             if ($oRequestModel) {

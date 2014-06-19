@@ -446,5 +446,4 @@ abstract class Configuration
     {
         return TRUE;
     }
-    
 }
