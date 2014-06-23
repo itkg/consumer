@@ -455,6 +455,6 @@ abstract class Configuration
      */
     public function getLogLevel()
     {
-        return LogLevel::Info;
+        return LogLevel::INFO;
     }
 }
