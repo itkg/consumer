@@ -43,6 +43,13 @@ class Configuration
     protected $parameters;
 
     /**
+     * Log level
+     *
+     * @var string
+     */
+    protected $logLevel;
+
+    /**
      * Permet l'initialisation de la configuration
      */
     public function init()
@@ -198,5 +205,15 @@ class Configuration
     public function setNotifiers(array $notifiers = array())
     {
         $this->notifiers = $notifiers;
+    }
+
+    /**
+     * Get log level
+     *
+     * @return string
+     */
+    public function getLogLevel()
+    {
+        return \Psr\Log\LogLevel::INFO;
     }
 }

@@ -346,9 +346,9 @@ abstract class Service
         $oRequestModel = null,
         \Exception $exception = null,
         array $aDatas = array(),
-        $method = '',
-        $paramsLogs = array()
+        $method = ''
     ) {
+        $paramsLogs = array();
         $reponseTrame = "";
         $requestTrame = "";
 
@@ -358,13 +358,15 @@ abstract class Service
         if (!isset($paramsLogs["appelRetour"])) {
             $paramsLogs["appelRetour"] = "APPEL";
         }
-        $bWriteLogs = true;
+        
+        $bWriteLogs = TRUE;
+        
         // pas d'écriture des logs d'appel au cache si c'est désactivé en BO.         
         if(!$this->configuration->isCacheEnabled() 
             && preg_match('#FROM CACHE#', $paramsLogs["appelRetour"])) {
             $bWriteLogs = false;
         }
-
+        
         if($bWriteLogs) {
             $requestToLog = "";
             if ($oRequestModel) {
@@ -400,7 +402,9 @@ abstract class Service
         if (is_object($oResponse) && method_exists($oResponse, "__toLog")) {
             $sLogResponseModel = $oResponse->__toLog();
         }
-        $this->logger->addInfo($sLogResponseModel . $reponseTrame, $paramsLogs);
+        if ($this->configuration->getLogLevel() == \Psr\Log\LogLevel::INFO) {
+           $this->logger->addInfo($sLogResponseModel . $reponseTrame, $paramsLogs);
+        }
     }
 
     /**
