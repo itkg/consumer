@@ -3,6 +3,7 @@
 namespace Itkg\Service;
 
 use Itkg\Log\Factory as LogFactory;
+use Psr\Log\LogLevel;
 
 /**
  * Classe générique de configuration d'un service
@@ -445,5 +446,15 @@ abstract class Configuration
     public function isDisplayWsEnabled()
     {
         return TRUE;
+    }
+
+    /**
+     * Get log level
+     *
+     * @return mixed
+     */
+    public function getLogLevel()
+    {
+        return LogLevel::Info;
     }
 }
