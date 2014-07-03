@@ -346,9 +346,10 @@ abstract class Service
         $oRequestModel = null,
         \Exception $exception = null,
         array $aDatas = array(),
-        $method = ''
+        $method = '',
+        $paramsLogs = array()
     ) {
-        $paramsLogs = array();
+
         $reponseTrame = "";
         $requestTrame = "";
 
