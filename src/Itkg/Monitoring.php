@@ -232,7 +232,6 @@ class Monitoring
         $this->start = microtime(true);
         $oResponse = null;
         try {
-            $service->preCall($method);
 
             $oResponse = $service->$method();
             $this->working = true;
@@ -258,7 +257,7 @@ class Monitoring
         try {
             $service->setStart($this->start);
             $service->setEnd($this->end);
-            $service->postCall($response, null, $this->exception);
+
         } catch (\Exception $e) {
             // on ne fait rien dans le cas du monitoring
         }
@@ -391,15 +390,14 @@ class Monitoring
     public static function log($report)
     {
         if (is_array(self::$loggers)) {
-
             foreach (self::$loggers as $index => $logger) {
                 // Les balises html ne s'affichent que dans le cas d'un echo
                 if ($index == 'echo') {
                     $logger->addInfo($report);
                 } else {
-                    $report = str_replace('<br />', "\r\n", $report);
-                    $report = strip_tags($report);
-                    $logger->addInfo($report);
+                    $cleanReport = str_replace('<br />', "\r\n", $report);
+                    $cleanReport = strip_tags($cleanReport);
+                    $logger->addInfo($cleanReport);
                 }
             }
         }
