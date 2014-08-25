@@ -72,7 +72,7 @@ class Client extends BaseClient
         $request = null;
         $this->addOptions($options);
         $headers = null;
-        if ($this->options['headers']) {
+        if (isset($this->options['headers'])) {
             $headers = $this->options['headers'];
         }
         $request = $this->getRequest($method, $uri, $data, $headers);

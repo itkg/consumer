@@ -211,7 +211,7 @@ class Client extends \SoapClient
 					<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">'.$this->passwordHeaderSecurity.'</wsse:Password>
 				</wsse:UsernameToken>
 			</wsse:Security>';
-            if($this->options['signature']) {
+            if(isset($this->options['signature'])) {
                 $sHeader .='<Signature xmlns="http://www.canal-plus.com/signature">'.$this->options['signature'].'</Signature>';
             }
             $authvars = new \SoapVar($sHeader, XSD_ANYXML, NULL, $namespace);
