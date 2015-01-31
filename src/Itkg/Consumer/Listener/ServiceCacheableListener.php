@@ -22,6 +22,10 @@ class ServiceCacheableListener implements EventSubscriberInterface
      */
     private $eventDispatcher;
 
+    /**
+     * @param AdapterInterface $cacheAdapter
+     * @param EventDispatcher $eventDispatcher
+     */
     public function __construct(AdapterInterface $cacheAdapter, EventDispatcher $eventDispatcher)
     {
         $this->cacheAdapter = $cacheAdapter;

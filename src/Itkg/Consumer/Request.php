@@ -78,4 +78,14 @@ class Request
 
         return $this;
     }
+
+    /**
+     * Get request identifier
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return md5(sprintf('%s_%s', implode($this->headers), $this->body));
+    }
 }

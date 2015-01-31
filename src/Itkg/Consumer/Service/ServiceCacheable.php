@@ -18,7 +18,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getHashKey()
     {
-        return '';
+        return $this->request->getHash();
     }
 
     /**
@@ -52,21 +52,23 @@ class ServiceCacheable extends LightService implements CacheableInterface
     }
 
     /**
-     * Get data from entity for cache set
+     * Get data from service for cache set
      *
      * @return mixed
      */
     public function getDataForCache()
     {
-        // TODO: Implement getDataForCache() method.
+        return serialize($this->response);
     }
 
     /**
+     * Restore data after cache load
+     * 
      * @param $data
      * @return $this
      */
     public function setDataFromCache($data)
     {
-        // TODO: Implement setDataFromCache() method.
+        $this->response = unserialize($data);
     }
 }
