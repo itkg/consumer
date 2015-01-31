@@ -63,7 +63,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
 
     /**
      * Restore data after cache load
-     * 
+     *
      * @param $data
      * @return $this
      */
