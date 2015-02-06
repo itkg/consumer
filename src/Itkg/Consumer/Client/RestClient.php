@@ -3,44 +3,51 @@
 namespace Itkg\Consumer\Client;
 
 use Guzzle\Service\Client;
-use Itkg\Consumer\Request;
-use Itkg\Consumer\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RestClient extends Client implements ClientInterface
 {
+    /**
+     * @var array
+     */
+    private $options = array();
 
-    public function sendRequest(Request $request, \Symfony\Component\HttpFoundation\Response $response)
+    /**
+     * @param array $options
+     */
+    public function __construct(array $options = array())
     {
-        $request = null;
-        $this->addOptions($options);
-        $headers = null;
-        if (isset($this->options['headers'])) {
-            $headers = $this->options['headers'];
-        }
-        $request = $this->getClientRequest($request);
-        if ($request) {
-            // Si login et password, on procède à l'authentification
-            $request = $this->hydrateRequest($request);
-            // Envoi de la requete
-            $response = $request->send();
-            $aResponseDatas = array();
-            // Récupération du header
-            $aResponseDatas['headers'] = $response->getMessage();
-            // Récupération du body
-            $aResponseDatas['body'] = $response->getBody(true);
-            return $aResponseDatas;
+        $this->options = $options;
+
+        parent::__construct();
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
+    public function sendRequest(Request $request, Response $response)
+    {
+        $clientResponse = $this->getClientRequest($request)->send();
+
+        $response
+            ->setContent($clientResponse->getBody(true))
+            ->headers->add($clientResponse->getHeaders()->getAll());
     }
 
     /**
      * Get a guzzle request object for a Request
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Guzzle\Http\Message\RequestInterface
      */
     protected function getClientRequest(Request $request)
     {
-        $uri = $request->getUri();
+        $uri     = $request->getUri();
         $headers = $request->headers->all();
-        $body = $request->getContent();
+        $body    = $request->getContent();
 
         switch ($request->getMethod()) {
             case 'POST':
