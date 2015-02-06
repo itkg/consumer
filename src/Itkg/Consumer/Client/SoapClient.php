@@ -2,7 +2,7 @@
 
 namespace Itkg\Consumer\Client;
 
-use Itkg\Consumer\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SoapClient extends \SoapClient implements ClientInterface

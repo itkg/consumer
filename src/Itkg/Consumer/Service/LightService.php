@@ -5,7 +5,7 @@ namespace Itkg\Consumer\Service;
 use Itkg\Consumer\Client\ClientInterface;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
-use Itkg\Consumer\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Itkg\Core\ConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,7 +67,7 @@ class LightService
         $event = new ServiceEvent($this);
         $this->eventDispatcher->dispatch(ServiceEvents::REQUEST, $event);
 
-        if (null !== $this->response->getContent()) {
+        if (null != $this->response->getContent()) {
             return $this;
         }
 
@@ -106,7 +106,7 @@ class LightService
     }
 
     /**
-     * @param \Itkg\Consumer\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return $this
      */
@@ -118,7 +118,7 @@ class LightService
     }
 
     /**
-     * @return \Itkg\Consumer\Request
+     * @return \Symfony\Component\HttpFoundation\Request
      */
     public function getRequest()
     {
@@ -174,5 +174,13 @@ class LightService
     public function getException()
     {
         return $this->exception;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->config->get('identifier');
     }
 }

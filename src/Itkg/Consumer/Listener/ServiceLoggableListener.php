@@ -17,7 +17,9 @@ class ServiceLoggableListener implements EventSubscriberInterface
     {
         $service = $event->getService();
         if ($service instanceof ServiceLoggableInterface) {
-            // @TODO : Write call log
+            $service->getLogger()->info('Request will be send', array(
+                'service' => $service
+            ));
         }
     }
 
@@ -28,7 +30,9 @@ class ServiceLoggableListener implements EventSubscriberInterface
     {
         $service = $event->getService();
         if ($service instanceof ServiceLoggableInterface) {
-            // @TODO : Write success log
+            $service->getLogger()->info('Response success', array(
+                'service' => $service
+            ));
         }
     }
 
@@ -39,7 +43,9 @@ class ServiceLoggableListener implements EventSubscriberInterface
     {
         $service = $event->getService();
         if ($service instanceof ServiceLoggableInterface) {
-            // @TODO : Write error log
+            $service->getLogger()->error('Response KO', array(
+                'service' => $service
+            ));
         }
 
     }

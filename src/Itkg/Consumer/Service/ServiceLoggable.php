@@ -3,7 +3,7 @@
 namespace Itkg\Consumer\Service;
 
 use Itkg\Consumer\Client\ClientInterface;
-use Itkg\Consumer\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Itkg\Core\ConfigInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
