@@ -14,6 +14,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
 
     /**
      * @param array $config
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
      */
     public function configure(array $config = array(), OptionsResolver $resolver = null)
     {
@@ -33,7 +34,8 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getHashKey()
     {
-        return md5(sprintf('%s_%s_%s',
+        return md5(sprintf('%s_%s_%s_%s',
+            $this->getIdentifier(),
             $this->request->getContent(),
             $this->request->getUri(),
             json_encode($this->request->headers->all())

@@ -58,6 +58,7 @@ class LightService
 
     /**
      * @param array $config
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
      */
     public function configure(array $config = array(), OptionsResolver $resolver = null)
     {
