@@ -8,6 +8,7 @@ use Itkg\Consumer\Event\ServiceEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LightService
 {
@@ -48,10 +49,24 @@ class LightService
     public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, Request $request = null, Response $response = null, array $config = array())
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->config          = $config;
         $this->request         = $request;
         $this->response        = $response;
         $this->client          = $client;
+
+        $this->configure($config);
+    }
+
+    /**
+     * @param array $config
+     */
+    public function configure(array $config = array(), OptionsResolver $resolver = null)
+    {
+        if (null === $resolver) {
+            $resolver = new OptionsResolver();
+        }
+
+        $resolver->setRequired('identifier');
+        $this->config = $resolver->resolve($config);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Itkg\Consumer\Service;
 
 use Itkg\Core\CacheableInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceCacheable extends LightService implements CacheableInterface
 {
@@ -10,6 +11,20 @@ class ServiceCacheable extends LightService implements CacheableInterface
      * @var bool
      */
     private $loaded;
+
+    /**
+     * @param array $config
+     */
+    public function configure(array $config = array(), OptionsResolver $resolver = null)
+    {
+        $resolver = new OptionsResolver();
+
+        $resolver->setDefaults(array(
+            'cache_ttl' => null
+        ));
+
+        parent::configure($config, $resolver);
+    }
 
     /**
      * Hash key getter
