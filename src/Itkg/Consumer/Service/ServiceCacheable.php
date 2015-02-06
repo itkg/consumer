@@ -18,7 +18,11 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getHashKey()
     {
-        return $this->request->getHash();
+        return md5(sprintf('%s_%s_%s',
+            $this->request->getContent(),
+            $this->request->getUri(),
+            json_encode($this->request->headers->all())
+        ));
     }
 
     /**

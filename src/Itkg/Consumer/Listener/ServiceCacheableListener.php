@@ -28,7 +28,8 @@ class ServiceCacheableListener implements EventSubscriberInterface
      */
     public function __construct(AdapterInterface $cacheAdapter, EventDispatcher $eventDispatcher)
     {
-        $this->cacheAdapter = $cacheAdapter;
+        $this->cacheAdapter    = $cacheAdapter;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -41,7 +42,6 @@ class ServiceCacheableListener implements EventSubscriberInterface
         if (!$service instanceof ServiceCacheable) {
             return;
         }
-
         // Check cache
         if (false !== $data = $this->cacheAdapter->get($service)) {
 
