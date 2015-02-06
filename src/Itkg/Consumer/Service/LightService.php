@@ -6,7 +6,6 @@ use Itkg\Consumer\Client\ClientInterface;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
 use Symfony\Component\HttpFoundation\Request;
-use Itkg\Core\ConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,7 +24,7 @@ class LightService
      */
     protected $client;
     /**
-     * @var ConfigInterface
+     * @var array
      */
     protected $config;
 
@@ -41,12 +40,12 @@ class LightService
 
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
-     * @param ConfigInterface $config
      * @param ClientInterface $client
      * @param Request $request
      * @param Response $response
+     * @param array|\Itkg\Core\ConfigInterface $config
      */
-    public function __construct(EventDispatcher $eventDispatcher, ConfigInterface $config, ClientInterface $client, Request $request = null, Response $response = null)
+    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, Request $request = null, Response $response = null, array $config = array())
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->config          = $config;

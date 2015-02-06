@@ -4,7 +4,6 @@ namespace Itkg\Consumer\Listener;
 
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
-use Itkg\Consumer\Service\ServiceLoggable;
 use Itkg\Consumer\Service\ServiceLoggableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
