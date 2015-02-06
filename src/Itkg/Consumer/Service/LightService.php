@@ -6,9 +6,9 @@ use Itkg\Consumer\Client\ClientInterface;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Request;
-use Itkg\Consumer\Response;
 use Itkg\Core\ConfigInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Response;
 
 class LightService
 {
@@ -17,7 +17,7 @@ class LightService
      */
     protected $request;
     /**
-     * @var Response
+     * @var \Symfony\Component\HttpFoundation\Response
      */
     protected $response;
     /**
@@ -33,6 +33,11 @@ class LightService
      * @var EventDispatcher
      */
     protected $eventDispatcher;
+
+    /**
+     * @var \Exception
+     */
+    protected $exception;
 
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
@@ -72,6 +77,7 @@ class LightService
             $this->eventDispatcher->dispatch(ServiceEvents::RESPONSE, $event);
 
         } catch(\Exception $e) {
+            $this->exception = $e;
             $this->eventDispatcher->dispatch(ServiceEvents::EXCEPTION, $event);
 
             throw $e;
@@ -120,7 +126,7 @@ class LightService
     }
 
     /**
-     * @param \Itkg\Consumer\Response $response
+     * @param \Symfony\Component\HttpFoundation\Response $response
      *
      * @return $this
      */
@@ -132,7 +138,7 @@ class LightService
     }
 
     /**
-     * @return \Itkg\Consumer\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getResponse()
     {
@@ -150,10 +156,23 @@ class LightService
         return $this->client;
     }
 
+    /**
+     * @param ClientInterface $client
+     *
+     * @return $this
+     */
     public function setClient(ClientInterface $client)
     {
         $this->client = $client;
 
         return $this;
+    }
+
+    /**
+     * @return \Exception
+     */
+    public function getException()
+    {
+        return $this->exception;
     }
 }
