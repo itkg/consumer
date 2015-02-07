@@ -1,10 +1,7 @@
 <?php
 
-ini_set('display_errors', 'on');
-//ini_set('error_reporting', E_ALL );
-$loader = require_once('vendor/autoload.php');
+if (!file_exists($autoloadFile = __DIR__.'/../vendor/autoload.php')) {
+    throw new \LogicException('Could not find autoload.php in vendor/. Did you run "composer install --dev"?');
+}
 
-$loader->add('Itkg', array(
-    __DIR__.'/../src',
-    __DIR__.'/../tests'
-));
+require $autoloadFile;
