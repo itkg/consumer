@@ -28,13 +28,13 @@ class Service extends ServiceCacheable implements ServiceLoggableInterface
      * @param \Psr\Log\LoggerInterface $logger
      * @param Request $request
      * @param Response $response
-     * @param array $config
+     * @param array $options
      */
-    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, LoggerInterface $logger, Request $request = null, Response $response = null, array $config = array())
+    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, LoggerInterface $logger, Request $request = null, Response $response = null, array $options = array())
     {
         $this->logger = $logger;
 
-        parent::__construct($eventDispatcher, $client, $request, $response, $config);
+        parent::__construct($eventDispatcher, $client, $request, $response, $options);
     }
 
     /**

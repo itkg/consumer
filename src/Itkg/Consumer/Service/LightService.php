@@ -3,6 +3,7 @@
 namespace Itkg\Consumer\Service;
 
 use Itkg\Consumer\Client\ClientInterface;
+use Itkg\Consumer\Event\ConfigEvent;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,7 @@ class LightService
     /**
      * @var array
      */
-    protected $config;
+    protected $options;
 
     /**
      * @var EventDispatcher
@@ -51,30 +52,36 @@ class LightService
      * @param ClientInterface $client
      * @param Request $request
      * @param Response $response
-     * @param array|\Itkg\Core\ConfigInterface $config
+     * @param array|\Itkg\Core\ConfigInterface $options
      */
-    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, Request $request = null, Response $response = null, array $config = array())
+    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, Request $request = null, Response $response = null, array $options = array())
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->request         = $request;
         $this->response        = $response;
         $this->client          = $client;
 
-        $this->configure($config);
+        $this->configure($options);
     }
 
     /**
-     * @param array $config
+     * Manage configuration
+     *
+     * @param array $options
      * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
      */
-    public function configure(array $config = array(), OptionsResolver $resolver = null)
+    public function configure(array $options = array(), OptionsResolver $resolver = null)
     {
         if (null === $resolver) {
             $resolver = new OptionsResolver();
         }
 
+        $this->eventDispatcher->dispatch(ServiceEvents::PRE_CONFIGURE, new ConfigEvent($resolver, $options));
+
         $resolver->setRequired('identifier');
-        $this->config = $resolver->resolve($config);
+        $this->options = $resolver->resolve($options);
+
+        $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));
     }
 
     /**
@@ -108,23 +115,26 @@ class LightService
     }
 
     /**
-     * @param array $config
+     * Get all options
      *
-     * @return $this
+     * @return array
      */
-    public function setConfig($config)
+    public function getOptions()
     {
-        $this->config = $config;
-
-        return $this;
+        return $this->options;
     }
 
     /**
-     * @return array
+     * Set all options
+     *
+     * @param array $options
+     * @return $this
      */
-    public function getConfig()
+    public function setOptions(array $options)
     {
-        return $this->config;
+        $this->configure($options);
+
+        return $this;
     }
 
     /**
@@ -203,6 +213,6 @@ class LightService
      */
     public function getIdentifier()
     {
-        return $this->config['identifier'];
+        return $this->options['identifier'];
     }
 }

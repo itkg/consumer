@@ -14,4 +14,8 @@ final class ServiceEvents
     const RESPONSE       = 'consumer.service.response';
 
     const EXCEPTION      = 'consumer.service.exception';
+
+    const PRE_CONFIGURE  = 'consumer.service.pre_configure';
+
+    const POST_CONFIGURE = 'consumer.service.post_configure';
 }

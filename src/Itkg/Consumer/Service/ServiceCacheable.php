@@ -20,10 +20,10 @@ class ServiceCacheable extends LightService implements CacheableInterface
     private $loaded;
 
     /**
-     * @param array $config
+     * @param array $options
      * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
      */
-    public function configure(array $config = array(), OptionsResolver $resolver = null)
+    public function configure(array $options = array(), OptionsResolver $resolver = null)
     {
         $resolver = new OptionsResolver();
 
@@ -31,7 +31,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
             'cache_ttl' => null
         ));
 
-        parent::configure($config, $resolver);
+        parent::configure($options, $resolver);
     }
 
     /**
