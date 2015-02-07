@@ -54,21 +54,17 @@ class RestClient extends Client implements ClientInterface
     {
         $uri     = $request->getUri();
         $headers = $request->headers->all();
-        $body    = $request->getContent();
+        $body    = (string) $request->getContent();
 
         switch ($request->getMethod()) {
             case 'POST':
                 return $this->post($uri, $headers, $body);
-                break;
             case 'PUT':
                 return $this->put($uri, $headers, $body);
-                break;
             case 'DELETE':
                 return $this->delete($uri, $headers, $body);
-                break;
             default:
                 return $this->get($uri, $headers);
-                break;
         }
     }
 }

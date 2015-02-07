@@ -105,7 +105,7 @@ class LightService
 
             $this->eventDispatcher->dispatch(ServiceEvents::RESPONSE, $event);
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->exception = $e;
             $this->eventDispatcher->dispatch(ServiceEvents::EXCEPTION, $event);
 

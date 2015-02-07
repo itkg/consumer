@@ -41,12 +41,15 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getHashKey()
     {
-        return md5(sprintf('%s_%s_%s_%s',
-            $this->getIdentifier(),
-            $this->request->getContent(),
-            $this->request->getUri(),
-            json_encode($this->request->headers->all())
-        ));
+        return md5(
+            sprintf(
+                '%s_%s_%s_%s',
+                $this->getIdentifier(),
+                $this->request->getContent(),
+                $this->request->getUri(),
+                json_encode($this->request->headers->all())
+            )
+        );
     }
 
     /**
@@ -56,7 +59,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getTtl()
     {
-        return $this->config['cache_ttl'];
+        return $this->options['cache_ttl'];
     }
 
     /**
