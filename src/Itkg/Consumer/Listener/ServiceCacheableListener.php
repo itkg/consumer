@@ -7,9 +7,17 @@ use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Service\ServiceCacheable;
 use Itkg\Core\Cache\AdapterInterface;
 use Itkg\Core\Cache\Event\CacheEvent;
+use Itkg\Core\CacheableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Class ServiceCacheableListener
+ *
+ * Event listener for service caching (handle ServiceCacheable)
+ *
+ * @package Itkg\Consumer\Listener
+ */
 class ServiceCacheableListener implements EventSubscriberInterface
 {
     /**
@@ -39,7 +47,7 @@ class ServiceCacheableListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if (!$service instanceof ServiceCacheable) {
+        if (!$service instanceof CacheableInterface) {
             return;
         }
         // Check cache

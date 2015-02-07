@@ -10,6 +10,13 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class LightService
+ *
+ * A minimal service for sending requests & handle responses
+ *
+ * @package Itkg\Consumer\Service
+ */
 class LightService
 {
     /**
@@ -196,6 +203,6 @@ class LightService
      */
     public function getIdentifier()
     {
-        return $this->config->get('identifier');
+        return $this->config['identifier'];
     }
 }

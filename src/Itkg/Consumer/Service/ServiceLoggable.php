@@ -4,11 +4,17 @@ namespace Itkg\Consumer\Service;
 
 use Itkg\Consumer\Client\ClientInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Itkg\Core\ConfigInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class ServiceLoggable
+ *
+ * Light service with loggable functionnality
+ *
+ * @package Itkg\Consumer\Service
+ */
 class ServiceLoggable extends LightService implements ServiceLoggableInterface
 {
     /**

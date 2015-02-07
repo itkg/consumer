@@ -5,6 +5,13 @@ namespace Itkg\Consumer\Service;
 use Itkg\Core\CacheableInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class ServiceCacheable
+ *
+ * Light service with cacheable functionality
+ *
+ * @package Itkg\Consumer\Service
+ */
 class ServiceCacheable extends LightService implements CacheableInterface
 {
     /**
@@ -49,7 +56,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getTtl()
     {
-        return $this->config->has('cache_ttl') ? $this->config->get('cache_ttl') : null;
+        return $this->config['cache_ttl'];
     }
 
     /**

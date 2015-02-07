@@ -7,6 +7,13 @@ use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Service\ServiceLoggableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Class ServiceLoggableListener
+ *
+ * Event listener for service logging (handler ServiceLoggable)
+ *
+ * @package Itkg\Consumer\Listener
+ */
 class ServiceLoggableListener implements EventSubscriberInterface
 {
     /**

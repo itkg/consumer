@@ -6,6 +6,13 @@ use Guzzle\Service\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class RestClient
+ *
+ * A rest client using guzzle http client
+ *
+ * @package Itkg\Consumer\Client
+ */
 class RestClient extends Client implements ClientInterface
 {
     /**
