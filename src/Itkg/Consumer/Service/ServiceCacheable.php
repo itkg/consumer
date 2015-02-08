@@ -30,7 +30,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
         $resolver->setDefaults(array(
             'cache_ttl'         => null,
             'cache_serializer'  => 'serialize',
-            'cache_unseriliaze' => 'unserialize'
+            'cache_unserializer' => 'unserialize'
         ));
 
         parent::configure($options, $resolver);
@@ -43,10 +43,9 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getHashKey()
     {
-        return md5(
+        return strtr($this->getIdentifier(), ' ','_').md5(
             sprintf(
-                '%s_%s_%s_%s',
-                $this->getIdentifier(),
+                '%s_%s_%s',
                 $this->request->getContent(),
                 $this->request->getUri(),
                 json_encode($this->request->headers->all())
