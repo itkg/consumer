@@ -4,7 +4,6 @@ namespace Itkg\Consumer\Client;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class SoapClient
