@@ -33,16 +33,4 @@ class ServiceEvent extends Event
     {
         return $this->service;
     }
-
-    /**
-     * @param LightService $service
-     *
-     * @return $this
-     */
-    public function setService(LightService $service)
-    {
-        $this->service = $service;
-
-        return $this;
-    }
 }
