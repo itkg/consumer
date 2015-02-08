@@ -17,7 +17,7 @@ class ServiceCacheable extends LightService implements CacheableInterface
     /**
      * @var bool
      */
-    private $loaded;
+    private $loaded = false;
 
     /**
      * Hash key getter
