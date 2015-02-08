@@ -65,26 +65,6 @@ class LightService
     }
 
     /**
-     * Manage configuration
-     *
-     * @param array $options
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
-     */
-    public function configure(array $options = array(), OptionsResolver $resolver = null)
-    {
-        if (null === $resolver) {
-            $resolver = new OptionsResolver();
-        }
-
-        $this->eventDispatcher->dispatch(ServiceEvents::PRE_CONFIGURE, new ConfigEvent($resolver, $options));
-
-        $resolver->setRequired('identifier');
-        $this->options = $resolver->resolve($options);
-
-        $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));
-    }
-
-    /**
      * Send request using current client
      *
      * @throws \Exception
@@ -214,5 +194,25 @@ class LightService
     public function getIdentifier()
     {
         return $this->options['identifier'];
+    }
+
+    /**
+     * Manage configuration
+     *
+     * @param array $options
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
+     */
+    protected function configure(array $options = array(), OptionsResolver $resolver = null)
+    {
+        if (null === $resolver) {
+            $resolver = new OptionsResolver();
+        }
+
+        $this->eventDispatcher->dispatch(ServiceEvents::PRE_CONFIGURE, new ConfigEvent($resolver, $options));
+
+        $resolver->setRequired('identifier');
+        $this->options = $resolver->resolve($options);
+
+        $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));
     }
 }

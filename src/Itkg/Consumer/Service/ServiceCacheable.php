@@ -20,23 +20,6 @@ class ServiceCacheable extends LightService implements CacheableInterface
     private $loaded;
 
     /**
-     * @param array $options
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
-     */
-    public function configure(array $options = array(), OptionsResolver $resolver = null)
-    {
-        $resolver = new OptionsResolver();
-
-        $resolver->setDefaults(array(
-            'cache_ttl'         => null,
-            'cache_serializer'  => 'serialize',
-            'cache_unserializer' => 'unserialize'
-        ));
-
-        parent::configure($options, $resolver);
-    }
-
-    /**
      * Hash key getter
      *
      * @return string
@@ -108,5 +91,22 @@ class ServiceCacheable extends LightService implements CacheableInterface
             $this->options['cache_unserializer'],
             $data
         );
+    }
+
+    /**
+     * @param array $options
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
+     */
+    protected function configure(array $options = array(), OptionsResolver $resolver = null)
+    {
+        $resolver = new OptionsResolver();
+
+        $resolver->setDefaults(array(
+            'cache_ttl'         => null,
+            'cache_serializer'  => 'serialize',
+            'cache_unserializer' => 'unserialize'
+        ));
+
+        parent::configure($options, $resolver);
     }
 }
