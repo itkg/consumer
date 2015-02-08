@@ -28,7 +28,9 @@ class ServiceCacheable extends LightService implements CacheableInterface
         $resolver = new OptionsResolver();
 
         $resolver->setDefaults(array(
-            'cache_ttl' => null
+            'cache_ttl'         => null,
+            'cache_serializer'  => 'serialize',
+            'cache_unseriliaze' => 'unserialize'
         ));
 
         parent::configure($options, $resolver);
@@ -89,7 +91,10 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function getDataForCache()
     {
-        return serialize($this->response);
+        return call_user_func(
+            $this->options['cache_serializer'],
+            $this->response
+        );
     }
 
     /**
@@ -100,6 +105,9 @@ class ServiceCacheable extends LightService implements CacheableInterface
      */
     public function setDataFromCache($data)
     {
-        $this->response = unserialize($data);
+        $this->response = call_user_func(
+            $this->options['cache_unserializer'],
+            $data
+        );
     }
 }
