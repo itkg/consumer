@@ -30,7 +30,13 @@ class LoggableService extends LightService implements ServiceLoggableInterface
      * @param Response $response
      * @param array $options
      */
-    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, LoggerInterface $logger, Request $request = null, Response $response = null, array $options = array())
+    public function __construct(
+        EventDispatcher $eventDispatcher,
+        ClientInterface $client,
+        LoggerInterface $logger,
+        Request $request = null,
+        Response $response = null,
+        array $options = array())
     {
         $this->logger = $logger;
 

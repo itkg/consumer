@@ -54,7 +54,12 @@ class LightService implements ServiceInterface
      * @param Response $response
      * @param array|\Itkg\Core\ConfigInterface $options
      */
-    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, Request $request = null, Response $response = null, array $options = array())
+    public function __construct(
+        EventDispatcher $eventDispatcher,
+        ClientInterface $client,
+        Request $request = null,
+        Response $response = null,
+        array $options = array())
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->request         = $request;

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @package Itkg\Consumer\Service
  */
-class Service extends ServiceCacheable implements ServiceLoggableInterface
+class Service extends CacheableService implements ServiceLoggableInterface
 {
     /**
      * @var LoggerInterface
@@ -30,7 +30,13 @@ class Service extends ServiceCacheable implements ServiceLoggableInterface
      * @param Response $response
      * @param array $options
      */
-    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, LoggerInterface $logger, Request $request = null, Response $response = null, array $options = array())
+    public function __construct(
+        EventDispatcher $eventDispatcher,
+        ClientInterface $client,
+        LoggerInterface $logger,
+        Request $request = null,
+        Response $response = null,
+        array $options = array())
     {
         $this->logger = $logger;
 
