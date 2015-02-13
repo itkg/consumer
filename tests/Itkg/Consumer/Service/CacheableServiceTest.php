@@ -3,16 +3,17 @@
 namespace Itkg\Consumer;
 
 use Itkg\Consumer\Client\RestClient;
+use Itkg\Consumer\Service\CacheableService;
 use Itkg\Consumer\Service\ServiceCacheable;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ServiceCacheableTest extends \PHPUnit_Framework_TestCase
+class CacheableServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultConfiguration()
     {
-        $service = new ServiceCacheable(new EventDispatcher(), new RestClient(), null, null, array('identifier' => 'cacheable service'));
+        $service = new CacheableService(new EventDispatcher(), new RestClient(), null, null, array('identifier' => 'cacheable service'));
         $options = $service->getOptions();
 
         $this->assertNull($options['cache_ttl']);
@@ -34,7 +35,7 @@ class ServiceCacheableTest extends \PHPUnit_Framework_TestCase
             }
         );
         $response = new Response('My Response');
-        $service = new ServiceCacheable(new EventDispatcher(), new RestClient(), null, $response, $options);
+        $service = new CacheableService(new EventDispatcher(), new RestClient(), null, $response, $options);
         $this->assertEquals(300, $service->getTtl());
 
         $this->assertEquals('My Response', $service->getDataForCache());
@@ -44,7 +45,7 @@ class ServiceCacheableTest extends \PHPUnit_Framework_TestCase
 
     public function testHashKey()
     {
-        $service = new ServiceCacheable(new EventDispatcher(), new RestClient(), null, null, array('identifier' => 'cacheable service'));
+        $service = new CacheableService(new EventDispatcher(), new RestClient(), null, null, array('identifier' => 'cacheable service'));
 
         $service->setRequest(Request::create('/'));
         $key = $service->getHashKey();
@@ -63,7 +64,5 @@ class ServiceCacheableTest extends \PHPUnit_Framework_TestCase
         $service->setRequest(Request::create('/', 'GET', array(), array(), array(), array('HTTP_CONTENT_TYPE' => 'application/json'), 'request body'));
         $newKey = $service->getHashKey();
         $this->assertNotEquals($key, $newKey);
-
-
     }
 }

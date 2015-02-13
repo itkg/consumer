@@ -6,13 +6,13 @@ use Itkg\Core\CacheableInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class ServiceCacheable
+ * Class CacheableService
  *
  * Light service with cacheable functionality
  *
  * @package Itkg\Consumer\Service
  */
-class ServiceCacheable extends LightService implements CacheableInterface
+class CacheableService extends LightService implements CacheableInterface
 {
     /**
      * @var bool

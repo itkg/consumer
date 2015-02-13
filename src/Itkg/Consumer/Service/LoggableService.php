@@ -9,13 +9,13 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ServiceLoggable
+ * Class LoggableService
  *
  * Light service with loggable functionnality
  *
  * @package Itkg\Consumer\Service
  */
-class ServiceLoggable extends LightService implements ServiceLoggableInterface
+class LoggableService extends LightService implements ServiceLoggableInterface
 {
     /**
      * @var LoggerInterface

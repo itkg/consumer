@@ -2,12 +2,12 @@
 
 namespace Itkg\Consumer\Listener;
 
-use Itkg\Consumer\Service\ServiceLoggable;
+use Itkg\Consumer\Service\LoggableService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ServiceLoggableListenerTest extends \PHPUnit_Framework_TestCase
+class LoggerListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \Exception
@@ -15,13 +15,13 @@ class ServiceLoggableListenerTest extends \PHPUnit_Framework_TestCase
     public function testServiceSuccessAndFail()
     {
         $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addSubscriber(new ServiceLoggableListener());
+        $eventDispatcher->addSubscriber(new LoggerListener());
 
         $clientMock = $this->getMockBuilder('Itkg\Consumer\Client\RestClient')->getMock();
         $loggerMock = $this->getMockBuilder('Psr\Log\AbstractLogger')->disableOriginalConstructor()->getMock();
         $loggerMock->expects($this->exactly(3))->method('info');
         $loggerMock->expects($this->once())->method('error');
-        $loggableService = new ServiceLoggable(
+        $loggableService = new LoggableService(
             $eventDispatcher,
             $clientMock,
             $loggerMock,

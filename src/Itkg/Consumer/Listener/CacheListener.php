@@ -12,13 +12,13 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class ServiceCacheableListener
+ * Class CacheListener
  *
- * Event listener for service caching (handle ServiceCacheable)
+ * Event listener for service caching (handle CacheableService)
  *
  * @package Itkg\Consumer\Listener
  */
-class ServiceCacheableListener implements EventSubscriberInterface
+class CacheListener implements EventSubscriberInterface
 {
     /**
      * @var AdapterInterface
@@ -67,7 +67,7 @@ class ServiceCacheableListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if (!$service instanceof ServiceCacheable) {
+        if (!$service instanceof CacheableInterface) {
             return;
         }
 

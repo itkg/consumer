@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @package Itkg\Consumer\Service
  */
-class LightService
+class LightService implements ServiceInterface
 {
     /**
      * @var Request
