@@ -26,21 +26,17 @@ class Service extends CacheableService implements ServiceLoggableInterface
      * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
      * @param ClientInterface $client
      * @param \Psr\Log\LoggerInterface $logger
-     * @param Request $request
-     * @param Response $response
      * @param array $options
      */
     public function __construct(
         EventDispatcher $eventDispatcher,
         ClientInterface $client,
         LoggerInterface $logger,
-        Request $request = null,
-        Response $response = null,
         array $options = array())
     {
         $this->logger = $logger;
 
-        parent::__construct($eventDispatcher, $client, $request, $response, $options);
+        parent::__construct($eventDispatcher, $client, $options);
     }
 
     /**

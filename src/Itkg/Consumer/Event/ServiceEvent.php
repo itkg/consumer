@@ -2,7 +2,7 @@
 
 namespace Itkg\Consumer\Event;
 
-use Itkg\Consumer\Service\LightService;
+use Itkg\Consumer\Service\SimpleService;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -15,19 +15,19 @@ use Symfony\Component\EventDispatcher\Event;
 class ServiceEvent extends Event
 {
     /**
-     * @var LightService
+     * @var SimpleService
      */
     private $service;
 
     /**
-     * @param LightService $service
+     * @param SimpleService $service
      */
-    public function __construct(LightService $service)
+    public function __construct(SimpleService $service)
     {
         $this->service = $service;
     }
     /**
-     * @return LightService
+     * @return SimpleService
      */
     public function getService()
     {

@@ -9,33 +9,29 @@ $eventDispatcher =  new \Symfony\Component\EventDispatcher\EventDispatcher();
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\CacheListener($registry, $eventDispatcher));
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\LoggerListener());
 
-$service =  new \Itkg\Consumer\Service\LightService(
+$service =  new \Itkg\Consumer\Service\SimpleService(
     $eventDispatcher,
     new Itkg\Consumer\Client\RestClient(array(
         'timeout' => 10
     )),
-    \Symfony\Component\HttpFoundation\Request::create('XXXX'),
-    new \Symfony\Component\HttpFoundation\Response(),
     array(
         'identifier' => 'my test'
     )
 );
 
-$service->sendRequest()->getResponse();
+$service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
 $service =  new \Itkg\Consumer\Service\CacheableService(
     $eventDispatcher,
     new Itkg\Consumer\Client\RestClient(array(
         'timeout' => 10
     )),
-    \Symfony\Component\HttpFoundation\Request::create('XXXX'),
-    new \Symfony\Component\HttpFoundation\Response(),
     array(
         'cache_ttl' => 20,
         'identifier' => 'my test'
     )
 );
 
-$service->sendRequest()->getResponse();
+$service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
 
 $service =  new \Itkg\Consumer\Service\LoggableService(
     $eventDispatcher,
@@ -43,10 +39,9 @@ $service =  new \Itkg\Consumer\Service\LoggableService(
         'timeout' => 10
     )),
     new \Monolog\Logger('my_logger', array(new \Monolog\Handler\StreamHandler('/tmp/test'))),
-    \Symfony\Component\HttpFoundation\Request::create('XXXX'),
-    new \Symfony\Component\HttpFoundation\Response(),
     array(
         'identifier' => 'my test'
     )
 );
-$service->sendRequest()->getResponse();
+
+$service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();

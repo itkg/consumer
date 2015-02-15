@@ -25,17 +25,15 @@ class LoggerListenerTest extends \PHPUnit_Framework_TestCase
             $eventDispatcher,
             $clientMock,
             $loggerMock,
-            Request::create('/'),
-            new Response(),
             array('identifier' => 'loggable service')
         );
 
-        $loggableService->sendRequest();
+        $loggableService->sendRequest(Request::create('/'));
 
         $clientMock->expects($this->once())->method('sendRequest')->will($this->throwException(new \Exception('KO')));
 
         $loggableService->setClient($clientMock);
-        $loggableService->sendRequest();
+        $loggableService->sendRequest(Request::create('/'));
 
     }
 } 

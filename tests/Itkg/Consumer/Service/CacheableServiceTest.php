@@ -13,7 +13,7 @@ class CacheableServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultConfiguration()
     {
-        $service = new CacheableService(new EventDispatcher(), new RestClient(), null, null, array('identifier' => 'cacheable service'));
+        $service = new CacheableService(new EventDispatcher(), new RestClient(), array('identifier' => 'cacheable service'));
         $options = $service->getOptions();
 
         $this->assertNull($options['cache_ttl']);
@@ -35,9 +35,9 @@ class CacheableServiceTest extends \PHPUnit_Framework_TestCase
             }
         );
         $response = new Response('My Response');
-        $service = new CacheableService(new EventDispatcher(), new RestClient(), null, $response, $options);
+        $service = new CacheableService(new EventDispatcher(), new RestClient(), $options);
         $this->assertEquals(300, $service->getTtl());
-
+        $service->setResponse($response);
         $this->assertEquals('My Response', $service->getDataForCache());
         $service->setDataFromCache('My Response');
         $this->assertEquals($response, $service->getResponse());
@@ -45,7 +45,7 @@ class CacheableServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testHashKey()
     {
-        $service = new CacheableService(new EventDispatcher(), new RestClient(), null, null, array('identifier' => 'cacheable service'));
+        $service = new CacheableService(new EventDispatcher(), new RestClient(), array('identifier' => 'cacheable service'));
 
         $service->setRequest(Request::create('/'));
         $key = $service->getHashKey();

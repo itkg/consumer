@@ -12,13 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class LightService
+ * Class SimpleService
  *
  * A minimal service for sending requests & handle responses
  *
  * @package Itkg\Consumer\Service
  */
-class LightService implements ServiceInterface
+class SimpleService implements ServiceInterface
 {
     /**
      * @var Request
@@ -50,20 +50,11 @@ class LightService implements ServiceInterface
     /**
      * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
      * @param ClientInterface $client
-     * @param Request $request
-     * @param Response $response
      * @param array|\Itkg\Core\ConfigInterface $options
      */
-    public function __construct(
-        EventDispatcher $eventDispatcher,
-        ClientInterface $client,
-        Request $request = null,
-        Response $response = null,
-        array $options = array())
+    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, array $options = array())
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->request         = $request;
-        $this->response        = $response;
         $this->client          = $client;
 
         $this->configure($options);
@@ -72,12 +63,18 @@ class LightService implements ServiceInterface
     /**
      * Send request using current client
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     *
      * @throws \Exception
      *
      * @return $this
      */
-    public function sendRequest()
+    public function sendRequest(Request $request, Response $response = null)
     {
+        $this->request = $request;
+        $this->response = (null === $response) ? new Response() : $response;
+
         $event = new ServiceEvent($this);
         $this->eventDispatcher->dispatch(ServiceEvents::REQUEST, $event);
 

@@ -20,8 +20,6 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
         $cacheableService = new CacheableService(
             $eventDispatcher,
             $clientMock,
-            Request::create('/'),
-            new Response(),
             array(
                 'identifier' => 'cacheable service',
                 'cache_serializer' => function (Response $response) {
@@ -32,11 +30,11 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertFalse($cacheableService->isLoaded());
-        $cacheableService->sendRequest();
+        $cacheableService->sendRequest(Request::create('/'));
 
         $this->assertNotNull($registry->get($cacheableService));
 
-        $cacheableService->sendRequest();
+        $cacheableService->sendRequest(Request::create('/'));
         $this->assertTrue($cacheableService->isLoaded());
     }
 } 
