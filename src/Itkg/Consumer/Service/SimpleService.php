@@ -107,6 +107,28 @@ class SimpleService implements ServiceInterface
     }
 
     /**
+     * Get option by key
+     *
+     * @param $key
+     *
+     * @return mixed
+     */
+    public function getOption($key)
+    {
+        return $this->options[$key];
+    }
+
+    /**
+     * @param $key
+     *
+     * @return bool
+     */
+    public function hasOption($key)
+    {
+        return isset($this->options[$key]);
+    }
+
+    /**
      * Set all options
      *
      * @param array $options
@@ -202,7 +224,7 @@ class SimpleService implements ServiceInterface
      * Manage configuration
      *
      * @param array $options
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
+     * @param OptionsResolver $resolver
      */
     protected function configure(array $options = array(), OptionsResolver $resolver = null)
     {
@@ -215,10 +237,14 @@ class SimpleService implements ServiceInterface
         $resolver
             ->setRequired('identifier')
             ->setDefined(array(
-                'response_mapping', // Define a mapped class for response content deserialization
-                'response_type' // Defin a type used by serializer (json, xml, etc)
+
+            ))
+            ->setDefaults(array(
+                'response_format' => 'json', // Define a format used by serializer (json, xml, etc),
+                'response_type'   => 'array', // Define a mapped class for response content deserialization
             )
         );
+
         $this->options = $resolver->resolve($options);
 
         $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));

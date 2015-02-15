@@ -8,6 +8,7 @@ $registry = new \Itkg\Core\Cache\Adapter\Registry();
 $eventDispatcher =  new \Symfony\Component\EventDispatcher\EventDispatcher();
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\CacheListener($registry, $eventDispatcher));
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\LoggerListener());
+$eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\DeserializerListener(JMS\Serializer\SerializerBuilder::create()->build()));
 
 $service =  new \Itkg\Consumer\Service\SimpleService(
     $eventDispatcher,
@@ -44,4 +45,4 @@ $service =  new \Itkg\Consumer\Service\LoggableService(
     )
 );
 
-$service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
+$response = $service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();

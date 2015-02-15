@@ -2,7 +2,10 @@
 
 namespace Itkg\Consumer\Provider;
 
+use Itkg\Consumer\Listener\DeserializerListener;
+use Itkg\Consumer\Listener\LoggerListener;
 use Itkg\Core\Provider\ServiceProviderInterface;
+use JMS\Serializer\SerializerBuilder;
 
 class ServiceProvider implements ServiceProviderInterface
 {
@@ -14,8 +17,26 @@ class ServiceProvider implements ServiceProviderInterface
      *
      * @param \Pimple $container An Container instance
      */
-    public function register(\Pimple $container)
+    public function register(\Pimple $mainContainer)
     {
-        // TODO: Implement register() method.
+        $container = new \Pimple();
+
+        $container['deserializer_listener'] = $mainContainer->share(
+            function () {
+                return new DeserializerListener(
+                    SerializerBuilder::create()->build()
+                );
+            }
+        );
+
+        $container['logger_listener'] = $mainContainer->share(
+            function () {
+                return new LoggerListener();
+            }
+        );
+
+        $mainContainer['core']['dispatcher']->addSubscriber($container['deserializer_listener']);
+
+        $mainContainer['consumer'] = $container;
     }
 }

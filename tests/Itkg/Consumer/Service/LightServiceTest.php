@@ -62,7 +62,7 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
 
         $options = array('identifier' => 'My service');
         $service = new SimpleService($eventDispatcherMock, new RestClient(), $options);
-        $this->assertEquals($options, $service->getOptions());
+        $this->assertEquals('My service', $service->getOption('identifier'));
 
     }
 
@@ -75,7 +75,6 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($client, $service->getClient());
         $this->assertNull($service->getRequest());
         $this->assertNull($service->getResponse());
-        $this->assertEquals($options, $service->getOptions());
 
         $client = new RestClient(array('timeout' => 10));
         $request = Request::create('/');
@@ -85,12 +84,10 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($service, $service->setClient($client));
         $this->assertEquals($service, $service->setRequest($request));
         $this->assertEquals($service, $service->setResponse($response));
-        $this->assertEquals($service, $service->setOptions($options));
 
         $this->assertEquals($client, $service->getClient());
         $this->assertEquals($request, $service->getRequest());
         $this->assertEquals($response, $service->getResponse());
-        $this->assertEquals($options, $service->getOptions());
 
     }
 }
