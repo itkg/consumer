@@ -5,7 +5,7 @@ namespace Itkg\Consumer\Listener;
 use Itkg\Consumer\Service\LoggableService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Itkg\Consumer\Response;
 
 class LoggerListenerTest extends \PHPUnit_Framework_TestCase
 {

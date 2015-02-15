@@ -6,7 +6,7 @@ use Itkg\Consumer\Client\ClientInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Response;
+use Itkg\Consumer\Response;
 
 /**
  * Class LoggableService

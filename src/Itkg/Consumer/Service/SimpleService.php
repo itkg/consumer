@@ -8,7 +8,7 @@ use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\Response;
+use Itkg\Consumer\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -25,7 +25,7 @@ class SimpleService implements ServiceInterface
      */
     protected $request;
     /**
-     * @var \Symfony\Component\HttpFoundation\Response
+     * @var \Itkg\Consumer\Response
      */
     protected $response;
     /**
@@ -64,7 +64,7 @@ class SimpleService implements ServiceInterface
      * Send request using current client
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param \Itkg\Consumer\Response $response
      *
      * @throws \Exception
      *
@@ -140,7 +140,7 @@ class SimpleService implements ServiceInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param \Itkg\Consumer\Response $response
      *
      * @return $this
      */
@@ -152,7 +152,7 @@ class SimpleService implements ServiceInterface
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Itkg\Consumer\Response
      */
     public function getResponse()
     {
@@ -212,7 +212,13 @@ class SimpleService implements ServiceInterface
 
         $this->eventDispatcher->dispatch(ServiceEvents::PRE_CONFIGURE, new ConfigEvent($resolver, $options));
 
-        $resolver->setRequired('identifier');
+        $resolver
+            ->setRequired('identifier')
+            ->setDefined(array(
+                'response_mapping', // Define a mapped class for response content deserialization
+                'response_type' // Defin a type used by serializer (json, xml, etc)
+            )
+        );
         $this->options = $resolver->resolve($options);
 
         $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));

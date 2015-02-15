@@ -3,7 +3,7 @@
 namespace Itkg\Consumer\Service;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Itkg\Consumer\Response;
 
 interface ServiceInterface
 {

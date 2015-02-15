@@ -7,7 +7,7 @@ use Itkg\Consumer\Service\CacheableService;
 use Itkg\Consumer\Service\ServiceCacheable;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Itkg\Consumer\Response;
 
 class CacheableServiceTest extends \PHPUnit_Framework_TestCase
 {

@@ -6,7 +6,7 @@ use Itkg\Consumer\Service\CacheableService;
 use Itkg\Core\Cache\Adapter\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Itkg\Consumer\Response;
 
 class CacheListenerTest extends \PHPUnit_Framework_TestCase
 {

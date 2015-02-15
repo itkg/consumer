@@ -3,7 +3,7 @@
 namespace Itkg\Consumer\Client;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Itkg\Consumer\Response;
 
 /**
  * Class SoapClient
