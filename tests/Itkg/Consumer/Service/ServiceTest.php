@@ -4,12 +4,12 @@ namespace Itkg\Consumer;
 
 use Itkg\Consumer\Client\RestClient;
 use Itkg\Consumer\Event\ServiceEvents;
-use Itkg\Consumer\Service\SimpleService;
+use Itkg\Consumer\Service\Service;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Itkg\Consumer\Response;
 
-class SimpleServiceTest extends \PHPUnit_Framework_TestCase
+class ServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
@@ -17,7 +17,7 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function testIdentifierNotSet()
     {
-        new SimpleService(new EventDispatcher(), new RestClient());
+        new Service(new EventDispatcher(), new RestClient());
     }
 
     public function testSendRequest()
@@ -29,7 +29,7 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder('Itkg\Consumer\Client\RestClient')->getMock();
         $clientMock->expects($this->once())->method('sendRequest');
 
-        $service = new SimpleService(
+        $service = new Service(
             $eventDispatcherMock,
             $clientMock,
             array('identifier' => 'My service')
@@ -46,7 +46,7 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
         $clientMock = $this->getMockBuilder('Itkg\Consumer\Client\RestClient')->getMock();
         $clientMock->expects($this->never())->method('sendRequest');
 
-        $service = new SimpleService(
+        $service = new Service(
             $eventDispatcherMock,
             $clientMock,
             array('identifier' => 'My service')
@@ -61,7 +61,7 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
         $eventDispatcherMock->expects($this->at(1))->method('dispatch')->with(ServiceEvents::POST_CONFIGURE);
 
         $options = array('identifier' => 'My service');
-        $service = new SimpleService($eventDispatcherMock, new RestClient(), $options);
+        $service = new Service($eventDispatcherMock, new RestClient(), $options);
         $this->assertEquals('My service', $service->getOption('identifier'));
 
     }
@@ -70,7 +70,7 @@ class SimpleServiceTest extends \PHPUnit_Framework_TestCase
     {
         $client = new RestClient();
         $options = array('identifier' => 'my identifier');
-        $service = new SimpleService(new EventDispatcher(), $client, $options);
+        $service = new Service(new EventDispatcher(), $client, $options);
 
         $this->assertEquals($client, $service->getClient());
         $this->assertNull($service->getRequest());

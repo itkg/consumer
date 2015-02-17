@@ -2,10 +2,9 @@
 
 namespace Itkg\Consumer\Listener;
 
-use Itkg\Consumer\Service\LoggableService;
+use Itkg\Consumer\Service\Service;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Itkg\Consumer\Response;
 
 class LoggerListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,11 +20,14 @@ class LoggerListenerTest extends \PHPUnit_Framework_TestCase
         $loggerMock = $this->getMockBuilder('Psr\Log\AbstractLogger')->disableOriginalConstructor()->getMock();
         $loggerMock->expects($this->exactly(3))->method('info');
         $loggerMock->expects($this->once())->method('error');
-        $loggableService = new LoggableService(
+        $loggableService = new Service(
             $eventDispatcher,
             $clientMock,
-            $loggerMock,
-            array('identifier' => 'loggable service')
+            array(
+                'identifier' => 'loggable service',
+                'loggable'   => true,
+                'logger'     => $loggerMock
+            )
         );
 
         $loggableService->sendRequest(Request::create('/'));

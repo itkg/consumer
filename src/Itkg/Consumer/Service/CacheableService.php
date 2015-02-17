@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @package Itkg\Consumer\Service
  */
-class CacheableService extends SimpleService implements CacheableInterface
+class CacheableService extends Service implements CacheableInterface
 {
     /**
      * @var bool

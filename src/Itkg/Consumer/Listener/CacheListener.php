@@ -50,7 +50,7 @@ class CacheListener implements EventSubscriberInterface
         if (!$service instanceof CacheableInterface) {
             return;
         }
-        // Check cache
+        // Check cache existence
         if (false !== $data = $this->cacheAdapter->get($service)) {
 
             // Set data from cache to entity object

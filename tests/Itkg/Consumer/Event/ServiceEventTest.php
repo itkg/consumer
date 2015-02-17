@@ -10,7 +10,7 @@ class ServiceEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
     {
-        $service = $this->getMockBuilder('Itkg\Consumer\Service\SimpleService')->disableOriginalConstructor()->getMock();
+        $service = $this->getMockBuilder('Itkg\Consumer\Service\Service')->disableOriginalConstructor()->getMock();
         $event = new ServiceEvent($service);
 
         $this->assertEquals($event->getService(), $service);
