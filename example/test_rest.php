@@ -10,7 +10,7 @@ $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\CacheListener($regis
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\LoggerListener());
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\DeserializerListener(JMS\Serializer\SerializerBuilder::create()->build()));
 
-$service =  new \Itkg\Consumer\Service\SimpleService(
+$service =  new \Itkg\Consumer\Service\Service(
     $eventDispatcher,
     new Itkg\Consumer\Client\RestClient(array(
         'timeout' => 10
@@ -21,27 +21,29 @@ $service =  new \Itkg\Consumer\Service\SimpleService(
 );
 
 $service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
-$service =  new \Itkg\Consumer\Service\CacheableService(
+$service =  new \Itkg\Consumer\Service\Service(
     $eventDispatcher,
     new Itkg\Consumer\Client\RestClient(array(
         'timeout' => 10
     )),
     array(
-        'cache_ttl' => 20,
+        'cache_ttl'  => 20,
+        'cacheable'  => true,
         'identifier' => 'my test'
     )
 );
 
 $service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
 
-$service =  new \Itkg\Consumer\Service\LoggableService(
+$service =  new \Itkg\Consumer\Service\Service(
     $eventDispatcher,
     new Itkg\Consumer\Client\RestClient(array(
         'timeout' => 10
     )),
-    new \Monolog\Logger('my_logger', array(new \Monolog\Handler\StreamHandler('/tmp/test'))),
     array(
-        'identifier' => 'my test'
+        'identifier' => 'my test',
+        'loggable'   => true,
+        'logger'     => new \Monolog\Logger('my_logger', array(new \Monolog\Handler\StreamHandler('/tmp/test'))),
     )
 );
 

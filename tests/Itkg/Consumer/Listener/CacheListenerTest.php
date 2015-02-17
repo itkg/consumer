@@ -2,7 +2,7 @@
 
 namespace Itkg\Consumer\Listener;
 
-use Itkg\Consumer\Service\CacheableService;
+use Itkg\Consumer\Service\Service;
 use Itkg\Core\Cache\Adapter\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,11 +17,12 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
         $eventDispatcher->addSubscriber(new CacheListener($registry, $eventDispatcher));
         $clientMock = $this->getMockBuilder('Itkg\Consumer\Client\RestClient')->getMock();
         $clientMock->expects($this->once())->method('sendRequest');
-        $cacheableService = new CacheableService(
+        $cacheableService = new Service(
             $eventDispatcher,
             $clientMock,
             array(
                 'identifier' => 'cacheable service',
+                'cacheable'  => true,
                 'cache_serializer' => function (Response $response) {
                     $response->setContent('My content');
                     return serialize($response);

@@ -47,7 +47,7 @@ class CacheListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if (!$service instanceof CacheableInterface) {
+        if (!$service->getOption('cacheable')) {
             return;
         }
         // Check cache existence
@@ -67,7 +67,7 @@ class CacheListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if (!$service instanceof CacheableInterface) {
+        if (!$service->getOption('cacheable')) {
             return;
         }
 
