@@ -13,23 +13,24 @@ class Response extends BaseResponse
     /**
      * @var mixed
      */
-    protected $decodedContent;
+    protected $deserialized;
 
     /**
      * @return mixed
      */
-    public function getDecodedContent()
+    public function getDeserializedContent()
     {
-        return $this->decodedContent;
+        return $this->deserialized;
     }
 
     /**
-     * @param $decodedContent
+     * @param $deserializedContent
+     *
      * @return $this
      */
-    public function setDecodedContent($decodedContent)
+    public function setDeserializedContent($deserializedContent)
     {
-        $this->decodedContent = $decodedContent;
+        $this->deserialized = $deserializedContent;
 
         return $this;
     }

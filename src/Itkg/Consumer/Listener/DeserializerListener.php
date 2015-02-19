@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Event listener responsible of response deserialization
  * Use response_type & response_format options
  *
- * set decodedContent property of service's response
+ * set deserializedContent property of service's response
  *
  * @package Itkg\Consumer\Listener
  */
@@ -66,7 +66,7 @@ class DeserializerListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        $service->getResponse()->setDecodedContent(
+        $service->getResponse()->setDeserializedContent(
             $this->serializer->deserialize(
                 $service->getResponse()->getContent(),
                 $service->getOption('response_type'),

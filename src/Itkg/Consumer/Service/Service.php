@@ -83,21 +83,19 @@ class Service implements ServiceInterface, CacheableInterface
         $event = new ServiceEvent($this);
         $this->eventDispatcher->dispatch(ServiceEvents::REQUEST, $event);
 
-        if (null != $this->response->getContent()) {
-            return $this;
+        if (null == $this->response->getContent()) {
+            try {
+                $this->client->sendRequest($this->request, $this->response);
+            } catch (\Exception $e) {
+                $this->exception = $e;
+                $this->eventDispatcher->dispatch(ServiceEvents::EXCEPTION, $event);
+
+                throw $e;
+            }
         }
 
-        try {
-            $this->client->sendRequest($this->request, $this->response);
+        $this->eventDispatcher->dispatch(ServiceEvents::RESPONSE, $event);
 
-            $this->eventDispatcher->dispatch(ServiceEvents::RESPONSE, $event);
-
-        } catch (\Exception $e) {
-            $this->exception = $e;
-            $this->eventDispatcher->dispatch(ServiceEvents::EXCEPTION, $event);
-
-            throw $e;
-        }
         return $this;
     }
 
@@ -313,6 +311,8 @@ class Service implements ServiceInterface, CacheableInterface
 
         $this->eventDispatcher->dispatch(ServiceEvents::PRE_CONFIGURE, new ConfigEvent($resolver, $options));
 
+        $this->setDefaultOptions($resolver);
+
         $resolver
             ->setRequired('identifier')
             ->setDefined(array(
@@ -325,8 +325,6 @@ class Service implements ServiceInterface, CacheableInterface
                     'loggable'  => 'bool'
                 )
             );
-
-        $this->setDefaultOptions($resolver);
 
         $this->options = $resolver->resolve($options);
 

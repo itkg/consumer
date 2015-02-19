@@ -7,7 +7,7 @@ use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Service\Service;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Itkg\Consumer\Response;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,7 +41,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $eventDispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->getMock();
         $eventDispatcherMock->expects($this->at(2))->method('dispatch')->with(ServiceEvents::REQUEST);
-        $eventDispatcherMock->expects($this->exactly(3))->method('dispatch');
+        $eventDispatcherMock->expects($this->exactly(4))->method('dispatch');
 
         $clientMock = $this->getMockBuilder('Itkg\Consumer\Client\RestClient')->getMock();
         $clientMock->expects($this->never())->method('sendRequest');
@@ -63,7 +63,24 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $options = array('identifier' => 'My service');
         $service = new Service($eventDispatcherMock, new RestClient(), $options);
         $this->assertEquals('My service', $service->getOption('identifier'));
+    }
 
+    /**
+     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     */
+    public function testLoggerType()
+    {
+        $service = new Service(new EventDispatcher(), new RestClient(), array('identifier' => 'identifier', 'logger' => 1));
+        $this->assertEquals('My service', $service->getOption('identifier'));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
+     */
+    public function testCacheTtlType()
+    {
+        $service = new Service(new EventDispatcher(), new RestClient(), array('identifier' => 'identifier', 'cache_ttl' => 'test'));
+        $this->assertEquals('My service', $service->getOption('identifier'));
     }
 
     public function testGetSet()
