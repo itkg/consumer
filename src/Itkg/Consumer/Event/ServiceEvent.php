@@ -3,6 +3,7 @@
 namespace Itkg\Consumer\Event;
 
 use Itkg\Consumer\Service\Service;
+use Itkg\Consumer\Service\ServiceInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -20,14 +21,14 @@ class ServiceEvent extends Event
     private $service;
 
     /**
-     * @param Service $service
+     * @param ServiceInterface $service
      */
-    public function __construct(Service $service)
+    public function __construct(ServiceInterface $service)
     {
         $this->service = $service;
     }
     /**
-     * @return SimpleService
+     * @return ServiceInterface
      */
     public function getService()
     {

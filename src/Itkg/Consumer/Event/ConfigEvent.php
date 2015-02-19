@@ -2,6 +2,7 @@
 
 namespace Itkg\Consumer\Event;
 
+use Itkg\Consumer\Service\ServiceConfigurableInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,61 +14,31 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ConfigEvent extends Event
 {
     /**
-     * @var array
+     * @var ServiceConfigurableInterface
      */
-    private $options = array();
+    private $service = array();
 
     /**
-     * @var \Symfony\Component\OptionsResolver\OptionsResolver
+     * @var OptionsResolver
      */
     private $optionsResolver;
 
     /**
      * @param OptionsResolver $optionsResolver
-     * @param array $options
+     * @param ServiceConfigurableInterface $service
      */
-    public function __construct(OptionsResolver $optionsResolver, array $options)
+    public function __construct(OptionsResolver $optionsResolver, ServiceConfigurableInterface $service)
     {
-        $this->options = $options;
+        $this->service = $service;
         $this->optionsResolver = $optionsResolver;
     }
 
     /**
-     * Add an option (or replace existing option)
-     *
-     * @param $key
-     * @param $value
-     *
-     * @return $this
+     * @return ServiceConfigurableInterface
      */
-    public function addOption($key, $value)
+    public function getService()
     {
-        $this->options[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get all options
-     *
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * Set all options
-     *
-     * @param array $options
-     * @return $this
-     */
-    public function setOptions(array $options)
-    {
-        $this->options = $options;
-
-        return $this;
+        return $this->service;
     }
 
     /**

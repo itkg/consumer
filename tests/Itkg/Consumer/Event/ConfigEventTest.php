@@ -8,16 +8,12 @@ class ConfigEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetSetAdd()
     {
-        $options = array('identifier' => 'my identifier');
         $resolver = new OptionsResolver();
-        $event = new ConfigEvent($resolver, $options);
+        $service = $this->getMockBuilder('Itkg\Consumer\Service\Service')->disableOriginalConstructor()->getMock();
 
-        $this->assertEquals($options, $event->getOptions());
+        $event = new ConfigEvent($resolver, $service);
+
+        $this->assertEquals($event->getService(), $service);
         $this->assertEquals($resolver, $event->getOptionsResolver());
-        $this->assertEquals($event, $event->setOptions(array('key' => 'value')));
-        $this->assertArrayHasKey('key', $event->getOptions());
-        $event->addOption('key', 'value2');
-        $options = $event->getOptions();
-        $this->assertEquals('value2', $options['key']);
     }
 } 

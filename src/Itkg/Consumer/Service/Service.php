@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @package Itkg\Consumer\Service
  */
-class Service implements ServiceInterface, CacheableInterface
+class Service implements ServiceInterface, ServiceConfigurableInterface, CacheableInterface
 {
     /**
      * @var bool
@@ -309,7 +309,7 @@ class Service implements ServiceInterface, CacheableInterface
             $resolver = new OptionsResolver();
         }
 
-        $this->eventDispatcher->dispatch(ServiceEvents::PRE_CONFIGURE, new ConfigEvent($resolver, $options));
+        $this->eventDispatcher->dispatch(ServiceEvents::PRE_CONFIGURE, new ConfigEvent($resolver, $this));
 
         $this->setDefaultOptions($resolver);
 
@@ -328,7 +328,7 @@ class Service implements ServiceInterface, CacheableInterface
 
         $this->options = $resolver->resolve($options);
 
-        $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));
+        $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this));
     }
 
     /**
