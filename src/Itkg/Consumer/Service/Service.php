@@ -30,7 +30,7 @@ class Service implements ServiceInterface, CacheableInterface
      */
     protected $request;
     /**
-     * @var \Itkg\Consumer\Response
+     * @var Response
      */
     protected $response;
     /**
@@ -53,9 +53,9 @@ class Service implements ServiceInterface, CacheableInterface
     protected $exception;
 
     /**
-     * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+     * @param EventDispatcher $eventDispatcher
      * @param ClientInterface $client
-     * @param array|\Itkg\Core\ConfigInterface $options
+     * @param array $options
      */
     public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, array $options = array())
     {
@@ -68,8 +68,8 @@ class Service implements ServiceInterface, CacheableInterface
     /**
      * Send request using current client
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Itkg\Consumer\Response $response
+     * @param Request $request
+     * @param Response $response
      *
      * @throws \Exception
      *
@@ -147,7 +147,7 @@ class Service implements ServiceInterface, CacheableInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
      * @return $this
      */
@@ -159,7 +159,7 @@ class Service implements ServiceInterface, CacheableInterface
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
     public function getRequest()
     {
@@ -167,7 +167,7 @@ class Service implements ServiceInterface, CacheableInterface
     }
 
     /**
-     * @param \Itkg\Consumer\Response $response
+     * @param Response $response
      *
      * @return $this
      */
@@ -179,7 +179,7 @@ class Service implements ServiceInterface, CacheableInterface
     }
 
     /**
-     * @return \Itkg\Consumer\Response
+     * @return Response
      */
     public function getResponse()
     {
@@ -318,6 +318,30 @@ class Service implements ServiceInterface, CacheableInterface
             ->setDefined(array(
                 'logger'
             ))
+            ->addAllowedTypes(array(
+                    'logger'    => 'Psr\Log\LoggerInterface',
+                    'cache_ttl' => array('null', 'int'),
+                    'cacheable' => 'bool',
+                    'loggable'  => 'bool'
+                )
+            );
+
+        $this->setDefaultOptions($resolver);
+
+        $this->options = $resolver->resolve($options);
+
+        $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));
+    }
+
+    /**
+     * Configure default options
+     *
+     * @param OptionsResolver $resolver
+     * @return $this
+     */
+    protected function setDefaultOptions(OptionsResolver $resolver)
+    {
+        $resolver
             ->setDefaults(array(
                 'response_format'    => 'json', // Define a format used by serializer (json, xml, etc),
                 'response_type'      => 'array', // Define a mapped class for response content deserialization,
@@ -326,11 +350,8 @@ class Service implements ServiceInterface, CacheableInterface
                 'cache_ttl'          => null,
                 'cache_serializer'   => 'serialize',
                 'cache_unserializer' => 'unserialize'
-            )
-        );
+            ));
 
-        $this->options = $resolver->resolve($options);
-
-        $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this->options));
+        return $this;
     }
 }
