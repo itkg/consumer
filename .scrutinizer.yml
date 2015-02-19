@@ -35,5 +35,6 @@ tools:
     php_cpd:
        enabled: true
        excluded_dirs: [vendor, tests]
+    external_code_coverage: true
 before_commands:
     - "composer install --dev --prefer-source"
