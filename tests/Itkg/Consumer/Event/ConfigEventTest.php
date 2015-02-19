@@ -16,4 +16,4 @@ class ConfigEventTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($event->getService(), $service);
         $this->assertEquals($resolver, $event->getOptionsResolver());
     }
-} 
+}
