@@ -2,6 +2,7 @@
 
 namespace Itkg\Consumer\Authentication;
 
+use Itkg\Consumer\Service\ServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 interface AuthenticationProviderInterface
@@ -23,9 +24,9 @@ interface AuthenticationProviderInterface
     public function getToken();
 
     /**
-     * Inject authenticated information into request
+     * Inject authenticated information into service components
      *
-     * @param Request $request
+     * @param ServiceInterface $service
      */
-    public function hydrateRequest(Request $request);
+    public function hydrate(ServiceInterface $service);
 }

@@ -19,7 +19,9 @@
         "guzzle/guzzle": "~3.9",
         "itkg/core": "dev-master",
         "symfony/options-resolver": "~2",
-        "jms/serializer": "0.*"
+        "jms/serializer": "0.*",
+        "fkooman/guzzle-bearer-auth-plugin": "0.2.*",
+        "fkooman/oauth-client": "0.5.*"
     },
     "autoload": {
         "psr-0": {

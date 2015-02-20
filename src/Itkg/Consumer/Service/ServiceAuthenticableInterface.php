@@ -26,9 +26,7 @@ interface ServiceAuthenticableInterface
     public function isAuthenticated();
 
     /**
-     * Inject autenticated data into the request
-     *
-     * @param Request $request
+     * Inject authenticated data into the request / client
      */
-    public function makeRequestAuthenticated();
+    public function makeAuthenticated();
 }

@@ -1,6 +1,9 @@
 <?php
 
 namespace Itkg\Consumer\Authentication;
+use Guzzle\Http\Client;
+use Guzzle\Plugin\Oauth\OauthPlugin;
+use Itkg\Consumer\Service\ServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -116,9 +119,9 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
     /**
      * Handle callback by managing oauth token, saving oauth state and calling redirect URL
      *
-     * @param array $data
+     * @param Request $request
      */
-    public function handleCallback(array $data)
+    public function handleCallback(Request $request)
     {
         try {
             $this->api = new \OAuth(
@@ -128,7 +131,7 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
                 OAUTH_AUTH_TYPE_URI
             );
 
-            $this->api->setToken($data['oauth_token'], $this->secret);
+            $this->api->setToken($request->query->get('oauth_token'), $this->secret);
             $accessToken = $this->api->getAccessToken($this->options['access_token_endpoint']);
 
             $this->state = 2;
@@ -206,12 +209,25 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
     }
 
     /**
-     * Inject authenticated information into request
+     * Inject authenticated information into service components
      *
-     * @param Request $request
+     * @param ServiceInterface $service
      */
-    public function hydrateRequest(Request $request)
+    public function hydrate(ServiceInterface $service)
     {
-        // TODO: Implement hydrateRequest() method.
+        $this->hydrateClient($service->getClient());
+    }
+
+    /**
+     * @param Client $client
+     */
+    private function hydrateClient(Client $client)
+    {
+        $client->addSubscriber(new OauthPlugin(array(
+            'consumer_key'    => $this->options['consumer_key'],
+            'consumer_secret' => $this->options['consumer_secret'],
+            'token'           => $this->token,
+            'token_secret'    => $this->secret
+        )));
     }
 }
