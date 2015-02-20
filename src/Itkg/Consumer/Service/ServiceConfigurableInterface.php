@@ -2,8 +2,18 @@
 
 namespace Itkg\Consumer\Service;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 interface ServiceConfigurableInterface
 {
+    /**
+     * Configure service options
+     *
+     * @param array $options
+     * @param OptionsResolver $resolver
+     */
+    public function configure(array $options = array(), OptionsResolver $resolver = null);
+
     /**
      * Get all options
      *

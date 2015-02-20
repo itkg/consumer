@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @package Itkg\Consumer\Service
  */
-class Service implements ServiceInterface, ServiceConfigurableInterface, CacheableInterface
+class Service implements ServiceInterface, ServiceConfigurableInterface, ServiceAuthenticableInterface, CacheableInterface
 {
     /**
      * @var bool
@@ -303,7 +303,7 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Cacheab
      * @param array $options
      * @param OptionsResolver $resolver
      */
-    protected function configure(array $options = array(), OptionsResolver $resolver = null)
+    public function configure(array $options = array(), OptionsResolver $resolver = null)
     {
         if (null === $resolver) {
             $resolver = new OptionsResolver();
@@ -319,10 +319,11 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Cacheab
                 'logger'
             ))
             ->addAllowedTypes(array(
-                    'logger'    => 'Psr\Log\LoggerInterface',
-                    'cache_ttl' => array('null', 'int'),
-                    'cacheable' => 'bool',
-                    'loggable'  => 'bool'
+                    'logger'                  => 'Psr\Log\LoggerInterface',
+                    'authentication_provider' => 'Itkg\Consumer\Authentication\AuthenticationProviderInterface',
+                    'cache_ttl'               => array('null', 'int'),
+                    'cacheable'               => 'bool',
+                    'loggable'                => 'bool'
                 )
             );
 
@@ -345,11 +346,44 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Cacheab
                 'response_type'      => 'array', // Define a mapped class for response content deserialization,
                 'loggable'           => false,
                 'cacheable'          => false,
+                'authenticable'      => false,
                 'cache_ttl'          => null,
                 'cache_serializer'   => 'serialize',
                 'cache_unserializer' => 'unserialize'
             ));
 
         return $this;
+    }
+
+    /**
+     * Authenticate service
+     *
+     * @return mixed
+     */
+    public function authenticate()
+    {
+        $this->getOption('authentication_provider')->authenticate();
+    }
+
+    /**
+     * Service is authenticated or not
+     *
+     * @return bool
+     */
+    public function isAuthenticated()
+    {
+        if (!$this->hasOption('authentication_provider')) {
+            return true;
+        }
+
+        return (null !== $this->getOption('authentication_provider')->getToken());
+    }
+
+    /**
+     * Inject autenticated data into the request
+     */
+    public function makeRequestAuthenticated()
+    {
+        $this->getOption('authentication_provider')->hydrateRequest($this->request);
     }
 }

@@ -16,4 +16,16 @@ interface AuthenticationProviderInterface
      * @return $this
      */
     public function configure(array $options);
+
+    /**
+     * @return string
+     */
+    public function getToken();
+
+    /**
+     * Inject authenticated information into request
+     *
+     * @param Request $request
+     */
+    public function hydrateRequest(Request $request);
 }

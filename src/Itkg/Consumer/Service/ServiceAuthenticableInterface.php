@@ -2,6 +2,8 @@
 
 namespace Itkg\Consumer\Service;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Interface ServiceAuthenticableInterface
  *
@@ -24,8 +26,9 @@ interface ServiceAuthenticableInterface
     public function isAuthenticated();
 
     /**
-     * @param bool $authenticated
-     * @return $this
+     * Inject autenticated data into the request
+     *
+     * @param Request $request
      */
-    public function setAuthenticated($authenticated);
+    public function makeRequestAuthenticated();
 }

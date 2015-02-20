@@ -74,23 +74,14 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
         $this->restoreState();
     }
 
-    public function getAuthToken()
-    {
-        if(false !== $this->token) {
-            $this->authenticate();
-        }
-
-        return $this->token;
-    }
-
     /**
-     * Token exists or not
+     * Get authenticated token
      *
-     * @return bool
+     * @return string
      */
-    public function hasAccess()
+    public function getToken()
     {
-        return (null !== $this->token);
+        return $this->token;
     }
 
     /**
@@ -212,5 +203,15 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
         $this->options = $optionsResolver->resolve($options);
 
         return $this;
+    }
+
+    /**
+     * Inject authenticated information into request
+     *
+     * @param Request $request
+     */
+    public function hydrateRequest(Request $request)
+    {
+        // TODO: Implement hydrateRequest() method.
     }
 }
