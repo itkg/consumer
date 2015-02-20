@@ -4,6 +4,7 @@ namespace Itkg\Consumer\Listener;
 
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
+use Itkg\Consumer\Service\ServiceLoggableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -21,7 +22,7 @@ class LoggerListener implements EventSubscriberInterface
     public function onServiceRequest(ServiceEvent $event)
     {
         $service = $event->getService();
-        if ($service->getOption('loggable')) {
+        if ($service instanceof ServiceLoggableInterface) {
             $service->getOption('logger')->info('Request will be send', array(
                 'service' => $service
             ));
@@ -34,7 +35,8 @@ class LoggerListener implements EventSubscriberInterface
     public function onServiceResponse(ServiceEvent $event)
     {
         $service = $event->getService();
-        if ($service->getOption('loggable')) {
+
+        if ($service instanceof ServiceLoggableInterface) {
             $service->getOption('logger')->info('Response success', array(
                 'service' => $service
             ));
@@ -47,7 +49,7 @@ class LoggerListener implements EventSubscriberInterface
     public function onServiceException(ServiceEvent $event)
     {
         $service = $event->getService();
-        if ($service->getOption('loggable')) {
+        if ($service instanceof ServiceLoggableInterface) {
             $service->getOption('logger')->error('Response KO', array(
                 'service' => $service
             ));

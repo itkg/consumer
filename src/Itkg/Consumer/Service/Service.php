@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @package Itkg\Consumer\Service
  */
-class Service implements ServiceInterface, ServiceConfigurableInterface, ServiceAuthenticableInterface, CacheableInterface
+class Service implements ServiceInterface, ServiceConfigurableInterface, ServiceAuthenticableInterface, ServiceLoggableInterface, CacheableInterface
 {
     /**
      * @var bool
@@ -319,8 +319,8 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
                 'logger'
             ))
             ->addAllowedTypes(array(
-                    'logger'                  => 'Psr\Log\LoggerInterface',
-                    'authentication_provider' => 'Itkg\Consumer\Authentication\AuthenticationProviderInterface',
+                    'logger'                  => array('null', 'Psr\Log\LoggerInterface'),
+                    'authentication_provider' => array('null', 'Itkg\Consumer\Authentication\AuthenticationProviderInterface'),
                     'cache_ttl'               => array('null', 'int'),
                     'cacheable'               => 'bool',
                     'loggable'                => 'bool'
@@ -342,14 +342,15 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
     {
         $resolver
             ->setDefaults(array(
-                'response_format'    => 'json', // Define a format used by serializer (json, xml, etc),
-                'response_type'      => 'array', // Define a mapped class for response content deserialization,
-                'loggable'           => false,
-                'cacheable'          => false,
-                'authenticable'      => false,
-                'cache_ttl'          => null,
-                'cache_serializer'   => 'serialize',
-                'cache_unserializer' => 'unserialize'
+                'response_format'         => 'json', // Define a format used by serializer (json, xml, etc),
+                'response_type'           => 'array', // Define a mapped class for response content deserialization,
+                'loggable'                => false,
+                'cacheable'               => false,
+                'authenticable'           => false,
+                'cache_ttl'               => null,
+                'cache_serializer'        => 'serialize',
+                'cache_unserializer'      => 'unserialize',
+                'authentication_provider' => null
             ));
 
         return $this;
@@ -385,5 +386,13 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
     public function makeRequestAuthenticated()
     {
         $this->getOption('authentication_provider')->hydrateRequest($this->request);
+    }
+
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->getOption('logger');
     }
 }
