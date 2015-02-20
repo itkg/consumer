@@ -6,10 +6,10 @@ use Itkg\Consumer\Client\ClientInterface;
 use Itkg\Consumer\Event\ConfigEvent;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
-use Itkg\Core\CacheableInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Itkg\Consumer\Response;
+use Itkg\Core\CacheableInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -19,7 +19,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @package Itkg\Consumer\Service
  */
-class Service implements ServiceInterface, ServiceConfigurableInterface, ServiceAuthenticableInterface, ServiceLoggableInterface, CacheableInterface
+class Service implements ServiceInterface, ServiceConfigurableInterface, ServiceAuthenticableInterface,
+    ServiceLoggableInterface, CacheableInterface
 {
     /**
      * @var bool
@@ -62,7 +63,7 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
     public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, array $options = array())
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->client          = $client;
+        $this->client = $client;
 
         $this->configure($options);
     }
@@ -239,14 +240,14 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
         }
 
         if (null === $this->hashKey) {
-            $this->hashKey = strtr($this->getIdentifier(), ' ','_').md5(
-                sprintf(
-                    '%s_%s_%s',
-                    $this->request->getContent(),
-                    $this->request->getUri(),
-                    json_encode($this->request->headers->all())
-                )
-            );
+            $this->hashKey = strtr($this->getIdentifier(), ' ', '_') . md5(
+                    sprintf(
+                        '%s_%s_%s',
+                        $this->request->getContent(),
+                        $this->request->getUri(),
+                        json_encode($this->request->headers->all())
+                    )
+                );
         }
         return $this->hashKey;
     }
@@ -327,11 +328,11 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
         $resolver
             ->setRequired('identifier')
             ->addAllowedTypes(array(
-                    'logger'                  => array('null', 'Psr\Log\LoggerInterface'),
+                    'logger' => array('null', 'Psr\Log\LoggerInterface'),
                     'authentication_provider' => array('null', 'Itkg\Consumer\Authentication\AuthenticationProviderInterface'),
-                    'cache_ttl'               => array('null', 'int'),
-                    'cacheable'               => 'bool',
-                    'loggable'                => 'bool'
+                    'cache_ttl' => array('null', 'int'),
+                    'cacheable' => 'bool',
+                    'loggable' => 'bool'
                 )
             );
 
@@ -350,16 +351,16 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
     {
         $resolver
             ->setDefaults(array(
-                'response_format'         => 'json', // Define a format used by serializer (json, xml, etc),
-                'response_type'           => 'array', // Define a mapped class for response content deserialization,
-                'loggable'                => false,
-                'cacheable'               => false,
-                'authenticable'           => false,
-                'cache_ttl'               => null,
-                'cache_serializer'        => 'serialize',
-                'cache_unserializer'      => 'unserialize',
+                'response_format' => 'json', // Define a format used by serializer (json, xml, etc),
+                'response_type' => 'array', // Define a mapped class for response content deserialization,
+                'loggable' => false,
+                'cacheable' => false,
+                'authenticable' => false,
+                'cache_ttl' => null,
+                'cache_serializer' => 'serialize',
+                'cache_unserializer' => 'unserialize',
                 'authentication_provider' => null,
-                'logger'                  => null
+                'logger' => null
             ));
 
         return $this;

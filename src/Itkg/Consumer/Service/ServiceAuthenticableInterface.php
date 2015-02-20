@@ -2,8 +2,6 @@
 
 namespace Itkg\Consumer\Service;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Interface ServiceAuthenticableInterface
  *

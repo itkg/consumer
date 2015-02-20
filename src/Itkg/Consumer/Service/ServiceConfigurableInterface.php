@@ -4,6 +4,13 @@ namespace Itkg\Consumer\Service;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Interface ServiceConfigurableInterface
+ *
+ * Service configurable contract
+ *
+ * @package Itkg\Consumer\Service
+ */
 interface ServiceConfigurableInterface
 {
     /**

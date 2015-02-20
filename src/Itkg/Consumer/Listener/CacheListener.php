@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Class CacheListener
  *
- * Event listener for service caching (handle CacheableService)
+ * Event listener for service caching (handler for Cacheable Service (implements CacheableInterface)
  *
  * @package Itkg\Consumer\Listener
  */

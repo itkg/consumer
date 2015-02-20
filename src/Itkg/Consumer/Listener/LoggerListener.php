@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Class LoggerListener
  *
- * Event listener for service logging (handler LoggableService)
+ * Event listener for service logging (handler for ServiceLoggableInterface)
  *
  * @package Itkg\Consumer\Listener
  */

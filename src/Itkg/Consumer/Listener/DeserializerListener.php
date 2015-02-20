@@ -4,6 +4,7 @@ namespace Itkg\Consumer\Listener;
 
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
+use Itkg\Consumer\Service\ServiceConfigurableInterface;
 use JMS\Serializer\Serializer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -66,13 +67,15 @@ class DeserializerListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        $service->getResponse()->setDeserializedContent(
-            $this->serializer->deserialize(
-                $service->getResponse()->getContent(),
-                $service->getOption('response_type'),
-                $service->getOption('response_format')
-            )
-        );
+        if ($service instanceof ServiceConfigurableInterface) {
+            $service->getResponse()->setDeserializedContent(
+                $this->serializer->deserialize(
+                    $service->getResponse()->getContent(),
+                    $service->getOption('response_type'),
+                    $service->getOption('response_format')
+                )
+            );
+        }
     }
 
     /**

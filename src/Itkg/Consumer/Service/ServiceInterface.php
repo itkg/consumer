@@ -6,6 +6,13 @@ use Itkg\Consumer\Client\ClientInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Itkg\Consumer\Response;
 
+/**
+ * Interface ServiceInterface
+ *
+ * Minimal service contract
+ *
+ * @package Itkg\Consumer\Service
+ */
 interface ServiceInterface
 {
     /**

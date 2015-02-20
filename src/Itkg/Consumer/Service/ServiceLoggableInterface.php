@@ -3,6 +3,10 @@
 namespace Itkg\Consumer\Service;
 
 /**
+ * interface ServiceLoggableInterface
+ *
+ * Loggable service conctract
+ *
  * @author Pascal DENIS <pascal.denis@businessdecision.com>
  */
 interface ServiceLoggableInterface
