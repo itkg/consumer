@@ -41,16 +41,18 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
      * @var array
      */
     protected $options;
-
     /**
      * @var EventDispatcher
      */
     protected $eventDispatcher;
-
     /**
      * @var \Exception
      */
     protected $exception;
+    /**
+     * @var string|null
+     */
+    protected $hashKey = null;
 
     /**
      * @param EventDispatcher $eventDispatcher
@@ -226,18 +228,27 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
     /**
      * Hash key getter
      *
+     * Hash key is null if service cache is disabled
+     *
      * @return string
      */
     public function getHashKey()
     {
-        return strtr($this->getIdentifier(), ' ','_').md5(
-            sprintf(
-                '%s_%s_%s',
-                $this->request->getContent(),
-                $this->request->getUri(),
-                json_encode($this->request->headers->all())
-            )
-        );
+        if (!$this->getOption('cacheable')) {
+            return null;
+        }
+
+        if (null === $this->hashKey) {
+            $this->hashKey = strtr($this->getIdentifier(), ' ','_').md5(
+                sprintf(
+                    '%s_%s_%s',
+                    $this->request->getContent(),
+                    $this->request->getUri(),
+                    json_encode($this->request->headers->all())
+                )
+            );
+        }
+        return $this->hashKey;
     }
 
     /**

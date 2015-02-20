@@ -64,7 +64,7 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
 
     /**
      * @param Session $session
-     * @param null $request
+     * @param null|Request $request
      */
     public function __construct(Session $session, $request = null)
     {

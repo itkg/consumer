@@ -8,7 +8,6 @@ use fkooman\OAuth\Client\Api;
 use fkooman\OAuth\Client\Callback;
 use fkooman\OAuth\Client\ClientConfig;
 use fkooman\OAuth\Client\Context;
-use fkooman\OAuth\Client\Scope;
 use fkooman\OAuth\Client\SessionStorage;
 use Guzzle\Http\Client;
 use Itkg\Consumer\Service\ServiceInterface;
@@ -77,6 +76,11 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
      */
     protected $request;
 
+    /**
+     * @param array $options
+     * @param Session $session
+     * @param Request $request
+     */
     public function __construct(array $options, Session $session, Request $request = null)
     {
         $this->request = $request;

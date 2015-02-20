@@ -3,8 +3,14 @@
 namespace Itkg\Consumer\Authentication;
 
 use Itkg\Consumer\Service\ServiceInterface;
-use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Interface AuthenticationProviderInterface
+ *
+ * For specific authentication before service call
+ *
+ * @package Itkg\Consumer\Authentication
+ */
 interface AuthenticationProviderInterface
 {
     public function authenticate();
