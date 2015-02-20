@@ -315,9 +315,6 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
 
         $resolver
             ->setRequired('identifier')
-            ->setDefined(array(
-                'logger'
-            ))
             ->addAllowedTypes(array(
                     'logger'                  => array('null', 'Psr\Log\LoggerInterface'),
                     'authentication_provider' => array('null', 'Itkg\Consumer\Authentication\AuthenticationProviderInterface'),
@@ -350,7 +347,8 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
                 'cache_ttl'               => null,
                 'cache_serializer'        => 'serialize',
                 'cache_unserializer'      => 'unserialize',
-                'authentication_provider' => null
+                'authentication_provider' => null,
+                'logger'                  => null
             ));
 
         return $this;
@@ -381,11 +379,11 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
     }
 
     /**
-     * Inject autenticated data into the request
+     * Inject autenticated data into the request / Client
      */
-    public function makeRequestAuthenticated()
+    public function makeAuthenticated()
     {
-        $this->getOption('authentication_provider')->hydrateRequest($this->request);
+        $this->getOption('authentication_provider')->hydrate($this);
     }
 
     /**
@@ -393,6 +391,9 @@ class Service implements ServiceInterface, ServiceConfigurableInterface, Service
      */
     public function getLogger()
     {
+        if (!$this->getOption('loggable')) {
+            return null;
+        }
         return $this->getOption('logger');
     }
 }

@@ -22,8 +22,8 @@ class LoggerListener implements EventSubscriberInterface
     public function onServiceRequest(ServiceEvent $event)
     {
         $service = $event->getService();
-        if ($service instanceof ServiceLoggableInterface) {
-            $service->getOption('logger')->info('Request will be send', array(
+        if ($service instanceof ServiceLoggableInterface && null !== $logger = $service->getLogger()) {
+            $logger->info('Request will be send', array(
                 'service' => $service
             ));
         }
@@ -36,8 +36,8 @@ class LoggerListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if ($service instanceof ServiceLoggableInterface) {
-            $service->getOption('logger')->info('Response success', array(
+        if ($service instanceof ServiceLoggableInterface && null !== $logger = $service->getLogger()) {
+            $logger->info('Response success', array(
                 'service' => $service
             ));
         }
@@ -49,8 +49,8 @@ class LoggerListener implements EventSubscriberInterface
     public function onServiceException(ServiceEvent $event)
     {
         $service = $event->getService();
-        if ($service instanceof ServiceLoggableInterface) {
-            $service->getOption('logger')->error('Response KO', array(
+        if ($service instanceof ServiceLoggableInterface && null !== $logger = $service->getLogger()) {
+            $logger->error('Response KO', array(
                 'service' => $service
             ));
         }

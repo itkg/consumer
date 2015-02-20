@@ -2,6 +2,7 @@
 
 namespace Itkg\Consumer\Service;
 
+use Itkg\Consumer\Client\ClientInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Itkg\Consumer\Response;
 
@@ -40,4 +41,24 @@ interface ServiceInterface
      * @return Response
      */
     public function getResponse();
+
+    /**
+     * Get client bases on config settings
+     * restClient is default client
+     *
+     * @return ClientInterface
+     */
+    public function getClient();
+
+    /**
+     * @param ClientInterface $client
+     *
+     * @return $this
+     */
+    public function setClient(ClientInterface $client);
+
+    /**
+     * @return \Exception
+     */
+    public function getException();
 }
