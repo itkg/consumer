@@ -31,7 +31,7 @@ class AuthenticationListener implements EventSubscriberInterface
         }
 
         // Inject authenticated data into the current request
-        $service->makeRequestAuthenticated();
+        $service->makeAuthenticated();
     }
 
     /**

@@ -120,6 +120,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($service->hasOption('logger'));
         $this->assertFalse($service->hasOption('unknown'));
         $this->assertTrue($service->getOption('loggable'));
+
+        $this->assertTrue($service->isAuthenticated());
+        $this->assertFalse($service->isLoaded());
     }
 
     public function testDefaultOptions()
@@ -129,5 +132,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($service->getOption('loggable'));
         $this->assertEquals('json', $service->getOption('response_format'));
         $this->assertEquals('array', $service->getOption('response_type'));
+
     }
 }
