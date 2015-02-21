@@ -13,7 +13,10 @@ class DeserializedListenerTest extends \PHPUnit_Framework_TestCase
     public function testDeserializerAndDefaultDeserialization()
     {
         $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addSubscriber(new DeserializerListener(SerializerBuilder::create()->build()));
+
+        $deserializerListener = new DeserializerListener(SerializerBuilder::create()->build());
+
+        $eventDispatcher->addSubscriber($deserializerListener);
 
         $clientMock = $this->getMockBuilder('Itkg\Consumer\Client\RestClient')->getMock();
 
@@ -26,7 +29,7 @@ class DeserializedListenerTest extends \PHPUnit_Framework_TestCase
         );
 
         $service->sendRequest(Request::create('/'), new Response('[{"title":"value"}]'));
-
+        $this->assertEquals($deserializerListener, $deserializerListener->setSerializer(SerializerBuilder::create()->build()));
         $this->assertEquals(array(0 => array('title' => 'value')), $service->getResponse()->getDeserializedContent());
 
     }
