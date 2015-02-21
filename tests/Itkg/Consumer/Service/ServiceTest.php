@@ -5,6 +5,7 @@ namespace Itkg\Consumer;
 use Itkg\Consumer\Client\RestClient;
 use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Service\Service;
+use Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -13,7 +14,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
-     * @expectedExceptionMessage The required option "identifier" is missing
      */
     public function testIdentifierNotSet()
     {
@@ -96,7 +96,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $client = new RestClient(array('timeout' => 10));
         $request = Request::create('/');
         $response = new Response('a content');
-        $options = array('identifier' => 'my new identifier');
 
         $this->assertEquals($service, $service->setClient($client));
         $this->assertEquals($service, $service->setRequest($request));
@@ -106,5 +105,29 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($request, $service->getRequest());
         $this->assertEquals($response, $service->getResponse());
 
+        // Test hashkey with/without cache enable
+        $this->assertNull($service->getHashKey());
+        $service->setOptions(array('cacheable' => true, 'identifier' => 'test cache', 'cache_ttl' => 10));
+        $this->assertNotNull($service->getHashKey());
+        $this->assertEquals(10, $service->getTtl());
+
+        $this->assertNull($service->getLogger());
+        $service->setOptions(array('logger' => new Logger('logger'), 'identifier' => 'test'));
+        $this->assertNull($service->getLogger());
+        $service->setOptions(array('logger' => new Logger('logger'), 'loggable' => true, 'identifier' => 'test'));
+        $this->assertNotNull($service->getLogger());
+
+        $this->assertTrue($service->hasOption('logger'));
+        $this->assertFalse($service->hasOption('unknown'));
+        $this->assertTrue($service->getOption('loggable'));
+    }
+
+    public function testDefaultOptions()
+    {
+        $service = new Service(new EventDispatcher(), new RestClient(), array('identifier' => 'identifier'));
+        $this->assertFalse($service->getOption('cacheable'));
+        $this->assertFalse($service->getOption('loggable'));
+        $this->assertEquals('json', $service->getOption('response_format'));
+        $this->assertEquals('array', $service->getOption('response_type'));
     }
 }

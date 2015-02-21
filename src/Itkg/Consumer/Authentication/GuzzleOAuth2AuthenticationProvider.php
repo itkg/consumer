@@ -131,7 +131,6 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
             $this->saveState();
             header("HTTP/1.1 302 Found");
             header("Location: " . $this->api->getAuthorizeUri($this->context));
-            exit;
         }
         $this->logged = true;
 
@@ -159,7 +158,6 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
 
         header("HTTP/1.1 302 Found");
         header("Location: " . $this->redirectUrl);
-        exit;
     }
 
     /**

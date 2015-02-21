@@ -68,4 +68,11 @@ interface ServiceInterface
      * @return \Exception
      */
     public function getException();
+
+    /**
+     * Get Service identifier
+     *
+     * @return string
+     */
+    public function getIdentifier();
 }
