@@ -1,26 +1,37 @@
-<phpunit backupGlobals="false"
+<phpunit backupGlobals="true"
          backupStaticAttributes="false"
          bootstrap="tests/bootstrap.php"
          cacheTokens="true"
-         colors="true"
+         colors="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
          mapTestClassNameToCoveredClassName="false"
          processIsolation="false"
-         stopOnError="true"
-         stopOnFailure="true"
-         stopOnIncomplete="true"
-         stopOnSkipped="true"
-         strict="true"
-         verbose="true">
-    <testsuites name="Itkg/Consumer tests suite">
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         strict="false"
+         verbose="false">
+    <testsuites>
         <testsuite>
             <directory suffix="Test.php">tests/</directory>
         </testsuite>
+        <testsuite name="Library Test Suite">
+            <directory>./src</directory>
+            <exclude>./vendor</exclude>
+            <exclude>./tests</exclude>
+        </testsuite>
     </testsuites>
-    <whitelist processUncoveredFilesFromWhitelist="true">
-        <directory suffix=".php">./src</directory>
-    </whitelist>
+    <filter>
+        <blacklist>
+            <directory>./vendor</directory>
+            <directory>./tests</directory>
+        </blacklist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
