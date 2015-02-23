@@ -70,7 +70,7 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
         $event = new ServiceEvent($this);
         $this->eventDispatcher->dispatch(ServiceEvents::REQUEST, $event);
 
-        if (null == $this->response->getContent()) {
+        if (null === $this->response->getContent()) {
             try {
                 $this->client->sendRequest($this->request, $this->response);
             } catch (\Exception $e) {

@@ -16,11 +16,6 @@ use Itkg\Consumer\Response;
 class RestClient extends Client implements ClientInterface
 {
     /**
-     * @var array
-     */
-    private $options = array();
-
-    /**
      * @param array $options
      */
     public function __construct(array $options = array())

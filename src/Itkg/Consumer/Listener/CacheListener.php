@@ -4,7 +4,6 @@ namespace Itkg\Consumer\Listener;
 
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
-use Itkg\Consumer\Service\ServiceCacheable;
 use Itkg\Core\Cache\AdapterInterface;
 use Itkg\Core\Cache\Event\CacheEvent;
 use Itkg\Core\CacheableInterface;
