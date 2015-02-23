@@ -23,7 +23,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
     public function testMethods()
     {
-        $client = $this->getMock('Itkg\Consumer\Client\RestClient', array('sendRequest'));
+        $client = $this->getMock('Itkg\Consumer\Client\RestClient', array());
 
         $client->expects($this->at(0))->method('post');
         $client->expects($this->at(1))->method('put');

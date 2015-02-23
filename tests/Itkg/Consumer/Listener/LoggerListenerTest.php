@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LoggerListenerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \Exception
-     */
     public function testServiceSuccessAndFail()
     {
         $eventDispatcher = new EventDispatcher();
@@ -35,7 +32,11 @@ class LoggerListenerTest extends \PHPUnit_Framework_TestCase
         $clientMock->expects($this->once())->method('sendRequest')->will($this->throwException(new \Exception('KO')));
 
         $loggableService->setClient($clientMock);
-        $loggableService->sendRequest(Request::create('/'));
 
+        try {
+            $loggableService->sendRequest(Request::create('/'));
+        } catch(\Exception $e) {
+            $this->assertEquals($e, $loggableService->getException());
+        }
     }
 } 
