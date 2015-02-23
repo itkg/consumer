@@ -117,7 +117,7 @@ class SoapClient extends \SoapClient implements ClientInterface
             }
             $this->overridenRequest = $request;
         }
-        return parent::__doRequest($request, $location, $action, $version, $one_way = 0);
+        return parent::__doRequest($request, $location, $action, $version, 0);
     }
 
     /**

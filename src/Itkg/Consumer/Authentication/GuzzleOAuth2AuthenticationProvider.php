@@ -200,7 +200,7 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
      */
     public function getToken()
     {
-        if (null == $this->token) {
+        if (null === $this->token) {
             return null;
         }
         return $this->token->getAccessToken();
