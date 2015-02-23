@@ -113,6 +113,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($service->getLogger());
         $service->setOptions(array('logger' => new Logger('logger'), 'identifier' => 'test'));
+      
         $this->assertNull($service->getLogger());
         $service->setOptions(array('logger' => new Logger('logger'), 'loggable' => true, 'identifier' => 'test'));
         $this->assertNotNull($service->getLogger());
