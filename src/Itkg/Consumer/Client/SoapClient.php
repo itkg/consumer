@@ -62,7 +62,7 @@ class SoapClient extends \SoapClient implements ClientInterface
     {
         $response->setContent(
             $this->__soapCall(
-                $request->getUri(),
+                $request->getPathInfo(),
                 array(
                     $this->getClientRequest($request)
                 ),
