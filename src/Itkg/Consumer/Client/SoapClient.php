@@ -83,9 +83,11 @@ class SoapClient extends \SoapClient implements ClientInterface
             unset($this->options['login'], $this->options['password']);
         }
 
+
         if (isset($this->options['http_auth_login']) && isset($this->options['http_auth_password'])) {
             $this->options['login'] = $this->options['http_auth_login'];
             $this->options['password'] = $this->options['http_auth_password'];
+            unset($this->options['http_auth_login'], $this->options['http_auth_password']);
         }
     }
 
