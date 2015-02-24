@@ -47,12 +47,12 @@ class SoapClientTest extends \PHPUnit_Framework_TestCase
             'http://my_namespace.com',
             'Security',
             new \SoapVar(
-                '<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-                <wsse:UsernameToken wsu:Id="UsernameToken-6868426" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-                    <wsse:Username>my_login</wsse:Username>
-                    <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">xxxx</wsse:Password>
-                </wsse:UsernameToken>
-            </wsse:Security>',
+                    '<wsse:Security  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+        <wsse:UsernameToken wsu:Id="UsernameToken-6868426" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            <wsse:Username>my_login</wsse:Username>
+            <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">xxxx</wsse:Password>
+        </wsse:UsernameToken>
+    </wsse:Security>',
                 XSD_ANYXML,
                 NULL,
                 'http://my_namespace.com'
@@ -65,8 +65,8 @@ class SoapClientTest extends \PHPUnit_Framework_TestCase
             'location'  => 'http://location'
         );
         $client = $this->getMock('Itkg\Consumer\Client\SoapClient', array('__soapCall'), array(NULL, $options));
-     //   $client->expects($this->once())->method('__soapCall')->with('/', array(new \SoapVar('', XSD_ANYXML)), $optionsTotest, $header);
-     //   $service = new Service(new EventDispatcher(), $client, array('identifier' => 'identifier'));
-     //   $service->sendRequest(Request::createFromGlobals())->getResponse();
+        $client->expects($this->once())->method('__soapCall')->with('/', array(new \SoapVar('', XSD_ANYXML)), $optionsTotest, $header);
+        $service = new Service(new EventDispatcher(), $client, array('identifier' => 'identifier'));
+        $service->sendRequest(Request::createFromGlobals())->getResponse();
     }
 }
