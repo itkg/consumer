@@ -22,42 +22,34 @@ class GuzzleOAuthAuthenticationProvider implements AuthenticationProviderInterfa
      * @var string
      */
     protected $key;
-
     /**
      * @var string
      */
     protected $secret;
-
     /**
      * @var \OAuth
      */
     protected $api;
-
     /**
      * @var bool
      */
     protected $state = 0;
-
     /**
      * @var string
      */
     protected $token;
-
     /**
      * @var string
      */
     protected $redirectUrl;
-
     /**
      * @var array
      */
-    protected $options;
-
+    protected $options = array();
     /**
      * @var Session
      */
     private $session;
-
     /**
      * @var Request
      */
@@ -227,6 +219,8 @@ class GuzzleOAuthAuthenticationProvider implements AuthenticationProviderInterfa
     }
 
     /**
+     * Hydrate client with OAuth key / secret / token data
+     *
      * @param Client $client
      */
     private function hydrateClient(Client $client)

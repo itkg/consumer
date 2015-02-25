@@ -8,6 +8,8 @@ use Itkg\Consumer\Service\ServiceAuthenticableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
+ * Authenticate service for ServiceAuthenticable services
+ *
  * @author Pascal DENIS <pascal.denis@businessdecision.com>
  */
 class AuthenticationListener implements EventSubscriberInterface

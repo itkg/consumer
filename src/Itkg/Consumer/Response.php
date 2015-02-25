@@ -20,6 +20,8 @@ class Response extends BaseResponse
     protected $deserialized;
 
     /**
+     * Get deserializedContent
+     * 
      * @return mixed
      */
     public function getDeserializedContent()

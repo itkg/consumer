@@ -31,12 +31,10 @@ class SoapClient extends \SoapClient implements ClientInterface
      * @var array
      */
     private $options = array();
-
     /**
      * @var string
      */
     private $headerLogin;
-
     /**
      * @var string
      */
@@ -55,6 +53,7 @@ class SoapClient extends \SoapClient implements ClientInterface
 
     /**
      * Send soap request & set Response content
+     *
      * @param Request $request
      * @param Response $response
      */
@@ -73,7 +72,7 @@ class SoapClient extends \SoapClient implements ClientInterface
     }
 
     /**
-     * Get security infos from options
+     * Get security data from options (auth & http_auth)
      */
     protected function configureSecurity()
     {
@@ -139,6 +138,7 @@ class SoapClient extends \SoapClient implements ClientInterface
 
     /**
      * configure options
+     * Define some default options & configure security
      *
      * @param array $options
      */

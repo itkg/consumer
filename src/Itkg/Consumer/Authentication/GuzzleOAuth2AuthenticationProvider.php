@@ -28,27 +28,22 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
      * @var Client
      */
     protected $client;
-
     /**
      * @var SessionStorage
      */
     protected $storage;
-
     /**
      * @var ClientConfig
      */
     protected $config;
-
     /**
      * @var Context
      */
     protected $context;
-
     /**
      * @var Api
      */
     protected $api;
-
     /**
      * @var string
      */
@@ -61,12 +56,10 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
      * @var array
      */
     protected $options;
-
     /**
      * @var AccessToken
      */
     protected $token;
-
     /**
      * @var Session
      */
@@ -148,6 +141,7 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
 
     /**
      * Handle callback authentication
+     * Redirect to redirectUrl after callback management
      *
      * @param Request $request
      */
@@ -171,6 +165,7 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
 
     /**
      * Configure provider options
+     * Define some required options for authentication process
      *
      * @param array $options
      *
@@ -196,7 +191,9 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
     }
 
     /**
-     * @return string
+     * Get access token or null if no token exists
+     *
+     * @return null|string
      */
     public function getToken()
     {
@@ -224,6 +221,8 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
     }
 
     /**
+     * Hydrate client with new Bearer auth token
+     *
      * @param Client $client
      */
     private function hydrateClient(Client $client)

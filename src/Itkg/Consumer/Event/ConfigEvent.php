@@ -16,8 +16,7 @@ class ConfigEvent extends Event
     /**
      * @var ServiceConfigurableInterface
      */
-    private $service = array();
-
+    private $service;
     /**
      * @var OptionsResolver
      */
@@ -34,6 +33,8 @@ class ConfigEvent extends Event
     }
 
     /**
+     * Get service
+     *
      * @return ServiceConfigurableInterface
      */
     public function getService()
@@ -42,6 +43,8 @@ class ConfigEvent extends Event
     }
 
     /**
+     * Get options resolver
+     *
      * @return OptionsResolver
      */
     public function getOptionsResolver()

@@ -12,5 +12,11 @@ use Itkg\Consumer\Response;
  */
 interface ClientInterface
 {
+    /**
+     * Send Request & hydrate Response with client response
+     *
+     * @param Request $request
+     * @param Response $response
+     */
     public function sendRequest(Request $request, Response $response);
 }

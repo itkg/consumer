@@ -13,6 +13,9 @@ use Itkg\Consumer\Service\ServiceInterface;
  */
 interface AuthenticationProviderInterface
 {
+    /**
+     * Authenticate service
+     */
     public function authenticate();
 
     /**
@@ -25,12 +28,14 @@ interface AuthenticationProviderInterface
     public function configure(array $options);
 
     /**
+     * Get access token needed for service authentication
+     *
      * @return string
      */
     public function getToken();
 
     /**
-     * Inject authenticated information into service components
+     * Inject authenticated information into service components (client, request, etc.)
      *
      * @param ServiceInterface $service
      */

@@ -28,6 +28,8 @@ class ServiceEvent extends Event
         $this->service = $service;
     }
     /**
+     * Get service
+     *
      * @return ServiceInterface
      */
     public function getService()

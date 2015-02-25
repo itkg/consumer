@@ -2,6 +2,7 @@
 
 namespace Itkg\Consumer\Client;
 
+use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Service\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Itkg\Consumer\Response;
@@ -26,6 +27,8 @@ class RestClient extends Client implements ClientInterface
     }
 
     /**
+     * Send request & hydrate response with client response data (content / headers)
+     *
      * @param Request $request
      * @param Response $response
      */
@@ -41,9 +44,9 @@ class RestClient extends Client implements ClientInterface
     /**
      * Get a guzzle request object for a Request
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return \Guzzle\Http\Message\RequestInterface
+     * @return RequestInterface
      */
     protected function getClientRequest(Request $request)
     {

@@ -23,7 +23,6 @@ class CacheListener implements EventSubscriberInterface
      * @var AdapterInterface
      */
     private $cacheAdapter;
-
     /**
      * @var EventDispatcher
      */
