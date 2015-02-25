@@ -21,7 +21,7 @@ class Response extends BaseResponse
 
     /**
      * Get deserializedContent
-     * 
+     *
      * @return mixed
      */
     public function getDeserializedContent()
