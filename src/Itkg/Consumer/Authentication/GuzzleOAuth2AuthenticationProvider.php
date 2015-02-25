@@ -210,10 +210,17 @@ class GuzzleOAuth2AuthenticationProvider implements AuthenticationProviderInterf
      * Hydrate service client with oauth2 data
      *
      * @param ServiceInterface $service
+     * @throws \InvalidArgumentException
      */
     public function hydrate(ServiceInterface $service)
     {
-        $this->hydrateClient($service->getClient());
+        $client = $service->getClient();
+        if (!$client instanceof Client) {
+            throw new \InvalidArgumentException(
+                sprintf('Guzzle client expected %s provided', get_class($client))
+            );
+        }
+        $this->hydrateClient($client);
     }
 
     /**

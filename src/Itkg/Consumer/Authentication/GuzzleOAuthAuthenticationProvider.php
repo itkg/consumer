@@ -1,6 +1,7 @@
 <?php
 
 namespace Itkg\Consumer\Authentication;
+
 use Guzzle\Http\Client;
 use Guzzle\Plugin\Oauth\OauthPlugin;
 use Itkg\Consumer\Service\ServiceInterface;
@@ -9,13 +10,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class OAuthAuthenticationProvider
+ * Class GuzzleOAuthAuthenticationProvider
  *
- * An OAuth authentication provider
+ * An OAuth authentication provider for a guzzle based client
  *
  * @author Pascal DENIS <pascal.denis@businessdecision.com>
  */
-class OAuthAuthenticationProvider implements AuthenticationProviderInterface
+class GuzzleOAuthAuthenticationProvider implements AuthenticationProviderInterface
 {
     /**
      * @var string
@@ -212,9 +213,16 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
      * Inject authenticated information into service components
      *
      * @param ServiceInterface $service
+     * @throws \InvalidArgumentException
      */
     public function hydrate(ServiceInterface $service)
     {
+        $client = $service->getClient();
+        if (!$client instanceof Client) {
+            throw new \InvalidArgumentException(
+                sprintf('Guzzle client expected %s provided', get_class($client))
+            );
+        }
         $this->hydrateClient($service->getClient());
     }
 
@@ -226,7 +234,7 @@ class OAuthAuthenticationProvider implements AuthenticationProviderInterface
         $client->addSubscriber(new OauthPlugin(array(
             'consumer_key'    => $this->options['consumer_key'],
             'consumer_secret' => $this->options['consumer_secret'],
-            'token'           => $this->token,
+            'token'           => $this->getToken(),
             'token_secret'    => $this->secret
         )));
     }
