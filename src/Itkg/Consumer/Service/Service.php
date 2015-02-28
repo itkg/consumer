@@ -119,19 +119,6 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
     }
 
     /**
-     * Set all options
-     *
-     * @param array $options
-     * @return $this
-     */
-    public function setOptions(array $options)
-    {
-        $this->configure($options);
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getIdentifier()

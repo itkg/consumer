@@ -43,12 +43,4 @@ interface ServiceConfigurableInterface
      * @return bool
      */
     public function hasOption($key);
-
-    /**
-     * Set all options
-     *
-     * @param array $options
-     * @return $this
-     */
-    public function setOptions(array $options);
 }

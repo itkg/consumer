@@ -107,15 +107,15 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         // Test hashkey with/without cache enable
         $this->assertNull($service->getHashKey());
-        $service->setOptions(array('cacheable' => true, 'identifier' => 'test cache', 'cache_ttl' => 10));
+        $service->configure(array('cacheable' => true, 'identifier' => 'test cache', 'cache_ttl' => 10));
         $this->assertNotNull($service->getHashKey());
         $this->assertEquals(10, $service->getTtl());
 
         $this->assertNull($service->getLogger());
-        $service->setOptions(array('logger' => new Logger('logger'), 'identifier' => 'test'));
+        $service->configure(array('logger' => new Logger('logger'), 'identifier' => 'test'));
 
         $this->assertNull($service->getLogger());
-        $service->setOptions(array('logger' => new Logger('logger'), 'loggable' => true, 'identifier' => 'test'));
+        $service->configure(array('logger' => new Logger('logger'), 'loggable' => true, 'identifier' => 'test'));
         $this->assertNotNull($service->getLogger());
 
         $this->assertTrue($service->hasOption('logger'));

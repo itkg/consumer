@@ -2,8 +2,8 @@ Webservice consumer library
 ===========================
 
 [![Build Status](https://travis-ci.org/itkg/consumer.png?branch=2.0)](https://travis-ci.org/itkg/consumer)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/pdenis/consumer/badges/quality-score.png?b=2.0)](https://scrutinizer-ci.com/g/pdenis/consumer/?branch=2.0)
-[![Code Coverage](https://scrutinizer-ci.com/g/pdenis/consumer/badges/coverage.png?b=2.0)](https://scrutinizer-ci.com/g/pdenis/consumer/?branch=2.0)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/itkg/consumer/badges/quality-score.png?b=2.0)](https://scrutinizer-ci.com/g/itkg/consumer/?branch=2.0)
+[![Code Coverage](https://scrutinizer-ci.com/g/itkg/consumer/badges/coverage.png?b=2.0)](https://scrutinizer-ci.com/g/itkg/consumer/?branch=2.0)
 
 ## features
 * Rest & Soap consumer library
