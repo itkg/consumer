@@ -18,6 +18,8 @@ interface ServiceConfigurableInterface
      *
      * @param array $options
      * @param OptionsResolver $resolver
+     *
+     * @return $this
      */
     public function configure(array $options = array(), OptionsResolver $resolver = null);
 

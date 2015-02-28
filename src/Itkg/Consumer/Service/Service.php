@@ -238,6 +238,8 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
         $this->options = $resolver->resolve($options);
 
         $this->eventDispatcher->dispatch(ServiceEvents::POST_CONFIGURE, new ConfigEvent($resolver, $this));
+
+        return $this;
     }
 
     /**
