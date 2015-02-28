@@ -26,7 +26,6 @@ $service =  new \Itkg\Consumer\Service\Service(
     )),
     array(
         'cache_ttl'     => 20,
-        'cacheable'     => true,
         'cache_adapter' => $registry,
         'identifier'    => 'my test'
     )
@@ -41,7 +40,6 @@ $service =  new \Itkg\Consumer\Service\Service(
     )),
     array(
         'identifier' => 'my test',
-        'loggable'   => true,
         'logger'     => new \Monolog\Logger('my_logger', array(new \Monolog\Handler\StreamHandler('/tmp/test'))),
     )
 );

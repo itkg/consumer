@@ -8,7 +8,6 @@ use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Response;
 use Itkg\Core\Cache\AdapterInterface;
-use Itkg\Core\CacheableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -136,19 +135,15 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
      */
     public function getHashKey()
     {
-        if (!$this->getOption('cacheable')) {
-            return null;
-        }
-
         if (null === $this->hashKey) {
             $this->hashKey = strtr($this->getIdentifier(), ' ', '_') . md5(
-                    sprintf(
-                        '%s_%s_%s',
-                        $this->request->getContent(),
-                        $this->request->getUri(),
-                        json_encode($this->request->headers->all())
-                    )
-                );
+                sprintf(
+                    '%s_%s_%s',
+                    $this->request->getContent(),
+                    $this->request->getUri(),
+                    json_encode($this->request->headers->all())
+                )
+            );
         }
         return $this->hashKey;
     }
@@ -215,6 +210,8 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
      *
      * @param array $options
      * @param OptionsResolver $resolver
+     *
+     * @return $this
      */
     public function configure(array $options = array(), OptionsResolver $resolver = null)
     {
@@ -232,8 +229,6 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
                     'authentication_provider' => array('null', 'Itkg\Consumer\Authentication\AuthenticationProviderInterface'),
                     'cache_ttl'               => array('null', 'int'),
                     'cache_adapter'           => array('null', 'Itkg\Core\Cache\AdapterInterface'),
-                    'cacheable'               => 'bool',
-                    'loggable'                => 'bool'
                 )
             );
 
@@ -257,9 +252,6 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
                 'identifier'              => 'UNDEFINED',
                 'response_format'         => 'json', // Define a format used by serializer (json, xml, etc),
                 'response_type'           => 'array', // Define a mapped class for response content deserialization,
-                'loggable'                => false,
-                'cacheable'               => false,
-                'authenticable'           => false,
                 'cache_ttl'               => null,
                 'cache_serializer'        => 'serialize',
                 'cache_unserializer'      => 'unserialize',
@@ -318,9 +310,6 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
      */
     public function getLogger()
     {
-        if (!$this->getOption('loggable')) {
-            return null;
-        }
         return $this->getOption('logger');
     }
 }

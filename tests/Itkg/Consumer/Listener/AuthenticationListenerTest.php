@@ -21,7 +21,7 @@ class AuthenticationListenerTest extends \PHPUnit_Framework_TestCase
             $eventDispatcher,
             $clientMock,
             array(
-                'identifier' => 'cacheable service',
+                'identifier' => 'authenticable service',
                 'authentication_provider' => $authenticatorMock
             )
         );

@@ -8,7 +8,6 @@ use Itkg\Consumer\Service\Service;
 use Monolog\Logger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -98,21 +97,16 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response, $service->getResponse());
 
         // Test hashkey with/without cache enable
-        $this->assertNull($service->getHashKey());
-        $service->configure(array('cacheable' => true, 'identifier' => 'test cache', 'cache_ttl' => 10));
+        $service->configure(array('identifier' => 'test cache', 'cache_ttl' => 10));
         $this->assertNotNull($service->getHashKey());
         $this->assertEquals(10, $service->getTtl());
 
         $this->assertNull($service->getLogger());
         $service->configure(array('logger' => new Logger('logger'), 'identifier' => 'test'));
-
-        $this->assertNull($service->getLogger());
-        $service->configure(array('logger' => new Logger('logger'), 'loggable' => true, 'identifier' => 'test'));
         $this->assertNotNull($service->getLogger());
 
         $this->assertTrue($service->hasOption('logger'));
         $this->assertFalse($service->hasOption('unknown'));
-        $this->assertTrue($service->getOption('loggable'));
 
         $this->assertTrue($service->isAuthenticated());
         $this->assertFalse($service->isLoaded());
@@ -120,11 +114,10 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultOptions()
     {
-        $service = new Service(new EventDispatcher(), new RestClient(), array('identifier' => 'identifier'));
-        $this->assertFalse($service->getOption('cacheable'));
-        $this->assertFalse($service->getOption('loggable'));
+        $service = new Service(new EventDispatcher(), new RestClient());
         $this->assertEquals('json', $service->getOption('response_format'));
         $this->assertEquals('array', $service->getOption('response_type'));
+        $this->assertEquals('UNDEFINED', $service->getOption('identifier'));
 
     }
 }

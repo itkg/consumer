@@ -22,7 +22,6 @@ class LoggerListenerTest extends \PHPUnit_Framework_TestCase
             $clientMock,
             array(
                 'identifier' => 'loggable service',
-                'loggable'   => true,
                 'logger'     => $loggerMock
             )
         );

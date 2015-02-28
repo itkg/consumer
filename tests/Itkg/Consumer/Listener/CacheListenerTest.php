@@ -22,7 +22,6 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
             $clientMock,
             array(
                 'identifier' => 'cacheable service',
-                'cacheable'  => true,
                 'cache_serializer' => function (Response $response) {
                     $response->setContent('My content');
                     return serialize($response);
