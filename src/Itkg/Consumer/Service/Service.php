@@ -7,6 +7,7 @@ use Itkg\Consumer\Event\ConfigEvent;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Response;
+use Itkg\Core\Cache\AdapterInterface;
 use Itkg\Core\CacheableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @package Itkg\Consumer\Service
  */
 class Service extends AbstractService implements ServiceInterface, ServiceConfigurableInterface,
-    ServiceAuthenticableInterface, ServiceLoggableInterface, CacheableInterface
+    ServiceAuthenticableInterface, ServiceLoggableInterface, ServiceCacheableInterface
 {
     /**
      * @var bool
@@ -230,6 +231,7 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
                     'logger'                  => array('null', 'Psr\Log\LoggerInterface'),
                     'authentication_provider' => array('null', 'Itkg\Consumer\Authentication\AuthenticationProviderInterface'),
                     'cache_ttl'               => array('null', 'int'),
+                    'cache_adapter'           => array('null', 'Itkg\Core\Cache\AdapterInterface'),
                     'cacheable'               => 'bool',
                     'loggable'                => 'bool'
                 )
@@ -261,8 +263,9 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
                 'cache_ttl'               => null,
                 'cache_serializer'        => 'serialize',
                 'cache_unserializer'      => 'unserialize',
+                'cache_adapter'           => null,
                 'authentication_provider' => null,
-                'logger'                  => null
+                'logger'                  => null,
             ));
 
         return $this;
@@ -298,6 +301,16 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
     public function makeAuthenticated()
     {
         $this->getOption('authentication_provider')->hydrate($this);
+    }
+
+    /**
+     * Get cache adapter
+     *
+     * @return AdapterInterface
+     */
+    public function getCacheAdapter()
+    {
+        return $this->options['cache_adapter'];
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Itkg\Consumer\Provider;
 
+use Itkg\Consumer\Listener\CacheListener;
 use Itkg\Consumer\Listener\DeserializerListener;
 use Itkg\Consumer\Listener\LoggerListener;
 use Itkg\Core\Provider\ServiceProviderInterface;
@@ -35,7 +36,25 @@ class ServiceProvider implements ServiceProviderInterface
             }
         );
 
+        $container['deserializer_listener'] = $mainContainer->share(
+            function () {
+                return new DeserializerListener(
+                    SerializerBuilder::create()->build()
+                );
+            }
+        );
+
+        $container['cache_listener'] = $mainContainer->share(
+            function () use ($mainContainer) {
+                return new CacheListener($mainContainer['core']['dispatcher']);
+            }
+        );
+
+
+
+        $mainContainer['core']['dispatcher']->addSubscriber($container['cache_listener']);
         $mainContainer['core']['dispatcher']->addSubscriber($container['deserializer_listener']);
+        $mainContainer['core']['dispatcher']->addSubscriber($container['logger_listener']);
 
         $mainContainer['consumer'] = $container;
     }

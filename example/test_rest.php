@@ -4,7 +4,7 @@ include_once __DIR__.'/../vendor/autoload.php';
 
 $registry = new \Itkg\Core\Cache\Adapter\Registry();
 $eventDispatcher =  new \Symfony\Component\EventDispatcher\EventDispatcher();
-$eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\CacheListener($registry, $eventDispatcher));
+$eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\CacheListener($eventDispatcher));
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\LoggerListener());
 $eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\DeserializerListener(JMS\Serializer\SerializerBuilder::create()->build()));
 
@@ -25,9 +25,10 @@ $service =  new \Itkg\Consumer\Service\Service(
         'timeout' => 10
     )),
     array(
-        'cache_ttl'  => 20,
-        'cacheable'  => true,
-        'identifier' => 'my test'
+        'cache_ttl'     => 20,
+        'cacheable'     => true,
+        'cache_adapter' => $registry,
+        'identifier'    => 'my test'
     )
 );
 

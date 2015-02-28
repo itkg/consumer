@@ -14,7 +14,7 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
     {
         $registry = new Registry();
         $eventDispatcher = new EventDispatcher();
-        $eventDispatcher->addSubscriber(new CacheListener($registry, $eventDispatcher));
+        $eventDispatcher->addSubscriber(new CacheListener($eventDispatcher));
         $clientMock = $this->getMockBuilder('Itkg\Consumer\Client\RestClient')->getMock();
         $clientMock->expects($this->once())->method('sendRequest');
         $cacheableService = new Service(
@@ -27,6 +27,7 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
                     $response->setContent('My content');
                     return serialize($response);
                 },
+                'cache_adapter' => $registry
             )
         );
 

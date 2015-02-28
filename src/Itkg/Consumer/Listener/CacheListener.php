@@ -4,9 +4,8 @@ namespace Itkg\Consumer\Listener;
 
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
-use Itkg\Core\Cache\AdapterInterface;
+use Itkg\Consumer\Service\ServiceCacheableInterface;
 use Itkg\Core\Cache\Event\CacheEvent;
-use Itkg\Core\CacheableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -20,21 +19,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class CacheListener implements EventSubscriberInterface
 {
     /**
-     * @var AdapterInterface
-     */
-    private $cacheAdapter;
-    /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
 
     /**
-     * @param AdapterInterface $cacheAdapter
      * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(AdapterInterface $cacheAdapter, EventDispatcher $eventDispatcher)
+    public function __construct(EventDispatcher $eventDispatcher)
     {
-        $this->cacheAdapter    = $cacheAdapter;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -45,11 +38,11 @@ class CacheListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if (!$service instanceof CacheableInterface || null === $service->getHashKey()) {
+        if (!$service instanceof ServiceCacheableInterface || null === $service->getCacheAdapter()) {
             return;
         }
         // Check cache existence
-        if (false !== $data = $this->cacheAdapter->get($service)) {
+        if (false !== $data = $service->getCacheAdapter()->get($service)) {
 
             // Set data from cache to entity object
             $service->setDataFromCache($data);
@@ -65,12 +58,12 @@ class CacheListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if (!$service instanceof CacheableInterface || null === $service->getHashKey()) {
+        if (!$service instanceof ServiceCacheableInterface || null === $service->getCacheAdapter()) {
             return;
         }
 
         if (!$service->isLoaded()) {
-            $this->cacheAdapter->set($service);
+            $service->getCacheAdapter()->set($service);
             $this->eventDispatcher->dispatch('cache.set', new CacheEvent($service));
         }
     }
