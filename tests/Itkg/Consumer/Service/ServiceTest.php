@@ -12,14 +12,6 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 class ServiceTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
-     */
-    public function testIdentifierNotSet()
-    {
-        new Service(new EventDispatcher(), new RestClient());
-    }
-
     public function testSendRequest()
     {
         $eventDispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')->getMock();

@@ -226,13 +226,12 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
         $this->setDefaultOptions($resolver);
 
         $resolver
-            ->setRequired('identifier')
             ->addAllowedTypes(array(
-                    'logger' => array('null', 'Psr\Log\LoggerInterface'),
+                    'logger'                  => array('null', 'Psr\Log\LoggerInterface'),
                     'authentication_provider' => array('null', 'Itkg\Consumer\Authentication\AuthenticationProviderInterface'),
-                    'cache_ttl' => array('null', 'int'),
-                    'cacheable' => 'bool',
-                    'loggable' => 'bool'
+                    'cache_ttl'               => array('null', 'int'),
+                    'cacheable'               => 'bool',
+                    'loggable'                => 'bool'
                 )
             );
 
@@ -251,16 +250,17 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
     {
         $resolver
             ->setDefaults(array(
-                'response_format' => 'json', // Define a format used by serializer (json, xml, etc),
-                'response_type' => 'array', // Define a mapped class for response content deserialization,
-                'loggable' => false,
-                'cacheable' => false,
-                'authenticable' => false,
-                'cache_ttl' => null,
-                'cache_serializer' => 'serialize',
-                'cache_unserializer' => 'unserialize',
+                'identifier'              => 'UNDEFINED',
+                'response_format'         => 'json', // Define a format used by serializer (json, xml, etc),
+                'response_type'           => 'array', // Define a mapped class for response content deserialization,
+                'loggable'                => false,
+                'cacheable'               => false,
+                'authenticable'           => false,
+                'cache_ttl'               => null,
+                'cache_serializer'        => 'serialize',
+                'cache_unserializer'      => 'unserialize',
                 'authentication_provider' => null,
-                'logger' => null
+                'logger'                  => null
             ));
 
         return $this;
