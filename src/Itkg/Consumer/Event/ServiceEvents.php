@@ -2,11 +2,20 @@
 
 namespace Itkg\Consumer\Event;
 
-class ServiceEvents
+/**
+ * Class ServiceEvents
+ *
+ * @package Itkg\Consumer\Event
+ */
+final class ServiceEvents
 {
-    const REQUEST = 'consumer.service.request';
+    const REQUEST        = 'consumer.service.request';
 
-    const RESPONSE = 'consumer.service.response';
+    const RESPONSE       = 'consumer.service.response';
 
-    const EXCEPTION = 'consumer.service.exception';
+    const EXCEPTION      = 'consumer.service.exception';
+
+    const PRE_CONFIGURE  = 'consumer.service.pre_configure';
+
+    const POST_CONFIGURE = 'consumer.service.post_configure';
 }

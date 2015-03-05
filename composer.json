@@ -17,11 +17,15 @@
     "require": {
         "php": ">=5.3.3",
         "guzzle/guzzle": "~3.9",
-        "itkg/core": "~1"
+        "itkg/core": "~1",
+        "symfony/options-resolver": "~2",
+        "jms/serializer": "0.*",
+        "fkooman/guzzle-bearer-auth-plugin": "0.2.*",
+        "fkooman/oauth-client": "0.5.*"
     },
     "autoload": {
         "psr-0": {
-            "Itkg/Consumer": "src"
+            "Itkg\\Consumer": "src"
         }
     }
 }
