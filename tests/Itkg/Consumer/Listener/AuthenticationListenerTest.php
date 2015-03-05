@@ -32,4 +32,4 @@ class AuthenticationListenerTest extends \PHPUnit_Framework_TestCase
         $service->sendRequest(Request::create('/'));
         $this->assertTrue($service->isAuthenticated());
     }
-} 
+}

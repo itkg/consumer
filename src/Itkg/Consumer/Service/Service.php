@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @package Itkg\Consumer\Service
  */
-class Service extends AbstractService implements ServiceInterface, ServiceConfigurableInterface,
+class Service extends AbstractService implements AdvancedServiceInterface, ServiceConfigurableInterface,
     ServiceAuthenticableInterface, ServiceLoggableInterface, ServiceCacheableInterface
 {
     /**
@@ -258,6 +258,7 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
                 'cache_adapter'           => null,
                 'authentication_provider' => null,
                 'logger'                  => null,
+                'disabled'                => false
             ));
 
         return $this;
@@ -311,5 +312,13 @@ class Service extends AbstractService implements ServiceInterface, ServiceConfig
     public function getLogger()
     {
         return $this->getOption('logger');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->getOption('disabled');
     }
 }
