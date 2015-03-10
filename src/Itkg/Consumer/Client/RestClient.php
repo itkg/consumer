@@ -65,4 +65,24 @@ class RestClient extends Client implements ClientInterface
                 return $this->get($uri, $headers);
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return $this
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+
+        return $this;
+    }
 }

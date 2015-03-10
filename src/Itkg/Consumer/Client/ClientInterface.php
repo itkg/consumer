@@ -19,4 +19,17 @@ interface ClientInterface
      * @param Response $response
      */
     public function sendRequest(Request $request, Response $response);
+
+    /**
+     * @return array
+     */
+    public function getOptions();
+
+    /**
+     * @param array $options
+     *
+     * @return $this
+     */
+    public function setOptions(array $options);
+
 }
