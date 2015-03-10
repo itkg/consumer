@@ -8,7 +8,7 @@ use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
 use Itkg\Consumer\Response;
 use Itkg\Core\Cache\AdapterInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,7 +31,7 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
      */
     protected $options;
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     protected $eventDispatcher;
     /**
@@ -40,11 +40,11 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
     protected $hashKey = null;
 
     /**
-     * @param EventDispatcher $eventDispatcher
+     * @param EventDispatcherInterface $eventDispatcher
      * @param ClientInterface $client
      * @param array $options
      */
-    public function __construct(EventDispatcher $eventDispatcher, ClientInterface $client, array $options = array())
+    public function __construct(EventDispatcherInterface $eventDispatcher, ClientInterface $client, array $options = array())
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->client = $client;
