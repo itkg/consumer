@@ -32,4 +32,15 @@ interface ClientInterface
      */
     public function setOptions(array $options);
 
+    /**
+     * @return array
+     */
+    public function getNormalizedOptions();
+
+    /**
+     * @param array $normalizedOptions
+     *
+     * @return $this
+     */
+    public function setNormalizedOptions(array $normalizedOptions);
 }

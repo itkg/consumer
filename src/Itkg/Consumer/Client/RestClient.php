@@ -50,8 +50,12 @@ class RestClient extends Client implements ClientInterface
      */
     protected function getClientRequest(Request $request)
     {
-        $uri     = $request->getUri();
+        $uri     = $request->getRequestUri();
+
+        // Remove host to allow baseUrl override
+        $request->headers->remove('host');
         $headers = $request->headers->all();
+
         $body    = (string) $request->getContent();
 
         switch ($request->getMethod()) {
@@ -64,6 +68,36 @@ class RestClient extends Client implements ClientInterface
             default:
                 return $this->get($uri, $headers);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getNormalizedOptions()
+    {
+        return array(
+            'auth_login'     => '',
+            'auth_password'  => '',
+            'proxy_login'    => '',
+            'proxy_password' => '',
+            'proxy_port'     => '',
+            'proxy_host'     => '',
+            'timeout'        => '',
+            'base_url'       => ''
+        );
+    }
+
+    /**
+     * @param array $normalizedOptions
+     *
+     * @return $this
+     */
+    public function setNormalizedOptions(array $normalizedOptions)
+    {
+        if (isset($normalizedOptions['base_url'])) {
+            $this->setBaseUrl($normalizedOptions['base_url']);
+        }
+        return $this;
     }
 
     /**
