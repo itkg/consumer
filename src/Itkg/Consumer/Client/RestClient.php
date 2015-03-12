@@ -109,6 +109,31 @@ class RestClient extends Client implements ClientInterface
     }
 
     /**
+     * @return array
+     */
+    public function getNormalizedOptions()
+    {
+        return array(
+            'auth_login' => '',
+            'auth_password' => '',
+            'proxy_login'   => '',
+            'proxy_password' => '',
+            'proxy_port'     => '',
+            'proxy_host'     => ''
+        );
+    }
+
+    /**
+     * @param array $normalizedOptions
+     *
+     * @return $this
+     */
+    public function setNormalizedOptions(array $normalizedOptions)
+    {
+        return $this;
+    }
+
+    /**
      * @param array $options
      *
      * @return $this
