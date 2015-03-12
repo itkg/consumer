@@ -24,11 +24,11 @@ class AuthenticationListener implements EventSubscriberInterface
     {
         $service = $event->getService();
 
-        if (!$service instanceof ServiceAuthenticableInterface) {
+        if (!$service instanceof ServiceAuthenticableInterface || !$service->needAuthentication()) {
             return;
         }
 
-        if (!$service->isAuthenticated()) {
+        if (!$service->isAuthenticated() ) {
             $service->authenticate();
         }
 
