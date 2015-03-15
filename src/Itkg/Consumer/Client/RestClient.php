@@ -52,6 +52,9 @@ class RestClient extends Client implements ClientInterface
     {
         $uri     = $request->getRequestUri();
 
+        if ('' === $this->getBaseUrl()) {
+            $uri = $request->getUri();
+        }
         // Remove host to allow baseUrl override
         $request->headers->remove('host');
         $headers = $request->headers->all();
