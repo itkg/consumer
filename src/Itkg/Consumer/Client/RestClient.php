@@ -23,7 +23,7 @@ class RestClient extends Client implements ClientInterface
     {
         $this->options = $options;
 
-        parent::__construct();
+        parent::__construct('', $options);
     }
 
     /**
@@ -97,6 +97,20 @@ class RestClient extends Client implements ClientInterface
         if (isset($normalizedOptions['base_url'])) {
             $this->setBaseUrl($normalizedOptions['base_url']);
         }
+
+        if (!empty($normalizedOptions['timeout'])) {
+            $this->options['curl.options']['CURLOPT_TIMEOUT'] = $normalizedOptions['timeout'];
+        }
+
+        if (!empty($normalizedOptions['proxy_host'])) {
+            $this->options['curl.options']['CURLOPT_PROXY'] = $normalizedOptions['proxy_host'].':'.$normalizedOptions['proxy_port'];
+        }
+
+        if (!empty($normalizedOptions['proxy_login'])) {
+            $this->options['curl.options']['CURLOPT_PROXYUSERPWD'] = $normalizedOptions['proxy_login'].':'.$normalizedOptions['proxy_password'];
+        }
+
+        $this->setConfig($this->options);
         return $this;
     }
 
