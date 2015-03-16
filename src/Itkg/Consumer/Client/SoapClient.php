@@ -243,13 +243,13 @@ class SoapClient extends \SoapClient implements ClientInterface
     public function getNormalizedOptions()
     {
         return array(
-            'auth_login' => '',
-            'auth_password' => '',
-            'proxy_login'   => '',
-            'proxy_password' => '',
-            'proxy_port'     => '',
-            'proxy_host'     => '',
-            'timeout'        => ''
+            'auth_login'     => $this->options['http_auth_login'],
+            'auth_password'  => $this->options['http_auth_password'],
+            'proxy_login'    => $this->options['proxy_login'],
+            'proxy_password' => $this->options['proxy_password'],
+            'proxy_port'     => $this->options['proxy_port'],
+            'proxy_host'     => $this->options['proxy_host'],
+            'timeout'        => $this->options['connection_timeout']
         );
     }
     /**
@@ -259,6 +259,10 @@ class SoapClient extends \SoapClient implements ClientInterface
      */
     public function setNormalizedOptions(array $normalizedOptions)
     {
+        $normalizedOptions['connection_timeout'] = $normalizedOptions['timeout'];
+
+        $this->options = array_merge($this->options, $normalizedOptions);
+
         return $this;
     }
 

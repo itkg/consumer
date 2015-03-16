@@ -78,14 +78,29 @@ class RestClient extends Client implements ClientInterface
      */
     public function getNormalizedOptions()
     {
+        $config = $this->getConfig();
         return array(
             'auth_login'     => '',
             'auth_password'  => '',
-            'proxy_login'    => '',
-            'proxy_password' => '',
-            'proxy_port'     => '',
-            'proxy_host'     => '',
-            'timeout'        => '',
+            'proxy_login'    => substr(
+                $config['curl.options']['CURLOPT_PROXYUSERPWD'],
+                0,
+                strrpos($config['curl.options']['CURLOPT_PROXYUSERPWD'], ':') - 1
+            ),
+            'proxy_password' => substr(
+                $config['curl.options']['CURLOPT_PROXYUSERPWD'],
+                strrpos($config['curl.options']['CURLOPT_PROXYUSERPWD'], ':')
+            ),
+            'proxy_port'     => substr(
+                $config['curl.options']['CURLOPT_PROXY'],
+                strrpos($config['curl.options']['CURLOPT_PROXY'], ':')
+            ),
+            'proxy_host'     => substr(
+                $config['curl.options']['CURLOPT_PROXY'],
+                0,
+                strrpos($config['curl.options']['CURLOPT_PROXY'], ':') - 1
+            ),
+            'timeout'        => $config['curl.options']['CURLOPT_TIMEOUT'],
             'base_url'       => ''
         );
     }
