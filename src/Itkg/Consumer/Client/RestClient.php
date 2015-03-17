@@ -17,13 +17,11 @@ use Itkg\Consumer\Response;
 class RestClient extends Client implements ClientInterface
 {
     /**
-     * @param array $options
+     * @param array $config
      */
-    public function __construct(array $options = array())
+    public function __construct(array $config = array())
     {
-        $this->options = $options;
-
-        parent::__construct('', $options);
+        parent::__construct('', $config);
     }
 
     /**
@@ -79,29 +77,29 @@ class RestClient extends Client implements ClientInterface
     public function getNormalizedOptions()
     {
         $config = $this->getConfig();
+        $proxyUserPwd = $proxy = $timeout = '';
+
+        if (isset($config['curl.options']['CURLOPT_PROXYUSERPWD'])) {
+            $proxyUserPwd = $config['curl.options']['CURLOPT_PROXYUSERPWD'];
+        }
+
+        if (isset($config['curl.options']['CURLOPT_PROXY'])) {
+            $proxy = $config['curl.options']['CURLOPT_PROXY'];
+        }
+
+        if (isset($config['curl.options']['CURLOPT_TIMEOUT'])) {
+            $timeout = $config['curl.options']['CURLOPT_TIMEOUT'];
+        }
+
         return array(
-            'auth_login'     => '',
-            'auth_password'  => '',
-            'proxy_login'    => substr(
-                $config['curl.options']['CURLOPT_PROXYUSERPWD'],
-                0,
-                strrpos($config['curl.options']['CURLOPT_PROXYUSERPWD'], ':') - 1
-            ),
-            'proxy_password' => substr(
-                $config['curl.options']['CURLOPT_PROXYUSERPWD'],
-                strrpos($config['curl.options']['CURLOPT_PROXYUSERPWD'], ':')
-            ),
-            'proxy_port'     => substr(
-                $config['curl.options']['CURLOPT_PROXY'],
-                strrpos($config['curl.options']['CURLOPT_PROXY'], ':')
-            ),
-            'proxy_host'     => substr(
-                $config['curl.options']['CURLOPT_PROXY'],
-                0,
-                strrpos($config['curl.options']['CURLOPT_PROXY'], ':') - 1
-            ),
-            'timeout'        => $config['curl.options']['CURLOPT_TIMEOUT'],
-            'base_url'       => ''
+            'auth_login'     => $config['request.options']['auth'][0],
+            'auth_password'  => $config['request.options']['auth'][1],
+            'proxy_login'    => substr($proxyUserPwd, 0, strrpos($proxyUserPwd, ':')),
+            'proxy_password' => substr($proxyUserPwd, strrpos($proxyUserPwd, ':') + 1),
+            'proxy_port'     => substr($proxy, strrpos($proxy, ':') + 1),
+            'proxy_host'     => substr($proxy, 0, strrpos($proxy, ':')),
+            'timeout'        => $timeout,
+            'base_url'       => $this->getBaseUrl()
         );
     }
 
@@ -116,19 +114,25 @@ class RestClient extends Client implements ClientInterface
             $this->setBaseUrl($normalizedOptions['base_url']);
         }
 
+        $config = array();
         if (!empty($normalizedOptions['timeout'])) {
-            $this->options['curl.options']['CURLOPT_TIMEOUT'] = $normalizedOptions['timeout'];
+            $config['curl.options']['CURLOPT_TIMEOUT'] = $normalizedOptions['timeout'];
         }
 
         if (!empty($normalizedOptions['proxy_host'])) {
-            $this->options['curl.options']['CURLOPT_PROXY'] = $normalizedOptions['proxy_host'].':'.$normalizedOptions['proxy_port'];
+            $config['curl.options']['CURLOPT_PROXY'] = $normalizedOptions['proxy_host'].':'.$normalizedOptions['proxy_port'];
         }
 
         if (!empty($normalizedOptions['proxy_login'])) {
-            $this->options['curl.options']['CURLOPT_PROXYUSERPWD'] = $normalizedOptions['proxy_login'].':'.$normalizedOptions['proxy_password'];
+            $config['curl.options']['CURLOPT_PROXYUSERPWD'] = $normalizedOptions['proxy_login'].':'.$normalizedOptions['proxy_password'];
         }
 
-        $this->setConfig($this->options);
+        if (!empty($normalizedOptions['auth_login'])) {
+            $config['request.options']['auth'] = array($normalizedOptions['auth_login'], $normalizedOptions['auth_password']);
+        }
+
+        $this->setConfig($config);
+
         return $this;
     }
 
@@ -137,7 +141,7 @@ class RestClient extends Client implements ClientInterface
      */
     public function getOptions()
     {
-        return $this->options;
+        return $this->getConfig();
     }
 
     /**
@@ -147,7 +151,7 @@ class RestClient extends Client implements ClientInterface
      */
     public function setOptions(array $options)
     {
-        $this->options = $options;
+        $this->setConfig($options);
 
         return $this;
     }
