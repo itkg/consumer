@@ -11,4 +11,4 @@ interface ServiceCacheableInterface extends CacheableInterface
      * @return AdapterInterface
      */
     public function getCacheAdapter();
-} 
+}
