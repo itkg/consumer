@@ -141,7 +141,7 @@ class RestClient extends Client implements ClientInterface
      */
     public function getOptions()
     {
-        return $this->getConfig();
+        return (array) $this->getConfig();
     }
 
     /**
