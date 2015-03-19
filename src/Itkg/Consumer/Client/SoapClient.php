@@ -240,6 +240,43 @@ class SoapClient extends \SoapClient implements ClientInterface
     /**
      * @return array
      */
+    public function getNormalizedOptions()
+    {
+        // Hack to get current location
+        $url = $this->__setLocation();
+        $this->__setLocation($url);
+
+        return array(
+            'auth_login'     => $this->options['http_auth_login'],
+            'auth_password'  => $this->options['http_auth_password'],
+            'proxy_login'    => $this->options['proxy_login'],
+            'proxy_password' => $this->options['proxy_password'],
+            'proxy_port'     => $this->options['proxy_port'],
+            'proxy_host'     => $this->options['proxy_host'],
+            'timeout'        => $this->options['connection_timeout'],
+            'base_url'       => $url
+        );
+    }
+    /**
+     * @param array $normalizedOptions
+     *
+     * @return $this
+     */
+    public function setNormalizedOptions(array $normalizedOptions)
+    {
+        $normalizedOptions['connection_timeout'] = $normalizedOptions['timeout'];
+
+        if (!empty($normalizedOptions['base_url'])) {
+            $this->__setLocation($normalizedOptions['base_url']);
+        }
+        $this->options = array_merge($this->options, $normalizedOptions);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
     public function getOptions()
     {
         return $this->options;

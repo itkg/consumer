@@ -51,4 +51,47 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             $response
         );
     }
+
+    public function testGetSetNormalizedOptions()
+    {
+        $client = new RestClient();
+
+        $options = array(
+            'auth_login'     => '',
+            'auth_password'  => '',
+            'proxy_login'    => '',
+            'proxy_password' => '',
+            'proxy_port'     => '',
+            'proxy_host'     => '',
+            'timeout'        => '',
+            'base_url'       => ''
+        );
+
+        $this->assertEquals($options, $client->getNormalizedOptions());
+
+        $options = array(
+            'auth_login'     => 'login',
+            'auth_password'  => 'pwd',
+            'proxy_login'    => 'pxlogin',
+            'proxy_password' => 'pxpwd',
+            'proxy_port'     => '8080',
+            'proxy_host'     => 'my_proxy',
+            'timeout'        => 12,
+            'base_url'       => 'http://service.test.com'
+        );
+
+        $client->setNormalizedOptions($options);
+
+        $config = $client->getOptions();
+
+        $this->assertEquals('http://service.test.com', $client->getBaseUrl());
+        $this->assertEquals(12, $config['curl.options']['CURLOPT_TIMEOUT']);
+        $this->assertEquals('pxlogin:pxpwd', $config['curl.options']['CURLOPT_PROXYUSERPWD']);
+        $this->assertEquals('my_proxy:8080', $config['curl.options']['CURLOPT_PROXY']);
+        $this->assertEquals('login', $config['request.options']['auth'][0]);
+        $this->assertEquals('pwd', $config['request.options']['auth'][1]);
+
+        $normalizedOptions = $client->getNormalizedOptions();
+        $this->assertEquals($options, $normalizedOptions);
+    }
 }

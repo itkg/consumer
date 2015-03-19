@@ -24,6 +24,11 @@ interface ServiceAuthenticableInterface
     public function isAuthenticated();
 
     /**
+     * @return bool
+     */
+    public function needAuthentication();
+
+    /**
      * Inject authenticated data into the request / client
      */
     public function makeAuthenticated();

@@ -281,7 +281,7 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
      */
     public function isAuthenticated()
     {
-        if (!$this->hasOption('authentication_provider')) {
+        if (null === $this->getOption('authentication_provider')) {
             return true;
         }
 
@@ -320,5 +320,13 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
     public function isDisabled()
     {
         return $this->getOption('disabled');
+    }
+
+    /**
+     * @return bool
+     */
+    public function needAuthentication()
+    {
+        return (null !== $this->getOption('authentication_provider'));
     }
 }
