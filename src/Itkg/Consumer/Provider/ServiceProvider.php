@@ -7,7 +7,6 @@ use Itkg\Consumer\Listener\DeserializerListener;
 use Itkg\Consumer\Listener\LoggerListener;
 use Itkg\Core\Provider\ServiceProviderInterface;
 use JMS\Serializer\SerializerBuilder;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class ServiceProvider
