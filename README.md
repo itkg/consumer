@@ -17,7 +17,7 @@ Webservice consumer library
 
 If you use composer, add library as a dependency to the composer.json of your application
 
-```php
+```json
     "require": {
         ...
         "itkg/consumer": "~2"
