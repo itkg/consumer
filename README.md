@@ -25,3 +25,124 @@ If you use composer, add library as a dependency to the composer.json of your ap
     },
 
 ```
+
+## Usage 
+
+Simple example of Rest WS
+
+```php
+
+$service =  new \Itkg\Consumer\Service\Service(
+    $eventDispatcher,
+    new Itkg\Consumer\Client\RestClient(array(
+        'timeout' => 10
+    )),
+    array(
+        'identifier' => 'my test'
+    )
+);
+
+$response = $service
+    ->sendRequest(\Symfony\Component\HttpFoundation\Request::create('http://URL/OF/MY/WEBSERVICE.json'))
+    ->getResponse();
+
+```
+## Configuration
+
+### Logs
+
+* Create a new logger instance 
+
+```php
+
+$service =  new \Itkg\Consumer\Service\Service(
+    $eventDispatcher,
+    new Itkg\Consumer\Client\RestClient(array(
+        'timeout' => 10
+    )),
+    array(
+        'identifier' => 'my test',
+        'logger'     => new \Monolog\Logger('my_logger', array(new \Monolog\Handler\StreamHandler('/tmp/test'))),
+    )
+);
+
+```
+
+* Add logger listener to your event dispatcher
+
+```php
+
+$eventDispatcher->addSubscriber(new \Itkg\Consumer\Listener\LoggerListener());
+
+```
+
+### Serialization
+
+* Add Deseralizer listener to your event dispatcher (Create serializer with JMS serializer builder)
+
+```php
+
+    $eventDispatcher->addSubscriber(
+        new \Itkg\Consumer\Listener\DeserializerListener(JMS\Serializer\SerializerBuilder::create()->build())
+    );
+
+```
+
+* Define response_type & response_format
+
+```php
+
+$service =  new \Itkg\Consumer\Service\Service(
+    $eventDispatcher,
+    new Itkg\Consumer\Client\RestClient(array(
+        'timeout' => 10
+    )),
+    array(
+        'identifier' => 'my test',
+        'reponse_format' => 'xml,
+        'response_type'  => 'My\Class
+    )
+);
+
+```
+
+* Get deserialized content like this 
+
+```php
+
+$object = $service->getResponse()->getDeserializedContent();
+
+```
+
+### Cache
+
+* Add Cache listener to your event dispatcher
+
+
+```php
+
+    $eventDispatcher->addSubscriber(
+        new \Itkg\Consumer\Listener\CacheListener($eventDispatcher)
+    );
+
+```
+
+* Add cache adapter to your service (see : https://github.com/itkg/core for adapters list)
+
+```php
+
+$service =  new \Itkg\Consumer\Service\Service(
+    $eventDispatcher,
+    new Itkg\Consumer\Client\RestClient(array(
+        'timeout' => 10
+    )),
+    array(
+        'identifier' => 'my test',
+        'cache_adapter' => new \Itkg\Core\Cache\Adapter\Registry(),
+        'cache_ttl => 10000
+    )
+);
+
+```
+
+* You can define serialize & deserialize method by defining 'cache_serializer' & 'cache_deserializer' options
