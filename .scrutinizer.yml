@@ -1,24 +1,28 @@
+filter:
+    path: [src/*]
+    excluded_paths: [vendor/*, tests/*]
 tools:
+    external_code_coverage: true
     php_mess_detector:
-        enabled: true
-        extensions:
-            - php
-        command: phpmd
-        filter:
-            paths: {  }
-            excluded_paths:
-                - 'tests/*'
-                - 'vendor/*'
-        config:
-            rulesets:
-                - codesize
+            enabled: true
+            extensions:
+                - php
+            command: phpmd
+            filter:
+                paths: {  }
+                excluded_paths:
+                    - 'tests/*'
+                    - 'vendor/*'
+            config:
+                rulesets:
+                    - codesize
     php_cs_fixer:
         enabled: true
         extensions:
             - php
         command: php-cs-fixer
         config:
-            level: psr0
+            level: psr2
     php_analyzer:
         enabled: true
         filter:
@@ -27,28 +31,9 @@ tools:
                 - 'vendor/*'
         extensions:
             - php
-    php_code_sniffer:
-        enabled: true
-        config:
-            standard: PSR2
-        extensions:
-            - php
-        command: phpcs
-        filter:
-            excluded_paths:
-                - 'tests/*'
-                - 'vendor/*'
-
-    php_pdepend:
-        command: pdepend
-        configuration_file:   ~
-        suffixes:
-            - php
-        excluded_dirs:
-            - vendor
-            - tests
-        enabled: true
-    php_code_coverage: true
-
+    php_pdepend: true
+    php_cpd:
+       enabled: true
+       excluded_dirs: [vendor, tests]
 before_commands:
-    - "composer install --prefer-source"
+    - "composer install --dev --prefer-source"
