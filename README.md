@@ -19,10 +19,8 @@ If you use composer, add library as a dependency to the composer.json of your ap
 
 ```json
     "require": {
-        ...
-        "itkg/consumer": "~2"
-        ...
-    },
+        "itkg/consumer": "dev-master"
+    }
 
 ```
 
