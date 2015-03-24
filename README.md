@@ -1,6 +1,8 @@
 Webservice consumer library
 ===========================
 
+V 1.0 is deprecated, please use v 2.0 instead
+
 [![Build Status](https://travis-ci.org/itkg/consumer.png?branch=master)](https://travis-ci.org/itkg/consumer)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/itkg/consumer/badges/quality-score.png?s=3b10bb253c61cc1d52897a81911334a8f42b25de)](https://scrutinizer-ci.com/g/itkg/consumer/)
 [![Code Coverage](https://scrutinizer-ci.com/g/itkg/consumer/badges/coverage.png?s=5f5724ea506f3d5493220cc807af0637f5fce749)](https://scrutinizer-ci.com/g/itkg/consumer/)
