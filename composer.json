@@ -16,7 +16,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "guzzle/guzzle": "~3.9",
+        "guzzle/guzzle": "~3",
         "itkg/core": "~1",
         "symfony/options-resolver": "~2",
         "jms/serializer": "0.*",
