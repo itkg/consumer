@@ -251,7 +251,7 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
             ->setDefaults(array(
                 'identifier'              => 'UNDEFINED',
                 'response_format'         => 'json', // Define a format used by serializer (json, xml, etc),
-                'response_type'           => 'array', // Define a mapped class for response content deserialization,
+                'response_type'           => null, // Define a mapped class for response content deserialization,
                 'cache_ttl'               => null,
                 'cache_serializer'        => 'serialize',
                 'cache_unserializer'      => 'unserialize',

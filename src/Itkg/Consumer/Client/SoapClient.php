@@ -59,16 +59,20 @@ class SoapClient extends \SoapClient implements ClientInterface
      */
     public function sendRequest(Request $request, Response $response)
     {
-        $response->setContent(
-            $this->__soapCall(
-                $request->getPathInfo(),
-                array(
-                    $this->getClientRequest($request)
-                ),
-                $this->options,
-                $this->getHeader()
-            )
+        $object = $this->__soapCall(
+            $request->getPathInfo(),
+            array(
+                $this->getClientRequest($request)
+            ),
+            $this->options,
+            $this->getHeader()
         );
+
+        $response->setContent(
+            $this->__getLastResponse()
+        );
+
+        $response->setDeserializedContent($object);
     }
 
     /**
@@ -171,7 +175,11 @@ class SoapClient extends \SoapClient implements ClientInterface
      */
     protected function getClientRequest(Request $request)
     {
-        return new \SoapVar($request->getContent(), XSD_ANYXML);
+        if ($content = $request->getContent()) {
+            return new \SoapVar($content, XSD_ANYXML);
+        }
+
+        return $request->request->all();
     }
 
     /**

@@ -67,8 +67,8 @@ class DeserializerListener implements EventSubscriberInterface
     public function onResponseEvent(ServiceEvent $event)
     {
         $service = $event->getService();
-
-        if ($service instanceof ServiceConfigurableInterface) {
+        
+        if ($service instanceof ServiceConfigurableInterface && null !== $service->getOption('response_type')) {
             /** @var Service $service */
             $service->getResponse()->setDeserializedContent(
                 $this->serializer->deserialize(
