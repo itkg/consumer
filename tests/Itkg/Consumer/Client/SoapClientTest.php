@@ -32,7 +32,7 @@ class SoapClientTest extends \PHPUnit_Framework_TestCase
 
         $request->expects($this->any())
             ->method('getContent')
-            ->willReturn('My SOAP Response');
+            ->will($this->returnValue('My SOAP Response'));
 
         $service = new Service(new EventDispatcher(), $client, array('identifier' => 'identifier'));
         $response = $service->sendRequest($request)->getResponse();
