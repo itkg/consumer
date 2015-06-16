@@ -103,7 +103,7 @@ EOF;
 
         $request->expects($this->once())
             ->method('getContent')
-            ->willReturn('My SOAP Response');
+            ->will($this->returnValue('My SOAP Response'));
 
         $request->expects($this->once())
             ->method('getPathInfo')
