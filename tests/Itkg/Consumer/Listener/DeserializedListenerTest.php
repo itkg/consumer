@@ -22,7 +22,8 @@ class DeserializedListenerTest extends \PHPUnit_Framework_TestCase
 
         $service = new Service(
             $eventDispatcher,
-            $clientMock
+            $clientMock,
+            array('response_type' => 'array')
         );
 
         $service->sendRequest(Request::create('/'), new Response('[{"title":"value"}]'));

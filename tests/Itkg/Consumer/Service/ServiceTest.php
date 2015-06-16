@@ -116,7 +116,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $service = new Service(new EventDispatcher(), new RestClient());
         $this->assertEquals('json', $service->getOption('response_format'));
-        $this->assertEquals('array', $service->getOption('response_type'));
+        $this->assertEquals(null, $service->getOption('response_type'));
         $this->assertEquals('UNDEFINED', $service->getOption('identifier'));
 
     }
