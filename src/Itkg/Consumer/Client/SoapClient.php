@@ -255,13 +255,13 @@ class SoapClient extends \SoapClient implements ClientInterface
         $this->__setLocation($url);
 
         return array(
-            'auth_login'     => $this->options['http_auth_login'],
-            'auth_password'  => $this->options['http_auth_password'],
-            'proxy_login'    => $this->options['proxy_login'],
-            'proxy_password' => $this->options['proxy_password'],
-            'proxy_port'     => $this->options['proxy_port'],
-            'proxy_host'     => $this->options['proxy_host'],
-            'timeout'        => $this->options['connection_timeout'],
+            'auth_login'     => isset($this->options['http_auth_login']) ? $this->options['http_auth_login'] : '',
+            'auth_password'  => isset($this->options['http_auth_password']) ? $this->options['http_auth_password'] : '',
+            'proxy_login'    => isset($this->options['proxy_login']) ? $this->options['proxy_login'] : '',
+            'proxy_password' => isset($this->options['proxy_password']) ? $this->options['proxy_password'] : '',
+            'proxy_port'     => isset($this->options['proxy_port']) ? $this->options['proxy_port'] : '',
+            'proxy_host'     => isset($this->options['proxy_host']) ? $this->options['proxy_host'] : '',
+            'timeout'        => isset($this->options['connection_timeout']) ? $this->options['connection_timeout'] : '',
             'base_url'       => $url
         );
     }
