@@ -135,16 +135,16 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
      */
     public function getHashKey()
     {
-        if (null === $this->hashKey) {
-            $this->hashKey = strtr($this->getIdentifier(), ' ', '_') . md5(
-                sprintf(
-                    '%s_%s_%s',
-                    $this->request->getContent(),
-                    $this->request->getUri(),
-                    json_encode($this->request->headers->all())
-                )
-            );
-        }
+        
+        $this->hashKey = strtr($this->getIdentifier(), ' ', '_') . md5(
+            sprintf(
+                '%s_%s_%s',
+                $this->request->getContent(),
+                $this->request->getUri(),
+                json_encode($this->request->headers->all())
+            )
+        );
+        
         return $this->hashKey;
     }
 
