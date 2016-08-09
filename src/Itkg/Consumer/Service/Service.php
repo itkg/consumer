@@ -70,7 +70,8 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
         $event = new ServiceEvent($this);
         $this->eventDispatcher->dispatch(ServiceEvents::REQUEST, $event);
 
-        if ('' === $this->response->getContent()) {
+        // check if content has been loaded by some one
+        if (!$this->isLoaded() && '' === $this->response->getContent()) {
             try {
                 $this->client->sendRequest($this->request, $this->response);
             } catch (\Exception $e) {
