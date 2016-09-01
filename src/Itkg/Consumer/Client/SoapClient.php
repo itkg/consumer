@@ -176,7 +176,7 @@ class SoapClient extends \SoapClient implements ClientInterface
     protected function getClientRequest(Request $request)
     {
         if ($content = $request->getContent()) {
-            return new \SoapVar($content, XSD_ANYXML);
+//            return new \SoapVar($content, XSD_ANYXML);
         }
 
         return $request->request->all();
