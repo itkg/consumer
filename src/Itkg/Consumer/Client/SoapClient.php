@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Itkg\Consumer\Client;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -61,9 +62,9 @@ class SoapClient extends \SoapClient implements ClientInterface
     {
         $currentTimeout = null;
 
-        if(isset($this->options['timeout']) && is_numeric($this->options['timeout'])) {
+        if(isset($this->options['connection_timeout']) && is_numeric($this->options['connection_timeout'])) {
             $currentTimeout = ini_get('default_socket_timeout');
-            ini_set('default_socket_timeout', $this->options['timeout']);
+            ini_set('default_socket_timeout', $this->options['connection_timeout']);
         }
 
         $object = $this->__soapCall(
