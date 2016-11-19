@@ -20,35 +20,19 @@ $service =  new \Itkg\Consumer\Service\Service(
         'cache_adapter' => $adapter,
         'cache_ttl'     => 3600,
         'cache_warmup'  => true,
-        'cache_fresh_ttl' => 10
+        'cache_fresh_ttl' => 30
     )
 );
 
-$service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
+$services = new \Itkg\Consumer\Service\ServiceCollection();
+$services->addService($service);
 
-$service =  new \Itkg\Consumer\Service\Service(
-    $eventDispatcher,
-    new Itkg\Consumer\Client\RestClient(array(
-        'timeout' => 10
-    )),
-    array(
-        'cache_ttl'     => 20,
-        'cache_adapter' => $registry,
-        'identifier'    => 'my test'
-    )
+$processor = new \Itkg\Consumer\Cache\ServiceCacheQueueProcessor(
+    new \Itkg\Consumer\Cache\ServiceCacheQueueReader($adapter),
+    new \Itkg\Consumer\Cache\ServiceCacheQueueWriter($adapter),
+    new \Itkg\Consumer\Cache\ServiceCacheWarmer(),
+    $adapter,
+    $services
 );
 
-$service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
-
-$service =  new \Itkg\Consumer\Service\Service(
-    $eventDispatcher,
-    new Itkg\Consumer\Client\RestClient(array(
-        'timeout' => 10
-    )),
-    array(
-        'identifier' => 'my test',
-        'logger'     => new \Monolog\Logger('my_logger', array(new \Monolog\Handler\StreamHandler('/tmp/test'))),
-    )
-);
-
-$response = $service->sendRequest(\Symfony\Component\HttpFoundation\Request::create('XXXX'))->getResponse();
+$processor->processAll();

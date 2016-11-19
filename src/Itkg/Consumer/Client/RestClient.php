@@ -17,10 +17,16 @@ use Itkg\Consumer\Response;
 class RestClient extends Client implements ClientInterface
 {
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
      * @param array $config
      */
     public function __construct(array $config = array())
     {
+        $this->options = $config;
         parent::__construct('', $config);
     }
 
@@ -54,9 +60,10 @@ class RestClient extends Client implements ClientInterface
             $uri = $request->getUri();
         }
         // Remove host to allow baseUrl override
-        $request->headers->remove('host');
         $headers = $request->headers->all();
-
+        if (isset($headers['host'])) {
+            unset($headers['host']);
+        }
         $body    = (string) $request->getContent();
 
         switch ($request->getMethod()) {
@@ -77,6 +84,7 @@ class RestClient extends Client implements ClientInterface
     public function getNormalizedOptions()
     {
         $config = $this->getConfig();
+
         $proxyUserPwd = $proxy = $timeout = '';
 
         if (isset($config['curl.options']['CURLOPT_PROXYUSERPWD'])) {
@@ -110,6 +118,7 @@ class RestClient extends Client implements ClientInterface
      */
     public function setNormalizedOptions(array $normalizedOptions)
     {
+
         if (isset($normalizedOptions['base_url'])) {
             $this->setBaseUrl($normalizedOptions['base_url']);
         }
@@ -130,7 +139,6 @@ class RestClient extends Client implements ClientInterface
         if (!empty($normalizedOptions['auth_login'])) {
             $config['request.options']['auth'] = array($normalizedOptions['auth_login'], $normalizedOptions['auth_password']);
         }
-
         $this->setConfig($config);
 
         return $this;
@@ -141,7 +149,7 @@ class RestClient extends Client implements ClientInterface
      */
     public function getOptions()
     {
-        return $this->getConfig()->getAll();
+        return null !== $this->getConfig() ? $this->getConfig()->getAll() : $this->options;
     }
 
     /**
@@ -151,8 +159,17 @@ class RestClient extends Client implements ClientInterface
      */
     public function setOptions(array $options)
     {
+        $this->options = $options;
         $this->setConfig($options);
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __sleep()
+    {
+        return array('options');
     }
 }
