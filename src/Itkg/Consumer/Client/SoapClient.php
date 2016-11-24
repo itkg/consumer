@@ -60,13 +60,6 @@ class SoapClient extends \SoapClient implements ClientInterface
      */
     public function sendRequest(Request $request, Response $response)
     {
-        $currentTimeout = null;
-
-        if(isset($this->options['connection_timeout']) && is_numeric($this->options['connection_timeout'])) {
-            $currentTimeout = ini_get('default_socket_timeout');
-            ini_set('default_socket_timeout', $this->options['connection_timeout']);
-        }
-
         $object = $this->__soapCall(
             $request->getPathInfo(),
             array(
@@ -79,10 +72,6 @@ class SoapClient extends \SoapClient implements ClientInterface
         $response->setContent(
             $this->__getLastResponse()
         );
-
-        if($currentTimeout) {
-            ini_set('default_socket_timeout', $currentTimeout);
-        }
         $response->setDeserializedContent($object);
     }
 
@@ -133,7 +122,15 @@ class SoapClient extends \SoapClient implements ClientInterface
             }
             $this->overridenRequest = $request;
         }
-        return parent::__doRequest($request, $location, $action, $version, 0);
+        
+        $currentTimeout = ini_get('default_socket_timeout');
+        if (isset($this->options['connection_timeout'])) {
+            ini_set('default_socket_timeout', $this->options['connection_timeout']);
+        }
+        $request = parent::__doRequest($request, $location, $action, $version, 0);
+        ini_set('default_socket_timeout', $currentTimeout);
+        
+        return $request;
     }
 
     /**
