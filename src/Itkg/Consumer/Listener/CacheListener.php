@@ -2,10 +2,15 @@
 
 namespace Itkg\Consumer\Listener;
 
+use Itkg\Consumer\Event\ServiceCacheEvents;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Event\ServiceEvents;
+use Itkg\Consumer\Service\AbstractService;
+use Itkg\Consumer\Service\Service;
 use Itkg\Consumer\Service\ServiceCacheableInterface;
+use Itkg\Core\Cache\CacheableData;
 use Itkg\Core\Cache\Event\CacheEvent;
+use Itkg\Core\CacheableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -29,44 +34,6 @@ class CacheListener implements EventSubscriberInterface
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * @param ServiceEvent $event
-     */
-    public function onServiceRequest(ServiceEvent $event)
-    {
-        $service = $event->getService();
-
-        if (!$service instanceof ServiceCacheableInterface || null === $service->getCacheAdapter()) {
-            return;
-        }
-        $service->setIsLoaded(false);
-        // Check cache existence
-        if (false !== $data = $service->getCacheAdapter()->get($service)) {
-
-            // Set data from cache to entity object
-            $service->setDataFromCache($data);
-            $service->setIsLoaded(true);
-            $this->eventDispatcher->dispatch('cache.load', new CacheEvent($service));
-        }
-    }
-
-    /**
-     * @param ServiceEvent $event
-     */
-    public function onServiceResponse(ServiceEvent $event)
-    {
-        $service = $event->getService();
-
-        if (!$service instanceof ServiceCacheableInterface || null === $service->getCacheAdapter()) {
-            return;
-        }
-
-        if (!$service->isLoaded()) {
-            $service->getCacheAdapter()->set($service);
-            $this->eventDispatcher->dispatch('cache.set', new CacheEvent($service));
-        }
     }
 
     /**
@@ -95,5 +62,63 @@ class CacheListener implements EventSubscriberInterface
             ServiceEvents::REQUEST  => 'onServiceRequest',
             ServiceEvents::RESPONSE => 'onServiceResponse'
         );
+    }
+
+    /**
+     * @param ServiceEvent $event
+     */
+    public function onServiceRequest(ServiceEvent $event)
+    {
+        $service = $event->getService();
+
+        if (!$service instanceof ServiceCacheableInterface || null === $service->getCacheAdapter() || $service->isNoCache()) {
+            return;
+        }
+        $cache = $this->createCache($service);
+        $cachedService = $service->getCacheAdapter()->get($cache);
+        // Check cache existence
+        if ($cachedService instanceof AbstractService) {
+            // Set data from cache to entity object
+            $service->setIsLoaded(true);
+            $service->setResponse($cachedService->getResponse());
+            $this->eventDispatcher->dispatch(ServiceCacheEvents::LOADED, new ServiceEvent($service));
+        }
+    }
+
+    /**
+     * @param ServiceEvent $event
+     */
+    public function onServiceResponse(ServiceEvent $event)
+    {
+        $service = $event->getService();
+
+        if (!$service instanceof ServiceCacheableInterface || null === $service->getCacheAdapter()) {
+            return;
+        }
+
+        if (!$service->isLoaded()) {
+            $cache = $this->createCache($service);
+            $service->getCacheAdapter()->set($cache);
+            $this->eventDispatcher->dispatch(ServiceCacheEvents::SET, new CacheEvent($cache));
+        }
+    }
+
+    /**
+     * @param AbstractService $service
+     *
+     * @return CacheableInterface|null
+     */
+    protected function createCache(AbstractService $service)
+    {
+        if (!$service instanceof ServiceCacheableInterface) {
+            return null;
+        }
+
+        return new CacheableData(
+            $service->getHashKey(),
+            $service->getTtl(),
+            $service
+        );
+
     }
 }

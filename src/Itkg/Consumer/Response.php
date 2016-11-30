@@ -20,6 +20,26 @@ class Response extends BaseResponse
     protected $deserialized;
 
     /**
+     * @var \DateTime
+     */
+    protected $createdAt;
+
+    /**
+     * Constructor.
+     *
+     * @param mixed $content The response content, see setContent()
+     * @param int   $status  The response status code
+     * @param array $headers An array of response headers
+     *
+     * @throws \InvalidArgumentException When the HTTP status code is not valid
+     */
+    public function __construct($content = '', $status = 200, $headers = array())
+    {
+        parent::__construct($content, $status, $headers);
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
      * Get deserializedContent
      *
      * @return mixed
@@ -39,5 +59,13 @@ class Response extends BaseResponse
         $this->deserialized = $deserializedContent;
 
         return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

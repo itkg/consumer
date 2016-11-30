@@ -270,7 +270,7 @@ class SoapClient extends \SoapClient implements ClientInterface
             'proxy_port'     => isset($this->options['proxy_port']) ? $this->options['proxy_port'] : '',
             'proxy_host'     => isset($this->options['proxy_host']) ? $this->options['proxy_host'] : '',
             'timeout'        => isset($this->options['connection_timeout']) ? $this->options['connection_timeout'] : '',
-            'base_url'       => $url
+            'base_url'       => isset($this->options['location']) ? $this->options['location'] : $url
         );
     }
     /**
@@ -307,6 +307,18 @@ class SoapClient extends \SoapClient implements ClientInterface
     {
         $this->options = $options;
 
+        if (!empty($options['location'])) {
+            $this->__setLocation($options['location']);
+        }
+
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __sleep()
+    {
+        return array('options');
     }
 }

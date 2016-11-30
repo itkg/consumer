@@ -40,6 +40,11 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
     protected $hashKey = null;
 
     /**
+     * @var bool
+     */
+    protected $noCache = false;
+
+    /**
      * @param EventDispatcherInterface $eventDispatcher
      * @param ClientInterface $client
      * @param array $options
@@ -74,6 +79,7 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
         if (!$this->isLoaded() && '' === $this->response->getContent()) {
             try {
                 $this->client->sendRequest($this->request, $this->response);
+
             } catch (\Exception $e) {
                 $this->exception = $e;
                 $this->eventDispatcher->dispatch(ServiceEvents::EXCEPTION, $event);
@@ -136,16 +142,15 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
      */
     public function getHashKey()
     {
-        
         $this->hashKey = strtr($this->getIdentifier(), ' ', '_') . md5(
             sprintf(
-                '%s_%s_%s',
+                '%s_%s_%s_%s',
                 $this->request->getContent(),
                 $this->request->getUri(),
+                $this->canBeWarmed() ? 'warm' : '',
                 json_encode($this->request->headers->all())
             )
         );
-        
         return $this->hashKey;
     }
 
@@ -180,33 +185,6 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
     }
 
     /**
-     * Get data from service for cache set
-     *
-     * @return mixed
-     */
-    public function getDataForCache()
-    {
-        return call_user_func(
-            $this->options['cache_serializer'],
-            $this->response
-        );
-    }
-
-    /**
-     * Restore data after cache load
-     *
-     * @param $data
-     * @return $this
-     */
-    public function setDataFromCache($data)
-    {
-        $this->response = call_user_func(
-            $this->options['cache_unserializer'],
-            $data
-        );
-    }
-
-    /**
      * Manage configuration
      *
      * @param array $options
@@ -229,6 +207,9 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
                     'logger'                  => array('null', 'Psr\Log\LoggerInterface'),
                     'authentication_provider' => array('null', 'Itkg\Consumer\Authentication\AuthenticationProviderInterface'),
                     'cache_ttl'               => array('null', 'int'),
+                    'cache_fresh_ttl'         => array('null', 'int'),
+                    'cache_warmup'            => array('false','boolean'),
+                    'disabled'                => array('false','boolean'),
                     'cache_adapter'           => array('null', 'Itkg\Core\Cache\AdapterInterface'),
                 )
             );
@@ -254,9 +235,9 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
                 'response_format'         => 'json', // Define a format used by serializer (json, xml, etc),
                 'response_type'           => null, // Define a mapped class for response content deserialization,
                 'cache_ttl'               => null,
-                'cache_serializer'        => 'serialize',
-                'cache_unserializer'      => 'unserialize',
                 'cache_adapter'           => null,
+                'cache_warmup'            => false,
+                'cache_fresh_ttl'        => null,
                 'authentication_provider' => null,
                 'logger'                  => null,
                 'disabled'                => false
@@ -329,5 +310,66 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
     public function needAuthentication()
     {
         return (null !== $this->getOption('authentication_provider'));
+    }
+
+    /**
+     * @rern bool
+     */
+    public function canBeWarmed()
+    {
+        return $this->getOption('cache_warmup');
+    }
+
+    /**
+     * @return int
+     */
+    public function getFreshTtl()
+    {
+        return $this->getOption('cache_fresh_ttl');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isObsolete()
+    {
+        if (!$this->response || null === $this->getFreshTtl()) {
+            return false;
+        }
+
+        return ($this->response->getCreatedAt()->getTimestamp() - (time() - $this->getFreshTtl())) < 0;
+    }
+
+    /**
+     * @param bool $noCache
+     *
+     * @return $this
+     */
+    public function setNoCache($noCache = true)
+    {
+        $this->noCache = $noCache;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNoCache()
+    {
+        return $this->noCache;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __sleep()
+    {
+        return array(
+            'client',
+            'options',
+            'request',
+            'response'
+        );
     }
 }
