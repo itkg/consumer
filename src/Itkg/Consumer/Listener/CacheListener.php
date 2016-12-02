@@ -74,6 +74,8 @@ class CacheListener implements EventSubscriberInterface
         if (!$service instanceof ServiceCacheableInterface || null === $service->getCacheAdapter() || $service->isNoCache()) {
             return;
         }
+
+        $service->setIsLoaded(false);
         $cache = $this->createCache($service);
         $cachedService = $service->getCacheAdapter()->get($cache);
         // Check cache existence
