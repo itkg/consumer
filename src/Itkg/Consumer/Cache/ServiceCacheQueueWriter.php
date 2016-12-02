@@ -37,9 +37,11 @@ class ServiceCacheQueueWriter implements ServiceCacheQueueWriterInterface
     public function addItem($key, $value)
     {
         $values = $this->cacheAdapter->get($this->createCacheItem());
-        $values[$key] = $value;
+        if (!isset($values[$key])) { // Avoid to replace existing keys
+            $values[$key] = $value;
 
-        $this->cacheAdapter->set($this->createCacheItem($values));
+            $this->cacheAdapter->set($this->createCacheItem($values));
+        }
     }
 
     /**
@@ -54,6 +56,18 @@ class ServiceCacheQueueWriter implements ServiceCacheQueueWriterInterface
         }
 
         unset($values[$key]);
+        $this->cacheAdapter->set($this->createCacheItem($values));
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function replaceItem($key, $value)
+    {
+        $values = $this->cacheAdapter->get($this->createCacheItem());
+        $values[$key] = $value;
+
         $this->cacheAdapter->set($this->createCacheItem($values));
     }
 

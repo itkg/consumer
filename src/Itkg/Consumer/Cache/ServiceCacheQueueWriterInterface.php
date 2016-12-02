@@ -17,4 +17,10 @@ interface ServiceCacheQueueWriterInterface
      * @param string $key
      */
     public function removeItem($key);
+
+    /**
+     * @param stirng $key
+     * @param mixed $value
+     */
+    public function replaceItem($key, $value);
 }

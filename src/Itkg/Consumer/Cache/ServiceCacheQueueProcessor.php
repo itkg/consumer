@@ -58,14 +58,22 @@ class ServiceCacheQueueProcessor implements ServiceCacheQueueProcessorInterface
     }
 
     /**
-     * @param callable $logCallback
+     * {@inheritDoc}
      */
-    public function processAll(\Closure $logCallback = null)
+    public function processAll($maxExecutionTime = 3600, \Closure $logCallback = null)
     {
+        $initialTime = time();
+        $this->log($logCallback, sprintf('Process start, Max execution time : defined %s secondes', $maxExecutionTime));
+        $this->log($logCallback, sprintf(
+            ' %s keys to refresh and %s keys locked',
+            count($this->reader->getAllItemsToRefresh()),
+            count($this->reader->getAllItemsLocked())
+        ));
+
         while(null !== $key = $this->reader->getFirstItem()) {
             try {
                 $cachedService = $this->cacheAdapter->get($this->createCacheItem($key));
-                $this->writer->removeItem($key);
+                $this->writer->replaceItem($key, WarmupQueue::STATUS_LOCKED);
                 if ($cachedService instanceof AbstractService) {
                     $service = $this->services->getServiceByIdentifier($cachedService->getIdentifier());
                     $this->cacheWarmer->warm($service, $cachedService);
@@ -73,6 +81,11 @@ class ServiceCacheQueueProcessor implements ServiceCacheQueueProcessorInterface
                 }
             } catch(\Exception $e) {
                 $this->log($logCallback, sprintf('ERROR ON REFRESH KEY %s : %s', $key, $e->getMessage()));
+            }
+            $this->writer->removeItem($key);
+            if (time() - $initialTime > $maxExecutionTime) {
+                $this->log($logCallback, sprintf('Max execution time of %s seconds reached. Terminating process', $maxExecutionTime));
+                break;
             }
         }
     }
