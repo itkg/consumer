@@ -4,6 +4,7 @@ namespace Itkg\Consumer\Listener;
 
 use Itkg\Consumer\Cache\ServiceCacheQueueReaderInterface;
 use Itkg\Consumer\Cache\ServiceCacheQueueWriterInterface;
+use Itkg\Consumer\Cache\WarmupQueue;
 use Itkg\Consumer\Event\ServiceCacheEvents;
 use Itkg\Consumer\Event\ServiceEvent;
 use Itkg\Consumer\Service\AbstractService;
@@ -69,7 +70,7 @@ class CacheControlListener implements EventSubscriberInterface
         }
 
         $serviceHashKey = $service->getHashKey();
-        $this->queueWriter->addItem($serviceHashKey, $serviceHashKey);
+        $this->queueWriter->addItem($serviceHashKey, WarmupQueue::STATUS_REFRESH);
     }
 
     /**

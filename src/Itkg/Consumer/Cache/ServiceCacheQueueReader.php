@@ -31,16 +31,20 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function getFirstItem()
+    public function getFirstItem($status = WarmupQueue::STATUS_REFRESH)
     {
         $keys = $this->cacheAdapter->get($this->createCacheItem());
 
         if (!is_array($keys)) {
             return null;
         }
-
+        foreach ($keys as $key => $keyStatus) {
+            if ($status === $keyStatus) {
+                return $key;
+            }
+        }
         return array_pop($keys);
     }
 
@@ -50,5 +54,29 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
     private function createCacheItem()
     {
         return new CacheableData($this->cacheKey, null, array());
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllItemsToRefresh()
+    {
+        $keys = $this->cacheAdapter->get($this->createCacheItem());
+
+        return array_filter($keys, function($status, $key) {
+            return $status == WarmupQueue::STATUS_REFRESH;
+        });
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllItemsLocked()
+    {
+        $keys = $this->cacheAdapter->get($this->createCacheItem());
+
+        return array_filter($keys, function($status, $key) {
+            return $status == WarmupQueue::STATUS_LOCKED;
+        });
     }
 }
