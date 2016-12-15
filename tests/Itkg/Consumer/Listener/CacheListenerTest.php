@@ -4,6 +4,7 @@ namespace Itkg\Consumer\Listener;
 
 use Itkg\Consumer\Service\Service;
 use Itkg\Core\Cache\Adapter\Registry;
+use Itkg\Core\Cache\CacheableData;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Itkg\Consumer\Response;
@@ -22,10 +23,6 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
             $clientMock,
             array(
                 'identifier' => 'cacheable service',
-                'cache_serializer' => function (Response $response) {
-                    $response->setContent('My content');
-                    return serialize($response);
-                },
                 'cache_adapter' => $registry
             )
         );
@@ -33,7 +30,7 @@ class CacheListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($cacheableService->isLoaded());
         $cacheableService->sendRequest(Request::create('/'));
 
-        $this->assertNotNull($registry->get($cacheableService));
+        $this->assertNotNull($registry->get(new CacheableData($cacheableService->getHashKey(), null, array())));
 
         $cacheableService->sendRequest(Request::create('/'));
         $this->assertTrue($cacheableService->isLoaded());
