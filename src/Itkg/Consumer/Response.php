@@ -68,4 +68,16 @@ class Response extends BaseResponse
     {
         return $this->createdAt;
     }
+
+    /**
+     * @param \DateTime $createdAt
+     *
+     * @return $this
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
 }
