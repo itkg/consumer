@@ -72,7 +72,13 @@ class ServiceCacheQueueProcessor implements ServiceCacheQueueProcessorInterface
 
         while(null !== $key = $this->reader->getFirstItem()) {
             try {
-                $cachedService = $this->cacheAdapter->get($this->createCacheItem($key));
+                $item = $this->createCacheItem($key);
+                $cachedService = $this->cacheAdapter->get($item);
+                // Ensure lock
+                if ($this->reader->isItemLocked($item)) {
+                    continue;
+                }
+
                 $this->writer->replaceItem($key, WarmupQueue::STATUS_LOCKED);
                 if ($cachedService instanceof AbstractService) {
                     $service = $this->services->getServiceByIdentifier($cachedService->getIdentifier());

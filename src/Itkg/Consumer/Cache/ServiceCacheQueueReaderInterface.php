@@ -2,6 +2,9 @@
 
 namespace Itkg\Consumer\Cache;
 
+use Itkg\Core\Cache\CacheableData;
+use Itkg\Core\CacheableInterface;
+
 /**
  * interface ServiceCacheQueueReaderInterface
  */
@@ -23,4 +26,11 @@ interface ServiceCacheQueueReaderInterface
      * @return array
      */
     public function getAllItemsLocked();
+
+    /**
+     * @param CacheableInterface $item
+     *
+     * @return bool
+     */
+    public function isItemLocked(CacheableInterface $item);
 }

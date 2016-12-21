@@ -4,6 +4,7 @@ namespace Itkg\Consumer\Cache;
 
 use Itkg\Core\Cache\AdapterInterface;
 use Itkg\Core\Cache\CacheableData;
+use Itkg\Core\CacheableInterface;
 
 /**
  * class ServiceCacheQueueReader 
@@ -78,5 +79,23 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
         return array_filter($keys, function($status, $key) {
             return $status == WarmupQueue::STATUS_LOCKED;
         });
+    }
+
+    /**
+     * @param CacheableInterface $item
+     *
+     * @return bool
+     */
+    public function isItemLocked(CacheableInterface $item)
+    {
+        $keys = $this->cacheAdapter->get($this->createCacheItem());
+
+        foreach ($keys as $key => $status) {
+            if ($key === $item->getHashKey()) {
+                return WarmupQueue::STATUS_LOCKED == $status;
+            }
+        }
+
+        return false;
     }
 }
