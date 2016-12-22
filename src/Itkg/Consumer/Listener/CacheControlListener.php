@@ -70,7 +70,10 @@ class CacheControlListener implements EventSubscriberInterface
         }
 
         $serviceHashKey = $service->getHashKey();
-        $this->queueWriter->addItem($serviceHashKey, WarmupQueue::STATUS_REFRESH);
+        $this->queueWriter->addItem($serviceHashKey, array(
+            'status' => WarmupQueue::STATUS_REFRESH,
+            'updatedAt' => time()
+        ));
     }
 
     /**

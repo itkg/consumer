@@ -12,6 +12,8 @@ use Itkg\Core\Cache\CacheableData;
  */
 class ServiceCacheQueueProcessor implements ServiceCacheQueueProcessorInterface
 {
+    const LOCKED_KEYS_MAX_DURATION = 600;
+
     /**
      * @var ServiceCacheQueueReaderInterface
      */
@@ -64,6 +66,9 @@ class ServiceCacheQueueProcessor implements ServiceCacheQueueProcessorInterface
     {
         $initialTime = time();
         $this->log($logCallback, sprintf('Process start, Max execution time : defined %s secondes', $maxExecutionTime));
+
+        $this->invalidateObsoleteLocked($logCallback);
+
         $this->log($logCallback, sprintf(
             ' %s keys to refresh and %s keys locked',
             count($this->reader->getAllItemsToRefresh()),
@@ -79,7 +84,10 @@ class ServiceCacheQueueProcessor implements ServiceCacheQueueProcessorInterface
                     continue;
                 }
 
-                $this->writer->replaceItem($key, WarmupQueue::STATUS_LOCKED);
+                $this->writer->replaceItem($key, array(
+                    'status' => WarmupQueue::STATUS_LOCKED,
+                    'updatedAt' => time()
+                ));
                 if ($cachedService instanceof AbstractService) {
                     $service = $this->services->getServiceByIdentifier($cachedService->getIdentifier());
                     $this->cacheWarmer->warm($service, $cachedService);
@@ -93,6 +101,24 @@ class ServiceCacheQueueProcessor implements ServiceCacheQueueProcessorInterface
                 $this->log($logCallback, sprintf('Max execution time of %s seconds reached. Terminating process', $maxExecutionTime));
                 break;
             }
+        }
+    }
+
+    /**
+     * @param callable $logCallback
+     */
+    private function invalidateObsoleteLocked(\Closure $logCallback = null)
+    {
+        $lockedKeyCount = 0;
+        foreach ($this->reader->getAllItemsLocked() as $lockedKey => $content) {
+            if (time() > $content['updatedAt'] + self::LOCKED_KEYS_MAX_DURATION) {
+                $this->writer->removeItem($lockedKey);
+                $lockedKeyCount ++;
+            }
+        }
+
+        if ($lockedKeyCount > 0) {
+            $this->log($logCallback, sprintf('Invalidate %s Obsolete locked keys', $lockedKeyCount));
         }
     }
 
