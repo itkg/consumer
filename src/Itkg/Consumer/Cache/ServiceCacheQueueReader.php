@@ -41,8 +41,8 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
         if (!is_array($keys)) {
             return null;
         }
-        foreach ($keys as $key => $keyStatus) {
-            if ($status === $keyStatus) {
+        foreach ($keys as $key => $content) {
+            if ($status === $content['status']) {
                 return $key;
             }
         }
@@ -64,8 +64,8 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
     {
         $keys = $this->cacheAdapter->get($this->createCacheItem());
 
-        return array_filter($keys, function($status, $key) {
-            return $status == WarmupQueue::STATUS_REFRESH;
+        return array_filter($keys, function($content, $key) {
+            return $content['status'] == WarmupQueue::STATUS_REFRESH;
         });
     }
 
@@ -76,8 +76,8 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
     {
         $keys = $this->cacheAdapter->get($this->createCacheItem());
 
-        return array_filter($keys, function($status, $key) {
-            return $status == WarmupQueue::STATUS_LOCKED;
+        return array_filter($keys, function($content, $key) {
+            return $content['status'] == WarmupQueue::STATUS_LOCKED;
         });
     }
 
@@ -90,9 +90,9 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
     {
         $keys = $this->cacheAdapter->get($this->createCacheItem());
 
-        foreach ($keys as $key => $status) {
+        foreach ($keys as $key => $content) {
             if ($key === $item->getHashKey()) {
-                return WarmupQueue::STATUS_LOCKED == $status;
+                return WarmupQueue::STATUS_LOCKED == $content['status'];
             }
         }
 
