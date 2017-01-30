@@ -64,7 +64,7 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
     {
         $keys = $this->cacheAdapter->get($this->createCacheItem());
 
-        return array_filter($keys, function($content, $key) {
+        return array_filter($keys, function($content) {
             return $content['status'] == WarmupQueue::STATUS_REFRESH;
         });
     }
@@ -76,7 +76,7 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
     {
         $keys = $this->cacheAdapter->get($this->createCacheItem());
 
-        return array_filter($keys, function($content, $key) {
+        return array_filter($keys, function($content) {
             return $content['status'] == WarmupQueue::STATUS_LOCKED;
         });
     }
