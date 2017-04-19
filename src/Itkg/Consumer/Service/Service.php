@@ -69,6 +69,8 @@ class Service extends AbstractService implements AdvancedServiceInterface, Servi
      */
     public function sendRequest(Request $request, Response $response = null)
     {
+        // reset is loaded flag before each request to allow multiple call to be cached
+        $this->loaded = false;
         $this->request = $request;
         $this->response = (null === $response) ? new Response() : $response;
 
