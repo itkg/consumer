@@ -41,12 +41,19 @@ class ServiceCacheQueueReader implements ServiceCacheQueueReaderInterface
         if (!is_array($keys)) {
             return null;
         }
+        // if no specific status we return first KEY
+        if(null === $status ) {
+            return array_pop(array_keys($keys));
+        }
+        // return the first key that match status
         foreach ($keys as $key => $content) {
             if ($status === $content['status']) {
                 return $key;
             }
         }
-        return array_pop($keys);
+        
+        //no key match the given status then return null
+        return null;
     }
 
     /**
